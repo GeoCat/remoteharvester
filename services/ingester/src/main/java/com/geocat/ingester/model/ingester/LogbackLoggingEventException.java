@@ -1,11 +1,7 @@
 package com.geocat.ingester.model.ingester;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 //taken from;
 // https://raw.githubusercontent.com/qos-ch/logback/master/logback-classic/src/main/resources/ch/qos/logback/classic/db/script/postgresql.sql
 
@@ -34,9 +30,8 @@ public class LogbackLoggingEventException {
     @Column(name = "trace_line", columnDefinition = "varchar(254)")
     private String traceLine;
 
-    @Column(name = "caused_by_depth",columnDefinition = "smallint")
+    @Column(name = "caused_by_depth", columnDefinition = "smallint")
     private short causedByDepth;
-
 
 
     //----------------------

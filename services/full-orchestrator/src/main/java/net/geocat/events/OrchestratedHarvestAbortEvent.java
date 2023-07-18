@@ -37,14 +37,12 @@ package net.geocat.events;
 public class OrchestratedHarvestAbortEvent extends Event {
 
 
-
     public OrchestratedHarvestAbortEvent() {
     }
 
     public OrchestratedHarvestAbortEvent(String processID) {
         super(processID);
     }
-
 
 
     @Override

@@ -113,7 +113,6 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
         }
 
 
-
         http.setConnectTimeout(TIMEOUT_MS);
         http.setReadTimeout(TIMEOUT_MS);
         http.setRequestMethod(verb);
@@ -189,7 +188,7 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
             }
             errorResult.setFinalURL(url.toString());
             if (cookies != null)
-                errorResult.setReceivedCookie(String.join("\n",cookies));
+                errorResult.setReceivedCookie(String.join("\n", cookies));
             errorResult.setSentCookie(cookie);
             errorResult.setFullyRead(false);
             errorResult.setErrorOccurred(true);
@@ -234,7 +233,7 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
             }
         }
         if (cookies != null)
-            result.setReceivedCookie(String.join("\n",cookies));
+            result.setReceivedCookie(String.join("\n", cookies));
         result.setSentCookie(cookie);
         result.setFinalURL(url.toString());
         result.setFullyRead(fullyRead);

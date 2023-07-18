@@ -42,7 +42,7 @@ public class StartPostProcessEvent extends Event {
     public StartPostProcessEvent() {
     }
 
-    public StartPostProcessEvent(  String linkCheckJobId) {
+    public StartPostProcessEvent(String linkCheckJobId) {
         this.linkCheckJobId = linkCheckJobId;
     }
 

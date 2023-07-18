@@ -34,12 +34,8 @@
 package net.geocat.service;
 
 
- import org.apache.camel.Exchange;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -47,8 +43,6 @@ import java.io.StringWriter;
 @Component
 @Scope("prototype")
 public class DatabaseUpdateService {
-
-
 
 
     public static String convertToString(Throwable e) {

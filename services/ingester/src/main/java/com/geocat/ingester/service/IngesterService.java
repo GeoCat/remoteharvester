@@ -11,11 +11,9 @@ import com.geocat.ingester.exception.GeoNetworkClientException;
 import com.geocat.ingester.geonetwork.client.GeoNetworkClient;
 import com.geocat.ingester.model.harvester.EndpointJob;
 import com.geocat.ingester.model.harvester.HarvestJob;
-import com.geocat.ingester.model.harvester.HarvestJobState;
 import com.geocat.ingester.model.harvester.MetadataRecordXml;
 import com.geocat.ingester.model.ingester.IngestJob;
 import com.geocat.ingester.model.ingester.IngestJobState;
-
 import com.geocat.ingester.model.linkchecker.*;
 import com.geocat.ingester.model.linkchecker.helper.*;
 import com.geocat.ingester.model.linkedresources.LinkedResourceIndicator;
@@ -31,8 +29,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.apache.camel.model.dataformat.JsonLibrary.Gson;
 
 @Service
 //@Transactional("metadataTransactionManager")
@@ -86,22 +82,22 @@ public class IngesterService {
     @Autowired
     private IngestJobRepo ingestJobRepo;
 
-    public boolean continueProcessing(String jobid){
+    public boolean continueProcessing(String jobid) {
         IngestJob ingestJob = ingestJobRepo.findById(jobid).get();
-        return  (ingestJob.getState() != IngestJobState.ERROR) && (ingestJob.getState() != IngestJobState.USERABORT);
+        return (ingestJob.getState() != IngestJobState.ERROR) && (ingestJob.getState() != IngestJobState.USERABORT);
     }
 
     /**
      * Executes the ingester process.
      *
      * @param harvestJobId
-     * @return  true - completed, false - aborted
+     * @return true - completed, false - aborted
      * @throws Exception
      */
     public boolean run(String processId, String harvestJobId) throws Exception {
         Optional<HarvestJob> harvestJob = harvestJobRepo.findById(harvestJobId);
         if (!harvestJob.isPresent()) {
-            log.info("No harvester job related found with harvest job id " +  harvestJobId + ".");
+            log.info("No harvester job related found with harvest job id " + harvestJobId + ".");
             // TODO: throw Exception harvester job not found
             return false;
         }
@@ -111,7 +107,7 @@ public class IngesterService {
         Optional<HarvesterConfiguration> harvesterConfigurationOptional = catalogueService.retrieveHarvesterConfiguration(harvesterUuidOrName);
 
         if (!harvesterConfigurationOptional.isPresent()) {
-            log.info("Harvester with name/uuid " +  harvesterUuidOrName + " not found.");
+            log.info("Harvester with name/uuid " + harvesterUuidOrName + " not found.");
             // TODO: throw Exception harvester not found
             return false;
         }
@@ -121,7 +117,7 @@ public class IngesterService {
         Optional<LinkCheckJob> linkCheckJob = linkCheckJobRepo.findByHarvestJobId(harvestJobId);
         String linkCheckJobId = null;
         if (!linkCheckJob.isPresent()) {
-            log.info("No link checker job related found for the harvester with name/uuid " +  harvesterUuidOrName + ".");
+            log.info("No link checker job related found for the harvester with name/uuid " + harvesterUuidOrName + ".");
         } else {
             linkCheckJobId = linkCheckJob.get().getJobId();
         }
@@ -134,7 +130,7 @@ public class IngesterService {
         }
 
         if (!continueProcessing(processId)) {
-            log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+            log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
             return false;
         }
         ingestJobService.updateIngestJobStateInDBIngestedRecords(processId, 0, 0, 0, totalMetadataToProcess);
@@ -153,7 +149,7 @@ public class IngesterService {
                 while (pagesAvailable) {
 
                     if (!continueProcessing(processId)) {
-                        log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+                        log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
                         return false;
                     }
 
@@ -166,9 +162,9 @@ public class IngesterService {
                         log.info("Total harvested records to process: " + metadataRecordList.getTotalElements());
                     }
 
-                    long from = (size * (page - 1) ) + 1;
-                    long to =  Math.min((size * page) - 1, metadataRecordList.getTotalElements());
-                    log.info("Adding harvested metadata records to the catalogue from " +  from + " to " + to + " of " + metadataRecordList.getTotalElements());
+                    long from = (size * (page - 1)) + 1;
+                    long to = Math.min((size * page) - 1, metadataRecordList.getTotalElements());
+                    log.info("Adding harvested metadata records to the catalogue from " + from + " to " + to + " of " + metadataRecordList.getTotalElements());
 
                     total = total + metadataRecordList.getNumberOfElements();
 
@@ -182,12 +178,12 @@ public class IngesterService {
                     }
 
                     if (!continueProcessing(processId)) {
-                        log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+                        log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
                         return false;
                     }
                     metadataIds.putAll(catalogueService.addOrUpdateMetadataRecords(metadataRecordList.toList(), harvesterConfigurationOptional.get(), harvestJobId));
                     if (!continueProcessing(processId)) {
-                        log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+                        log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
                         return false;
                     }
                     ingestJobService.updateIngestJobStateInDBIngestedRecords(processId, total);
@@ -201,7 +197,7 @@ public class IngesterService {
         }
 
         if (!continueProcessing(processId)) {
-            log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+            log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
             return false;
         }
 
@@ -213,7 +209,7 @@ public class IngesterService {
         geoNetworkClient.init();
 
         if (!continueProcessing(processId)) {
-            log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+            log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
             return false;
         }
 
@@ -239,7 +235,7 @@ public class IngesterService {
                 .collect(Collectors.toList());
 
         if (!continueProcessing(processId)) {
-            log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+            log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
             return false;
         }
 
@@ -247,13 +243,13 @@ public class IngesterService {
         deleteRecords(metadataIdsToDelete, processId);
 
         if (!continueProcessing(processId)) {
-            log.warn(harvestJobId+" is in USERABORT/ERROR state - aborting");
+            log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
             return false;
         }
 
         ingestJobService.updateIngestJobStateInDB(processId, IngestJobState.RECORDS_PROCESSED);
 
-        log.info("IngesterService: run(): Finished ingestion process for harvester with name/uuid " +  harvesterUuidOrName + ".");
+        log.info("IngesterService: run(): Finished ingestion process for harvester with name/uuid " + harvesterUuidOrName + ".");
         return true;
     }
 
@@ -276,19 +272,19 @@ public class IngesterService {
         for (int i = 0; i < totalPages; i++) {
             try {
                 if (!continueProcessing(processId)) {
-                    log.warn(processId+" is in USERABORT/ERROR state - aborting");
+                    log.warn(processId + " is in USERABORT/ERROR state - aborting");
                     return false;
                 }
 
                 int from = i * batchSize;
-                int to = Math.min(((i+1) * batchSize), metadataIds.size());
+                int to = Math.min(((i + 1) * batchSize), metadataIds.size());
 
-                int toR = (i == totalPages - 1)?metadataIds.size():(to-1);
-                log.info("Indexing harvested metadata records from " +  Math.max(1, i * batchSize) + " to " + toR + " of " + metadataIds.size());
+                int toR = (i == totalPages - 1) ? metadataIds.size() : (to - 1);
+                log.info("Indexing harvested metadata records from " + Math.max(1, i * batchSize) + " to " + toR + " of " + metadataIds.size());
 
-                geoNetworkClient.index(metadataIds.subList(from , to));
+                geoNetworkClient.index(metadataIds.subList(from, to));
 
-                total = total + (to-from);
+                total = total + (to - from);
 
                 ingestJobService.updateIngestJobStateInDBIndexedRecords(processId, total);
 
@@ -318,16 +314,16 @@ public class IngesterService {
         for (int i = 0; i < totalPages; i++) {
             try {
                 int from = i * batchSize;
-                int to = Math.min(((i+1) * batchSize), metadataIds.size());
+                int to = Math.min(((i + 1) * batchSize), metadataIds.size());
 
-                int toR = (i == totalPages - 1)?metadataIds.size():(to-1);
-                log.info("Deleting old harvested metadata records from " +  Math.max(1, i * batchSize) + " to " + toR + " of " + metadataIds.size());
+                int toR = (i == totalPages - 1) ? metadataIds.size() : (to - 1);
+                log.info("Deleting old harvested metadata records from " + Math.max(1, i * batchSize) + " to " + toR + " of " + metadataIds.size());
 
-                catalogueService.deleteMetadataByUuids(new HashSet(metadataIds.subList(from , to)));
+                catalogueService.deleteMetadataByUuids(new HashSet(metadataIds.subList(from, to)));
                 // Commented: to do local delete due to ECAS auth in GeoNetwork the csw-ingester can't use GeoNetwork API
                 //geoNetworkClient.delete(metadataIds.subList(from , to));
 
-                total = total + (to-from);
+                total = total + (to - from);
 
                 ingestJobService.updateIngestJobStateInDBDeletedRecords(processId, total);
 
@@ -347,7 +343,7 @@ public class IngesterService {
      * @param linkCheckJobId
      */
     private void fillMetadataIndicators(MetadataRecordXml metadata, String linkCheckJobId) {
-       // List<LocalServiceMetadataRecord> localServiceMetadataRecord = localServiceMetadataRecordRepo.findAllByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
+        // List<LocalServiceMetadataRecord> localServiceMetadataRecord = localServiceMetadataRecordRepo.findAllByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
         Optional<LocalServiceMetadataRecord> localServiceMetadataRecord = lazyLocalServiceMetadataRecordRepo.searchFirstByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
 
 
@@ -358,11 +354,11 @@ public class IngesterService {
             addIndicator(metadata, "INDICATOR_CAPABILITIES_TYPE", localServiceMetadataRecord.get().getINDICATOR_CAPABILITIES_TYPE());
             addIndicator(metadata, "INDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE", localServiceMetadataRecord.get().getINDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE());
             addIndicator(metadata, "INDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES", localServiceMetadataRecord.get().getINDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES());
-           // addIndicator(metadata, "INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES", localServiceMetadataRecord.get(0).getINDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES());
+            // addIndicator(metadata, "INDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES", localServiceMetadataRecord.get(0).getINDICATOR_CAPABILITIES_SERVICE_FULLY_MATCHES());
             addIndicator(metadata, "INDICATOR_RESOLVES_TO_CAPABILITIES", localServiceMetadataRecord.get().getINDICATOR_RESOLVES_TO_CAPABILITIES());
 
         } else {
-           // List<LocalDatasetMetadataRecord> localDatasetMetadataRecord = localDatasetMetadataRecordRepo.findAllByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
+            // List<LocalDatasetMetadataRecord> localDatasetMetadataRecord = localDatasetMetadataRecordRepo.findAllByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
             Optional<LocalDatasetMetadataRecord> localDatasetMetadataRecord = lazyLocalDatsetMetadataRecordRepo.searchFirstByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
 
             if (localDatasetMetadataRecord.isPresent()) {
@@ -434,7 +430,7 @@ public class IngesterService {
                 OGCLinkToData ogcLinkToData = (OGCLinkToData) vl;
 
                 String layerName = ogcLinkToData.getOgcLayerName();
-                String layerLink = (ogcLinkToData.getOgcRequest() != null)?ogcLinkToData.getOgcRequest().getFinalURL():"";
+                String layerLink = (ogcLinkToData.getOgcRequest() != null) ? ogcLinkToData.getOgcRequest().getFinalURL() : "";
 
                 List<ServiceDocumentLink> serviceDocumentLinks = serviceDocumentLinkRepo.findByLinkCheckJobIdAndSha2(linkCheckJobId, capabilitiesSha2);
 
@@ -494,12 +490,12 @@ public class IngesterService {
                 OGCLinkToData ogcLinkToData = (OGCLinkToData) vl;
 
                 layerName = ogcLinkToData.getOgcLayerName();
-                layerLink = (ogcLinkToData.getOgcRequest() != null)?ogcLinkToData.getOgcRequest().getFinalURL():"";
+                layerLink = (ogcLinkToData.getOgcRequest() != null) ? ogcLinkToData.getOgcRequest().getFinalURL() : "";
 
             } else if (vl instanceof SimpleStoredQueryDataLink) {
                 SimpleStoredQueryDataLink simpleStoredQueryDataLink = (SimpleStoredQueryDataLink) vl;
 
-                layerLink = (simpleStoredQueryDataLink.getOgcRequest() != null)?simpleStoredQueryDataLink.getOgcRequest().getFinalURL():"";
+                layerLink = (simpleStoredQueryDataLink.getOgcRequest() != null) ? simpleStoredQueryDataLink.getOgcRequest().getFinalURL() : "";
 
             } else if (vl instanceof SimpleAtomLinkToData) {
                 SimpleAtomLinkToData simpleAtomLinkToData = (SimpleAtomLinkToData) vl;

@@ -74,9 +74,9 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
     @Override
     protected void secondarySubAppend(ILoggingEvent event, Connection connection, long eventId) throws Throwable {
         Map<String, String> mergedMap = mergePropertyMaps(event);
-        if ( (event.getMarker() != null) && (event.getMarker() instanceof BasicMarker) ){
+        if ((event.getMarker() != null) && (event.getMarker() instanceof BasicMarker)) {
             String name = ((BasicMarker) event.getMarker()).getName();
-            mergedMap.put("markerValue",name);
+            mergedMap.put("markerValue", name);
         }
         insertProperties(mergedMap, connection, eventId);
 
@@ -84,6 +84,7 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
             insertThrowable(event.getThrowableProxy(), connection, eventId);
         }
     }
+
     @Override
     protected void insertProperties(Map<String, String> mergedMap, Connection connection, long eventId)
             throws SQLException {
@@ -91,7 +92,7 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
             return; // nothing to do
 
         String value = mergedMap.get("JMSCorrelationID");
-        if ( (value == null) || (value.isEmpty()) ){
+        if ((value == null) || (value.isEmpty())) {
             value = mergedMap.get("markerValue");
         }
         if ((value == null) || (value.isEmpty()))
@@ -136,10 +137,10 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
                                  long eventId,
                                  short causedByIndex) throws SQLException {
 
-        short index=0;
+        short index = 0;
         StringBuilder buf = new StringBuilder();
         ThrowableProxyUtil.subjoinFirstLine(buf, tp);
-        updateExceptionStatement(insertExceptionStatement, buf.toString(),causedByIndex, index++, eventId);
+        updateExceptionStatement(insertExceptionStatement, buf.toString(), causedByIndex, index++, eventId);
 
         int commonFrames = tp.getCommonFrames();
         StackTraceElementProxy[] stepArray = tp.getStackTraceElementProxyArray();
@@ -147,13 +148,13 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
             StringBuilder sb = new StringBuilder();
             sb.append(CoreConstants.TAB);
             ThrowableProxyUtil.subjoinSTEP(sb, stepArray[i]);
-            updateExceptionStatement(insertExceptionStatement, sb.toString(),causedByIndex, index++, eventId);
+            updateExceptionStatement(insertExceptionStatement, sb.toString(), causedByIndex, index++, eventId);
         }
 
         if (commonFrames > 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(CoreConstants.TAB).append("... ").append(commonFrames).append(" common frames omitted");
-            updateExceptionStatement(insertExceptionStatement, sb.toString(),causedByIndex, index++, eventId);
+            updateExceptionStatement(insertExceptionStatement, sb.toString(), causedByIndex, index++, eventId);
         }
 
 

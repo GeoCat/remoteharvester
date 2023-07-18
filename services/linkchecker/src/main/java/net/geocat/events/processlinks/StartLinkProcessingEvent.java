@@ -37,13 +37,13 @@ import net.geocat.events.Event;
 
 public class StartLinkProcessingEvent extends Event {
 
-     private String linkCheckJobId;
+    private String linkCheckJobId;
 
     public StartLinkProcessingEvent() {
     }
 
-    public StartLinkProcessingEvent(  String linkCheckJobId) {
-         this.linkCheckJobId = linkCheckJobId;
+    public StartLinkProcessingEvent(String linkCheckJobId) {
+        this.linkCheckJobId = linkCheckJobId;
     }
 
     public String getLinkCheckJobId() {

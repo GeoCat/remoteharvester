@@ -1,7 +1,6 @@
 package geocat.service;
 
 
-import geocat.csw.CSWService;
 import geocat.csw.csw.XMLTools;
 import geocat.database.entities.DuplicateRecordsReportItem;
 import geocat.database.entities.EndpointJob;
@@ -80,7 +79,7 @@ public class GetRecordsResponseEvaluator {
         if (problematicResultsConfiguration.errorIfTotalRecordsChanges())
             throw new Exception("GetRecord response - total records expected was " + endpointJob.getExpectedNumberOfRecords() + ", but now is " + info.getTotalExpectedResults());
         else
-            log (new Exception("GetRecord response - total records expected was " + endpointJob.getExpectedNumberOfRecords() + ", but now is " + info.getTotalExpectedResults()));
+            log(new Exception("GetRecord response - total records expected was " + endpointJob.getExpectedNumberOfRecords() + ", but now is " + info.getTotalExpectedResults()));
 
         //calculate % change and see if its too high
         double change = ((double) endpointJob.getExpectedNumberOfRecords()) / ((double) info.getTotalExpectedResults()) * 100;
@@ -95,7 +94,7 @@ public class GetRecordsResponseEvaluator {
                                      RecordSet recordSet,
                                      ProblematicResultsConfiguration problematicResultsConfiguration) throws Exception {
         if (recordSet.isLastSet()) {
-            if ((info.getNextRecordNumber() ==null) || (info.getNextRecordNumber() == 0))
+            if ((info.getNextRecordNumber() == null) || (info.getNextRecordNumber() == 0))
                 return; //all good
 
             if (problematicResultsConfiguration.errorIfLastRecordIsNotZero())
@@ -108,16 +107,16 @@ public class GetRecordsResponseEvaluator {
 
         //not the last record set
         int computedNextRecord = recordSet.getStartRecordNumber() + info.getNrecords();
-        if ((info.getNextRecordNumber() != null) && (info.getNextRecordNumber() != computedNextRecord)  ) {
+        if ((info.getNextRecordNumber() != null) && (info.getNextRecordNumber() != computedNextRecord)) {
             if (problematicResultsConfiguration.errorIfNextRecordComputedWrong())
                 throw new Exception("GetRecord response - computed NextRecord != received NextRecordNumber - " + computedNextRecord + " != " + info.getNextRecordNumber());
             else
-                log ( new Exception("GetRecord response - computed NextRecord != received NextRecordNumber - " + computedNextRecord + " != " + info.getNextRecordNumber()));
+                log(new Exception("GetRecord response - computed NextRecord != received NextRecordNumber - " + computedNextRecord + " != " + info.getNextRecordNumber()));
         }
     }
 
     private void log(Exception e) {
-        logger.error("IGNORED ERROR while evaluating harvested records",e);
+        logger.error("IGNORED ERROR while evaluating harvested records", e);
     }
 
     public void evaluate_duplicateUUIDs(HarvestJob harvestJob, EndpointJob endpointJob) throws Exception {
@@ -129,11 +128,11 @@ public class GetRecordsResponseEvaluator {
 
         if ((totalCount != distinctRecordIdentifiers)) {
             String msg = "duplicate record uuids detected - totalCount=" + totalCount + ", distinctCount=" + distinctRecordIdentifiers;
-            List<DuplicateRecordsReportItem> report = metadataRecordRepo.queryDuplicateRecordsReport( endpointJob.getEndpointJobId());
-            List<String> report_items =  report.stream()
-                    .map(x -> x.getRecordIdentifier() +" has "+x.getCount()+" records in positions: "+x.getCswRecordNumbers())
+            List<DuplicateRecordsReportItem> report = metadataRecordRepo.queryDuplicateRecordsReport(endpointJob.getEndpointJobId());
+            List<String> report_items = report.stream()
+                    .map(x -> x.getRecordIdentifier() + " has " + x.getCount() + " records in positions: " + x.getCswRecordNumbers())
                     .collect(Collectors.toList());
-            msg += "\n" + String.join("\n",report_items);
+            msg += "\n" + String.join("\n", report_items);
             if (problematicResultsConfiguration.errorIfDuplicateUUIDs())
                 throw new Exception(msg);
             else

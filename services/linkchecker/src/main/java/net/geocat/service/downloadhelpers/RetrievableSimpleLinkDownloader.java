@@ -33,13 +33,12 @@
 
 package net.geocat.service.downloadhelpers;
 
-import net.geocat.database.linkchecker.entities.helper.RetrievableSimpleLink;
-import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
 import net.geocat.database.linkchecker.entities.HttpResult;
+import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
+import net.geocat.database.linkchecker.entities.helper.RetrievableSimpleLink;
 import net.geocat.http.HTTPRequest;
 import net.geocat.http.HttpRequestFactory;
 import net.geocat.http.IContinueReadingPredicate;
-import net.geocat.http.IHTTPRetriever;
 import net.geocat.http.SmartHTTPRetriever;
 import net.geocat.service.LoggingSupport;
 import net.geocat.xml.XmlStringTools;
@@ -47,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -64,8 +62,8 @@ public class RetrievableSimpleLinkDownloader {
 
 
     @Autowired
-   // @Qualifier("cachingHttpRetriever")
-   // IHTTPRetriever retriever;
+    // @Qualifier("cachingHttpRetriever")
+    // IHTTPRetriever retriever;
     SmartHTTPRetriever smartHTTPRetriever;
 
     @Autowired
@@ -75,7 +73,7 @@ public class RetrievableSimpleLinkDownloader {
     HttpRequestFactory httpRequestFactory;
 
     public RetrievableSimpleLink process(RetrievableSimpleLink link) {
-        return process(link, headLength,null);
+        return process(link, headLength, null);
     }
 
     public RetrievableSimpleLink process(RetrievableSimpleLink link, int headLength, String acceptsHeader) {
@@ -84,11 +82,10 @@ public class RetrievableSimpleLinkDownloader {
             HttpResult data = null;
 
             String url = (link.getFixedURL() == null) ? link.getRawURL() : link.getFixedURL();
-            if (url !=null)
+            if (url != null)
                 url = url.trim(); // several links have a " " at the end of them
 
-            if ( (url == null) || (url.isEmpty()) )
-            {
+            if ((url == null) || (url.isEmpty())) {
                 link.setIndicator_LinkResolves(IndicatorStatus.FAIL);
                 link.setLinkHTTPException("URL is null/empty - nothing to retrieve.");
                 link.setUrlFullyRead(false);
@@ -100,7 +97,7 @@ public class RetrievableSimpleLinkDownloader {
             try {
                 HTTPRequest request = httpRequestFactory.createGET(url, link.getLinkCheckJobId());
                 request.setPredicate(continueReadingPredicate);
-                if ( (acceptsHeader!=null) && (!acceptsHeader.isEmpty()) )
+                if ((acceptsHeader != null) && (!acceptsHeader.isEmpty()))
                     request.setAcceptsHeader(acceptsHeader);
                 data = smartHTTPRetriever.retrieve(request);
             } catch (Exception e) {
@@ -136,14 +133,14 @@ public class RetrievableSimpleLinkDownloader {
             return link;
         } catch (Exception e) {
             Marker marker = LoggingSupport.getMarker(link.getLinkCheckJobId());
-            logger.error(marker,"RetrievableSimpleLinkDownloader - error occurred processing link", e);
+            logger.error(marker, "RetrievableSimpleLinkDownloader - error occurred processing link", e);
             return link;
         }
     }
 
     public boolean isXML(HttpResult result) {
         try {
-            return XmlStringTools.isXML( result.getData() );
+            return XmlStringTools.isXML(result.getData());
         } catch (Exception e) {
             return false;
         }

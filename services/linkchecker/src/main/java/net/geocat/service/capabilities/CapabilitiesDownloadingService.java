@@ -36,32 +36,24 @@ package net.geocat.service.capabilities;
 import net.geocat.database.linkchecker.entities.CapabilitiesDatasetMetadataLink;
 import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
 import net.geocat.database.linkchecker.entities.RemoteServiceMetadataRecordLink;
-import net.geocat.database.linkchecker.entities.ServiceDocumentLink;
 import net.geocat.database.linkchecker.entities.helper.CapabilitiesDocumentState;
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
 import net.geocat.database.linkchecker.entities.helper.LinkState;
 import net.geocat.database.linkchecker.entities.helper.SHA2JobIdCompositeKey;
 import net.geocat.database.linkchecker.repos.CapabilitiesDocumentRepo;
 import net.geocat.database.linkchecker.repos.ServiceDocumentLinkRepo;
-import net.geocat.eventprocessor.processors.processlinks.EventProcessor_ProcessServiceDocLinksEvent;
 import net.geocat.service.LoggingSupport;
 import net.geocat.service.RemoteServiceMetadataRecordLinkRetriever;
 import net.geocat.service.RetrieveCapabilitiesDatasetMetadataLink;
 import net.geocat.service.RetrieveServiceDocumentLink;
 import net.geocat.service.helper.ProcessLockingService;
 import net.geocat.service.helper.SharedForkJoinPool;
-import net.geocat.xml.XmlCapabilitiesDocument;
-import net.geocat.xml.XmlCapabilitiesWFS;
-import net.geocat.xml.XmlDocumentFactory;
-import net.geocat.xml.XmlStringTools;
-import net.geocat.xml.helpers.CapabilitiesType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -93,8 +85,6 @@ public class CapabilitiesDownloadingService {
     CapabilitiesDocumentRepo capabilitiesDocumentRepo;
 
 
-
-
     @Autowired
     RetrieveCapabilitiesDatasetMetadataLink retrieveCapabilitiesDatasetMetadataLink;
 
@@ -118,13 +108,12 @@ public class CapabilitiesDownloadingService {
     private void processCapabilitiesDocument(DocumentLink link) {
         String linkCheckId = link.getLinkCheckJobId();
         String capSha2 = link.getSha2();
-        String lockKey = "cap_"+linkCheckId+"_"+capSha2;
+        String lockKey = "cap_" + linkCheckId + "_" + capSha2;
         Lock lock = processLockingService.getLock(lockKey);
         lock.lock();
         try {
             processCapabilitiesDocument_work(link);
-        }
-        finally {
+        } finally {
             lock.unlock();
         }
     }
@@ -132,28 +121,26 @@ public class CapabilitiesDownloadingService {
 
     private void processCapabilitiesDocument_work(DocumentLink link) {
         //first lets see if the document already exists - if not, we need to make it
-        CapabilitiesDocument doc  = getOrCreate(link);
-        if ( (doc.getState() != CapabilitiesDocumentState.COMPLETE) && ( doc.getState() != CapabilitiesDocumentState.ERROR) ) {
+        CapabilitiesDocument doc = getOrCreate(link);
+        if ((doc.getState() != CapabilitiesDocumentState.COMPLETE) && (doc.getState() != CapabilitiesDocumentState.ERROR)) {
             //we have the lock (no one else is processing), but this isn't complete
             //we'll try again
             //STATE ERROR: this shouldn't really happen, so should be ok to re-process it when it does
             try {
-                String storedProcName = retrieveStoredQueries.getSpatialDataSetStoredQuery(doc,link);
-                if (storedProcName !=null)
+                String storedProcName = retrieveStoredQueries.getSpatialDataSetStoredQuery(doc, link);
+                if (storedProcName != null)
                     doc.setProcGetSpatialDataSetName(storedProcName);
                 getServiceDocument(doc);
                 getDatasetDocuments(doc);
                 doc.setState(CapabilitiesDocumentState.COMPLETE);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 doc.setState(CapabilitiesDocumentState.ERROR);
                 Marker marker = LoggingSupport.getMarker(link.getLinkCheckJobId());
-                logger.error(marker,"something happened processing capabilities document",e);
+                logger.error(marker, "something happened processing capabilities document", e);
             }
-            CapabilitiesDocument doc2 =  capabilitiesDocumentRepo.save(doc);
+            CapabilitiesDocument doc2 = capabilitiesDocumentRepo.save(doc);
         }
     }
-
 
 
     private void handleLayerDatasetLink(CapabilitiesDatasetMetadataLink capabilitiesDatasetMetadataLink) {
@@ -161,17 +148,16 @@ public class CapabilitiesDownloadingService {
 //            long startTime  = System.currentTimeMillis();
 
             String jobid = capabilitiesDatasetMetadataLink.getLinkCheckJobId();
-            capabilitiesDatasetMetadataLink = retrieveCapabilitiesDatasetMetadataLink.process(capabilitiesDatasetMetadataLink,jobid);
+            capabilitiesDatasetMetadataLink = retrieveCapabilitiesDatasetMetadataLink.process(capabilitiesDatasetMetadataLink, jobid);
 
             capabilitiesDatasetMetadataLink.setLinkState(LinkState.Complete);
 //            System.out.println("handleLayerDatasetLink handleLayerDatasetLink time: " + (System.currentTimeMillis() - startTime));
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Marker marker = LoggingSupport.getMarker(capabilitiesDatasetMetadataLink.getLinkCheckJobId());
-            logger.error(marker,"error occurred while processing cap Dataset link, CapabilitiesDatasetMetadataLink="+capabilitiesDatasetMetadataLink+", error="+e.getMessage(),e);
+            logger.error(marker, "error occurred while processing cap Dataset link, CapabilitiesDatasetMetadataLink=" + capabilitiesDatasetMetadataLink + ", error=" + e.getMessage(), e);
             capabilitiesDatasetMetadataLink.setLinkState(LinkState.ERROR);
-            capabilitiesDatasetMetadataLink.setErrorMessage(  convertToString(e) );
+            capabilitiesDatasetMetadataLink.setErrorMessage(convertToString(e));
         }
     }
 
@@ -179,23 +165,23 @@ public class CapabilitiesDownloadingService {
         if (capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList() == null)
             return;
 
-        logger.debug("processing "+capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList().size()+" dataset links from the capabilities document");
+        logger.debug("processing " + capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList().size() + " dataset links from the capabilities document");
 
         ForkJoinPool pool = sharedForkJoinPool.getPool();
         int nTotal = capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList().size();
         AtomicInteger counter = new AtomicInteger(0);
 
-            pool.submit(() ->
-                    capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList().stream().parallel()
-                            .forEach(x -> {
-                                handleLayerDatasetLink(x);
-                               // int ndone = counter.incrementAndGet();
-                              //  logger.trace("processed link cap's DS link " + ndone + " of " + nTotal); // a wee bit of a lie, but will be "accurate"
-                            })
-            ).get();
+        pool.submit(() ->
+                capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList().stream().parallel()
+                        .forEach(x -> {
+                            handleLayerDatasetLink(x);
+                            // int ndone = counter.incrementAndGet();
+                            //  logger.trace("processed link cap's DS link " + ndone + " of " + nTotal); // a wee bit of a lie, but will be "accurate"
+                        })
+        ).get();
 
         capabilitiesDocument.getCapabilitiesDatasetMetadataLinkList().stream()
-                .forEach(x->x.setCapabilitiesDocument(capabilitiesDocument));
+                .forEach(x -> x.setCapabilitiesDocument(capabilitiesDocument));
     }
 
 
@@ -203,13 +189,12 @@ public class CapabilitiesDownloadingService {
         try {
             rsmrl = remoteServiceMetadataRecordLinkRetriever.process(rsmrl);
             rsmrl.setLinkState(LinkState.Complete);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Marker marker = LoggingSupport.getMarker(rsmrl.getLinkCheckJobId());
 
-            logger.error(marker,"error occurred while processing , RemoteServiceMetadataRecordLink="+rsmrl+", error="+e.getMessage(),e);
+            logger.error(marker, "error occurred while processing , RemoteServiceMetadataRecordLink=" + rsmrl + ", error=" + e.getMessage(), e);
             rsmrl.setLinkState(LinkState.ERROR);
-            rsmrl.setErrorMessage(  convertToString(e) );
+            rsmrl.setErrorMessage(convertToString(e));
         }
     }
 
@@ -225,7 +210,7 @@ public class CapabilitiesDownloadingService {
         String linkCheckId = link.getLinkCheckJobId();
         String capSha2 = link.getSha2();
 
-        SHA2JobIdCompositeKey key = new SHA2JobIdCompositeKey(capSha2,linkCheckId);
+        SHA2JobIdCompositeKey key = new SHA2JobIdCompositeKey(capSha2, linkCheckId);
 
         //make sure we dont have multiple threads (i.e. via slightly different URLs) attempt to create the doc at the same time
         synchronized (lockObject) {
@@ -249,13 +234,12 @@ public class CapabilitiesDownloadingService {
 
     private void download(DocumentLink link) {
         try {
-            link =   retrieveServiceDocumentLink.process(link);
+            link = retrieveServiceDocumentLink.process(link);
             link.setLinkState(LinkState.Complete);
-        }
-        catch (Exception e){
-            logger.warn("error occurred while downloading capabilities document at url="+link.getFixedURL(),e);
+        } catch (Exception e) {
+            logger.warn("error occurred while downloading capabilities document at url=" + link.getFixedURL(), e);
             link.setLinkState(LinkState.ERROR);
-            link.setErrorMessage(  convertToString(e) );
+            link.setErrorMessage(convertToString(e));
         }
     }
 

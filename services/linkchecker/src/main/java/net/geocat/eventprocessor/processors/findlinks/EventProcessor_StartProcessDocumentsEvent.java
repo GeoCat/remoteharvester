@@ -34,12 +34,9 @@
 package net.geocat.eventprocessor.processors.findlinks;
 
 import net.geocat.database.harvester.entities.EndpointJob;
-import net.geocat.database.harvester.entities.MetadataRecord;
 import net.geocat.database.harvester.repos.EndpointJobRepo;
 import net.geocat.database.harvester.repos.MetadataRecordRepo;
 import net.geocat.database.linkchecker.entities.LinkCheckJob;
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
 import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
 import net.geocat.database.linkchecker.service.LinkCheckJobService;
@@ -58,7 +55,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,11 +110,11 @@ public class EventProcessor_StartProcessDocumentsEvent extends BaseEventProcesso
 
         metadataRecords = metadataRecordRepo.findByEndpointJobIdIn(endpointIds);
 
-       // metadataRecords = metadataRecords.stream().filter(x->x.getSha2().startsWith("EE4EED5D2C77F6289DD28CFF209F4A14E7FA2B923C07FD959CFC696FFC268654")).collect(Collectors.toList());
-    //    metadataRecords= metadataRecords.subList(0,10);
-    //   metadataRecords = metadataRecords.stream().filter(x-> x.getMetadataRecordId() == 7661).collect(Collectors.toList());//todo - remove
+        // metadataRecords = metadataRecords.stream().filter(x->x.getSha2().startsWith("EE4EED5D2C77F6289DD28CFF209F4A14E7FA2B923C07FD959CFC696FFC268654")).collect(Collectors.toList());
+        //    metadataRecords= metadataRecords.subList(0,10);
+        //   metadataRecords = metadataRecords.stream().filter(x-> x.getMetadataRecordId() == 7661).collect(Collectors.toList());//todo - remove
 
-    //  metadataRecords = metadataRecords.stream().filter(x-> x.getMetadataRecordId() == 2691).collect(Collectors.toList());
+        //  metadataRecords = metadataRecords.stream().filter(x-> x.getMetadataRecordId() == 2691).collect(Collectors.toList());
 //           List<Long> items = Arrays.asList(new Long[] {4937L} );
 //        metadataRecords = metadataRecords.stream().filter(x-> items.contains(x.getMetadataRecordId() )).collect(Collectors.toList());
 
@@ -139,21 +135,18 @@ public class EventProcessor_StartProcessDocumentsEvent extends BaseEventProcesso
 
 //     metadataRecords = metadataRecords.stream().filter(x-> !items.contains(x.getRecordIdentifier() )).collect(Collectors.toList());
 
-      //  metadataRecords =    metadataRecords.subList(0,10000);
-
-
-
+        //  metadataRecords =    metadataRecords.subList(0,10000);
 
 
         //--------------------------------------------------------------------------------------------------------
 
-        int nTotal= metadataRecords.size();
+        int nTotal = metadataRecords.size();
         //remove duplicates
         metadataRecords = metadataRecords.stream().distinct().collect(Collectors.toList());
         int nDistinct = metadataRecords.size();
 
-        if (nTotal != nDistinct){
-            logger.warn("DUPLICATE RECORDS REMOVED - linkcheckjob:"+linkCheckJobId+", nRecords="+nTotal+", nDistinct="+nDistinct);
+        if (nTotal != nDistinct) {
+            logger.warn("DUPLICATE RECORDS REMOVED - linkcheckjob:" + linkCheckJobId + ", nRecords=" + nTotal + ", nDistinct=" + nDistinct);
         }
 
 
@@ -164,15 +157,13 @@ public class EventProcessor_StartProcessDocumentsEvent extends BaseEventProcesso
     }
 
 
-
-
     @Override
     public List<Event> newEventProcessing() {
         List<Event> result = new ArrayList<>();
         String linkCheckJobId = getInitiatingEvent().getLinkCheckJobId();
         String harvestJobId = getInitiatingEvent().getHarvestJobId();
 
-        logger.debug("There are "+metadataRecords.size()+" records to process.");
+        logger.debug("There are " + metadataRecords.size() + " records to process.");
 
 //        long nService = metadataRecords.stream().filter(x->x instanceof LocalServiceMetadataRecord).count();
 //        long nDataset = metadataRecords.stream().filter(x->x instanceof LocalDatasetMetadataRecord).count();
@@ -189,8 +180,8 @@ public class EventProcessor_StartProcessDocumentsEvent extends BaseEventProcesso
 
         }
 
-     //   result = result.subList(0,180000);
-        logger.debug("Finished generating to-process-document messages for "+metadataRecords.size()+" records. (camel will send all in one tx)");
+        //   result = result.subList(0,180000);
+        logger.debug("Finished generating to-process-document messages for " + metadataRecords.size() + " records. (camel will send all in one tx)");
 
 
         return result;

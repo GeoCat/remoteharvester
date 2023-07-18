@@ -34,7 +34,6 @@
 package net.geocat.service.camelsupport;
 
 
-
 import net.geocat.database.orchestrator.entities.OrchestratedHarvestProcess;
 import net.geocat.database.orchestrator.entities.OrchestratedHarvestProcessState;
 import net.geocat.database.orchestrator.repos.OrchestratedHarvestProcessRepo;
@@ -59,7 +58,7 @@ public class StopProcessingMessageService {
 
     public void checkIfShouldBeProcessed(Exchange exchange) {
         String processId = (String) exchange.getMessage().getHeader("processID");
-        if ( (processId == null) || (processId.isEmpty()) )
+        if ((processId == null) || (processId.isEmpty()))
             return; // this is a ping (with no id)
         Optional<OrchestratedHarvestProcess> job = orchestratedHarvestProcessRepo.findById(processId);
         if (!job.isPresent())

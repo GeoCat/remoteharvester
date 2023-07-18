@@ -35,7 +35,6 @@ package net.geocat.routes.rest;
 
 import net.geocat.events.EventFactory;
 import net.geocat.routes.queuebased.MainOrchestrator;
-import net.geocat.service.GetStatusService;
 import org.apache.camel.BeanScope;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;

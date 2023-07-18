@@ -33,8 +33,8 @@
 
 package com.geocat.ingester.dao.linkchecker;
 
- import com.geocat.ingester.model.linkchecker.LocalDatasetMetadataRecord;
- import org.springframework.beans.factory.annotation.Autowired;
+import com.geocat.ingester.model.linkchecker.LocalDatasetMetadataRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
@@ -59,16 +59,15 @@ public class LazyLocalDatsetMetadataRecordRepo {
     PlatformTransactionManager transactionManager;
 
 
-
     // replaces List<LocalDatasetMetadataRecord> findAllByFileIdentifierAndLinkCheckJobId
     // Only return the first instance (code was always using .get(0) )
     // Only return the most basic version of the LocalDatasetMetadataRecord (no operatesOn and no documentLinks).
     // DO NOT SAVE THESE OBJECTS
     // DO NOT ACCESS operateOn or documentLinks  (hibernate session is closed)
-    public synchronized Optional<LocalDatasetMetadataRecord> searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId){
+    public synchronized Optional<LocalDatasetMetadataRecord> searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId) {
 
 
-        EntityManager entityManager =  localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
+        EntityManager entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
         try {
 
             EntityGraph entityGraph = entityManager.getEntityGraph("LocalDatasetMetadataRecord-lazy-graph");
@@ -87,8 +86,7 @@ public class LazyLocalDatsetMetadataRecordRepo {
             }
 
             return result;
-        }
-        finally {
+        } finally {
             entityManager.clear();
             entityManager.close();
         }

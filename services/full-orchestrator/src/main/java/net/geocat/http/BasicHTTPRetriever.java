@@ -75,9 +75,8 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
     }
 
     public HttpResult retrieveJSON(String verb, String location, String body, String cookie, IContinueReadingPredicate predicate)
-            throws IOException, SecurityException, ExceptionWithCookies, RedirectException
-    {
-        return retrieve(verb,location,body, cookie,predicate, "application/json");
+            throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
+        return retrieve(verb, location, body, cookie, predicate, "application/json");
     }
 
     /**
@@ -88,14 +87,12 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
      * @return response from server
      * @throws Exception
      */
-        public HttpResult retrieveXML(String verb, String location, String body, String cookie, IContinueReadingPredicate predicate)
-            throws IOException, SecurityException, ExceptionWithCookies, RedirectException
-        {
-            return retrieve(verb,location,body, cookie,predicate, "application/xml");
-        }
+    public HttpResult retrieveXML(String verb, String location, String body, String cookie, IContinueReadingPredicate predicate)
+            throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
+        return retrieve(verb, location, body, cookie, predicate, "application/xml");
+    }
 
-       public HttpResult retrieve (String verb, String location, String body, String cookie, IContinueReadingPredicate predicate,String contentType) throws IOException, SecurityException, ExceptionWithCookies, RedirectException
-       {
+    public HttpResult retrieve(String verb, String location, String body, String cookie, IContinueReadingPredicate predicate, String contentType) throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
         if (body == null)
             body = "";
         URL url = new URL(location);
@@ -133,7 +130,7 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
         http.setDoInput(true);
         if (verb.equals("POST")) {
             http.setFixedLengthStreamingMode(body_bytes.length);
-           // http.setRequestProperty("Content-Type", "application/xml");
+            // http.setRequestProperty("Content-Type", "application/xml");
         }
         http.setRequestProperty("Content-Type", contentType);
         http.setRequestProperty("Accept", contentType);
@@ -202,7 +199,7 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
             }
             errorResult.setFinalURL(url.toString());
             if (cookies != null)
-                errorResult.setReceivedCookie(String.join("\n",cookies));
+                errorResult.setReceivedCookie(String.join("\n", cookies));
             errorResult.setSentCookie(cookie);
             errorResult.setFullyRead(false);
             errorResult.setErrorOccurred(true);
@@ -247,7 +244,7 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
             }
         }
         if (cookies != null)
-            result.setReceivedCookie(String.join("\n",cookies));
+            result.setReceivedCookie(String.join("\n", cookies));
         result.setSentCookie(cookie);
         result.setFinalURL(url.toString());
         result.setFullyRead(fullyRead);

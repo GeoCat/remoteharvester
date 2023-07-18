@@ -45,16 +45,16 @@ public class MainOrchestrator extends SpringRouteBuilder {
         from("activemq:ActiveMQ.DLQ")
                 .routeId("MainOrchestrator.DLQ")
                 .onException(Exception.class).onExceptionOccurred(new Processor() {
-                                @Override
-                                public void process(Exchange exchange) throws Exception {
-                                    Exception ex = exchange.getException();
-                                    exchange.getMessage().setHeader("exception", ex);
-                                    exchange.getMessage().setHeader("exceptionTxt", DatabaseUpdateService.convertToString(ex));
-                                }
-                            })
-                            .handled(true)
-                            .to("activemq:ActiveMQ.DLQ_DLQ")
-                            .end()
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                        exchange.getMessage().setHeader("exceptionTxt", DatabaseUpdateService.convertToString(ex));
+                    }
+                })
+                .handled(true)
+                .to("activemq:ActiveMQ.DLQ_DLQ")
+                .end()
 
                 .bean(HarvestJobService.class, "updateHarvestJobStateInDBToError( ${header.processID} )", BeanScope.Request)
         ;

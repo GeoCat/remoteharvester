@@ -45,7 +45,7 @@ import java.util.Optional;
 @Scope("prototype")
 public class LinkCheckBlobStorageService {
 
-    public static Object lockingObject=new Object();
+    public static Object lockingObject = new Object();
 
     @Autowired
     LinkCheckBlobStorageRepo linkCheckBlobStorageRepo;
@@ -55,7 +55,7 @@ public class LinkCheckBlobStorageService {
     }
 
 
-    public   void ensureBlobExists(String xmlStr, String sha2) {
+    public void ensureBlobExists(String xmlStr, String sha2) {
 
         synchronized (lockingObject) {
 

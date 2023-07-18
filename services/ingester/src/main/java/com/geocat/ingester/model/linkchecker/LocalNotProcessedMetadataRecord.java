@@ -133,7 +133,7 @@ public class LocalNotProcessedMetadataRecord extends MetadataRecord {
     @Override
     public String toString() {
         String result = "LocalNotProcessedMetadataRecord {\n";
-        result += "      NOT PROCESSED Metadata Document Id: " + localNotProcessedMetadataRecordId+ "\n";
+        result += "      NOT PROCESSED Metadata Document Id: " + localNotProcessedMetadataRecordId + "\n";
         result += "     linkCheckJobId: " + linkCheckJobId + "\n";
         result += "     harvesterMetadataRecordId: " + harvesterMetadataRecordId + "\n";
         result += "     state: " + state + "\n";

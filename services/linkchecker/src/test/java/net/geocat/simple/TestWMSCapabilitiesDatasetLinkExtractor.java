@@ -52,11 +52,11 @@ public class TestWMSCapabilitiesDatasetLinkExtractor {
     WMSCapabilitiesDatasetLinkExtractor wmsCapabilitiesDatasetLinkExtractor;
 
     @Before
-    public void setup(){
+    public void setup() {
         xmlDocumentFactory = new XmlDocumentFactory();
         xmlDocumentFactory.capabilityDeterminer = new CapabilityDeterminer();
 
-        wmsCapabilitiesDatasetLinkExtractor =  new WMSCapabilitiesDatasetLinkExtractor();
+        wmsCapabilitiesDatasetLinkExtractor = new WMSCapabilitiesDatasetLinkExtractor();
     }
 
 
@@ -64,7 +64,7 @@ public class TestWMSCapabilitiesDatasetLinkExtractor {
     public void test_multiple_MetadataURLs() throws Exception {
         XmlCapabilitiesWMS xmlCapabilitiesDocument = read("wms_cap_multiple_MetadataURLS.xml");
         List<DatasetLink> links = wmsCapabilitiesDatasetLinkExtractor.findLinks(xmlCapabilitiesDocument);
-        assertEquals(2,links.size());
+        assertEquals(2, links.size());
 
         assertEquals("http://www.authority", links.get(0).getAuthority());
         assertEquals("authority", links.get(0).getAuthorityName());
@@ -87,20 +87,20 @@ public class TestWMSCapabilitiesDatasetLinkExtractor {
     public void info_fully_in_single_nested_layer() throws Exception {
         XmlCapabilitiesWMS xmlCapabilitiesDocument = read("wms_cap_full_nested.xml");
         List<DatasetLink> links = wmsCapabilitiesDatasetLinkExtractor.findLinks(xmlCapabilitiesDocument);
-        assertEquals(1,links.size());
+        assertEquals(1, links.size());
 
         assertEquals("http://www.authority", links.get(0).getAuthority());
         assertEquals("layer2identifierDSURL", links.get(0).getRawUrl());
         assertEquals("layer2identifier", links.get(0).getIdentifier());
 
-     }
+    }
 
     @Test
     public void info_fully_in_single_nested_layer_parent() throws Exception {
         XmlCapabilitiesWMS xmlCapabilitiesDocument = read("wms_cap_full_nested_in_parent.xml");
         List<DatasetLink> links = wmsCapabilitiesDatasetLinkExtractor.findLinks(xmlCapabilitiesDocument);
 
-        assertEquals(2,links.size()); // 1 because the will both be the same
+        assertEquals(2, links.size()); // 1 because the will both be the same
 
         assertEquals("http://www.authority", links.get(0).getAuthority());
         assertEquals("layer1identifierDSURL", links.get(0).getRawUrl());
@@ -117,6 +117,6 @@ public class TestWMSCapabilitiesDatasetLinkExtractor {
     public XmlCapabilitiesWMS read(String fname) throws Exception {
         String text = new Scanner(TestWMSCapabilitiesDatasetLinkExtractor.class.getClassLoader().getResourceAsStream(fname), "UTF-8")
                 .useDelimiter("\\A").next();
-        return (XmlCapabilitiesWMS)xmlDocumentFactory.create(text);
+        return (XmlCapabilitiesWMS) xmlDocumentFactory.create(text);
     }
 }

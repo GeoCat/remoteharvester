@@ -36,12 +36,12 @@ public class MainLoopRouteCreator {
 
         routeBuilder.errorHandler(routeBuilder.transactionErrorHandler().maximumRedeliveries(2).redeliveryDelay(1000));
         routeBuilder.onException().onExceptionOccurred(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Exception ex = exchange.getException();
-                exchange.getMessage().setHeader("exception", ex);
-            }
-        })
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                    }
+                })
                 .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(2)
         ;
 

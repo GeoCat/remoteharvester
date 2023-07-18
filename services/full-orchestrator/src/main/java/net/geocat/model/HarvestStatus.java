@@ -1,7 +1,7 @@
 package net.geocat.model;
 
 
- import java.util.List;
+import java.util.List;
 
 public class HarvestStatus {
     public String processID;

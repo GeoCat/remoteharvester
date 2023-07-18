@@ -33,7 +33,6 @@
 
 package net.geocat.routes.rest;
 
-import net.geocat.dblogging.service.GetLogService;
 import net.geocat.service.DeleteJobService;
 import org.apache.camel.BeanScope;
 import org.apache.camel.builder.RouteBuilder;

@@ -83,18 +83,18 @@ public class MainLoopRouteCreator {
                 .redeliveryDelay(1000));
 
         routeBuilder.onException().onExceptionOccurred(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Exception ex = exchange.getException();
-                exchange.getMessage().setHeader("exception", ex);
-                logger.error("exception occurred", ex);
-            }
-        })
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                        logger.error("exception occurred", ex);
+                    }
+                })
                 .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(2)
         ;
 
         ChoiceDefinition choice = routeBuilder
-                .from(from +"?concurrentConsumers="+concurrency)
+                .from(from + "?concurrentConsumers=" + concurrency)
                 .routeId(mainRouteName + ".eventprocessor")
                 .transacted("txPolicyName")
                 .unmarshal(jsonDefHarvesterConfig)

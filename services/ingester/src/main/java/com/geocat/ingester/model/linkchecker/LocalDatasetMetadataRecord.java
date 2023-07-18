@@ -37,7 +37,6 @@ package com.geocat.ingester.model.linkchecker;
 import com.geocat.ingester.model.linkchecker.helper.DatasetMetadataRecord;
 import com.geocat.ingester.model.linkchecker.helper.LinkToData;
 import com.geocat.ingester.model.linkchecker.helper.ServiceMetadataDocumentState;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OnDelete;
@@ -45,7 +44,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 //represents a harvested (local) Dataset document
@@ -65,7 +63,6 @@ public class LocalDatasetMetadataRecord extends DatasetMetadataRecord {
     ServiceMetadataDocumentState state;
 
 
-
     // from the harvester - what is the harvester's record ID for this document?
     private long harvesterMetadataRecordId;
 
@@ -76,7 +73,7 @@ public class LocalDatasetMetadataRecord extends DatasetMetadataRecord {
 
     @OneToMany(//mappedBy = "datasetMetadataRecord",
             cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinColumn(name="linktodata_id")
+    @JoinColumn(name = "linktodata_id")
     @Fetch(value = FetchMode.SUBSELECT)
     // @BatchSize(size=500)
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -33,30 +33,28 @@
 
 package net.geocat.database.linkchecker.entities.helper;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("DDMDRecordDatasetIdentifier")
-public class DatasetMetadataRecordDatasetIdentifier extends DatasetIdentifier{
+public class DatasetMetadataRecordDatasetIdentifier extends DatasetIdentifier {
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     DatasetMetadataRecord datasetMetadataRecord;
 
-    public DatasetMetadataRecordDatasetIdentifier() {super();}
+    public DatasetMetadataRecordDatasetIdentifier() {
+        super();
+    }
 
     public DatasetMetadataRecordDatasetIdentifier(DatasetIdentifierNodeType identifierNodeType, String code, String codeSpace) {
-        super(identifierNodeType,code,codeSpace);
+        super(identifierNodeType, code, codeSpace);
     }
 
     public DatasetMetadataRecordDatasetIdentifier(DatasetIdentifier id) {
-        super(id.getIdentifierNodeType(),id.getCode(),id.getCodeSpace());
+        super(id.getIdentifierNodeType(), id.getCode(), id.getCodeSpace());
     }
 
-    public DatasetMetadataRecordDatasetIdentifier(DatasetIdentifier id,DatasetMetadataRecord r ) {
+    public DatasetMetadataRecordDatasetIdentifier(DatasetIdentifier id, DatasetMetadataRecord r) {
         this(id);
         this.datasetMetadataRecord = r;
     }

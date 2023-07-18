@@ -57,8 +57,8 @@ public interface OperatesOnLinkRepo extends CrudRepository<OperatesOnLink, Long>
             "    operatesonlink.fileidentifier = ?1 \n" +
             "    AND operatesonlink.datasetidentifier = ?2" +
             "    AND operatesonlink.linkcheckjobid= ?3 "
-            ,nativeQuery = true)
-    List<ServiceDocSearchResult>  linkToService(String fileidentifier,String datasetId, String linkcheckjobid);
+            , nativeQuery = true)
+    List<ServiceDocSearchResult> linkToService(String fileidentifier, String datasetId, String linkcheckjobid);
 
     // use this one if datasetID = null
     @Query(value = "SELECT servicemetadatarecord.servicemetadatadocumentid as serviceid,metadataservicetype as metadataservicetype\n" +
@@ -69,7 +69,7 @@ public interface OperatesOnLinkRepo extends CrudRepository<OperatesOnLink, Long>
             "WHERE\n" +
             "    operatesonlink.fileidentifier = ?1 \n" +
             "    AND operatesonlink.linkcheckjobid= ?2 "
-            ,nativeQuery = true)
-    List<ServiceDocSearchResult>  linkToService(String fileidentifier,  String linkcheckjobid);
+            , nativeQuery = true)
+    List<ServiceDocSearchResult> linkToService(String fileidentifier, String linkcheckjobid);
 
 }

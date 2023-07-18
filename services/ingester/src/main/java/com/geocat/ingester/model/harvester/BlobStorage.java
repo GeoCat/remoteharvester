@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="blob_storage")
+@Table(name = "blob_storage")
 public class BlobStorage {
     @Id
     @Column(columnDefinition = "varchar(64)")

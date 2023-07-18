@@ -28,7 +28,7 @@ import java.util.concurrent.locks.Lock;
 @Scope("prototype")
 public class EventProcessor_OrchestratedHarvestRequestedEvent extends BaseEventProcessor<OrchestratedHarvestRequestedEvent> {
 
-    Logger logger = LoggerFactory.getLogger( EventProcessor_OrchestratedHarvestAbortEvent.class);
+    Logger logger = LoggerFactory.getLogger(EventProcessor_OrchestratedHarvestAbortEvent.class);
 
     @Autowired
     OrchestratedHarvestProcessRepo orchestratedHarvestProcessRepo;
@@ -100,9 +100,8 @@ public class EventProcessor_OrchestratedHarvestRequestedEvent extends BaseEventP
                 }
             }
             orchestratedHarvestProcessRepo.save(job);
-            job = orchestratedHarvestProcessService.updateLinkCheckJobStateInDB(processID,OrchestratedHarvestProcessState.HAVESTING);
-        }
-        finally {
+            job = orchestratedHarvestProcessService.updateLinkCheckJobStateInDB(processID, OrchestratedHarvestProcessState.HAVESTING);
+        } finally {
             lock.unlock();
         }
         return this;

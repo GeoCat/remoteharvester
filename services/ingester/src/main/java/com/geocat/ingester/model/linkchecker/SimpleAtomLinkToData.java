@@ -38,18 +38,8 @@ import com.geocat.ingester.model.linkchecker.helper.DatasetMetadataRecord;
 import com.geocat.ingester.model.linkchecker.helper.LinkToData;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -77,7 +67,7 @@ public class SimpleAtomLinkToData extends LinkToData {
     }
 
     public SimpleAtomLinkToData(String linkcheckjobid, String sha2, String capabilitiesdocumenttype, DatasetMetadataRecord datasetMetadataRecord, String layerName) {
-        super(linkcheckjobid,sha2,capabilitiesdocumenttype,datasetMetadataRecord);
+        super(linkcheckjobid, sha2, capabilitiesdocumenttype, datasetMetadataRecord);
         this.layerId = layerName;
     }
 
@@ -121,6 +111,6 @@ public class SimpleAtomLinkToData extends LinkToData {
 
     @Override
     public String key() {
-        return super.key() +"::"+layerId;
+        return super.key() + "::" + layerId;
     }
 }

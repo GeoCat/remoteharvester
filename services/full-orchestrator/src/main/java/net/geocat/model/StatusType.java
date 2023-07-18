@@ -36,9 +36,9 @@ package net.geocat.model;
 public class StatusType {
 
     String statusType;
-    Long   nDocuments;
+    Long nDocuments;
 
-    public StatusType( ) {
+    public StatusType() {
 
     }
 

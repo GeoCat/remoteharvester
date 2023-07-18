@@ -43,13 +43,13 @@ public class CapabilityDeterminer {
 
         String tag = doc.getRootTagName();
         String ns = doc.getRootNS();
-        if (ns ==null)
+        if (ns == null)
             ns = "";
         return determineType(ns.toLowerCase(), tag);
     }
 
     public CapabilitiesType determineType(String ns, String rootTagName) throws Exception {
-        if (ns ==null)
+        if (ns == null)
             ns = "";
         if (rootTagName.equals("WMS_Capabilities") && (ns.equalsIgnoreCase("http://www.opengis.net/wms")))
             return CapabilitiesType.WMS;

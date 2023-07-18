@@ -34,7 +34,6 @@
 package net.geocat.events.findlinks;
 
 import net.geocat.events.Event;
-import net.geocat.xml.MetadataDocumentType;
 
 public class ProcessLocalMetadataDocumentEvent extends Event {
 
@@ -51,7 +50,7 @@ public class ProcessLocalMetadataDocumentEvent extends Event {
                                              Long underlyingHarvestMetadataRecordId) {
         this.linkCheckJobId = linkCheckJobId;
         this.sha2 = sha2;
-     //   this.harvestJobId = harvestJobId;
+        //   this.harvestJobId = harvestJobId;
         this.underlyingHarvestMetadataRecordId = underlyingHarvestMetadataRecordId;
     }
 
@@ -90,6 +89,6 @@ public class ProcessLocalMetadataDocumentEvent extends Event {
 
     @Override
     public String toString() {
-        return "ProcessLocalMetadataDocumentEvent - linkCheckJobId:" + linkCheckJobId +  ", sha2:" + sha2+", underlyingHarvestMetadataRecordId="+underlyingHarvestMetadataRecordId;
+        return "ProcessLocalMetadataDocumentEvent - linkCheckJobId:" + linkCheckJobId + ", sha2:" + sha2 + ", underlyingHarvestMetadataRecordId=" + underlyingHarvestMetadataRecordId;
     }
 }

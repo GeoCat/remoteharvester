@@ -67,29 +67,29 @@ public class ShouldTransitionOutOfDataDownloading {
             if (!done)
                 return false;
             // done - we need to prevent it from happening in the future
-            completedDataDownloadJobs.put(linkCheckJobId,metadataDocumentId);
+            completedDataDownloadJobs.put(linkCheckJobId, metadataDocumentId);
             return true;
 
         }
     }
 
 
-    public boolean isDone(String linkCheckJob){
+    public boolean isDone(String linkCheckJob) {
         Long nremaining = numberItemsRemaining.get(linkCheckJob);
         if (nremaining == null) {
-            nremaining =metadataService.numberRemainingDataDownload(linkCheckJob);
-            numberItemsRemaining.put(linkCheckJob,nremaining );
+            nremaining = metadataService.numberRemainingDataDownload(linkCheckJob);
+            numberItemsRemaining.put(linkCheckJob, nremaining);
         }
         // more than 20 remaining - we're good.
         if (nremaining > 20) {
-            numberItemsRemaining.put(linkCheckJob,  nremaining -1 );
+            numberItemsRemaining.put(linkCheckJob, nremaining - 1);
             return false;
         }
 
         //less than 20 remaining, we check
-        nremaining= metadataService.numberRemainingDataDownload(linkCheckJob);
-        numberItemsRemaining.put(linkCheckJob,nremaining);
-        return nremaining==0;
+        nremaining = metadataService.numberRemainingDataDownload(linkCheckJob);
+        numberItemsRemaining.put(linkCheckJob, nremaining);
+        return nremaining == 0;
     }
 
 }

@@ -34,10 +34,8 @@
 package net.geocat.service;
 
 
-
 import net.geocat.xml.XmlDocumentFactory;
 import net.geocat.xml.XmlMetadataDocument;
-
 import net.geocat.xml.helpers.OnlineResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,7 +50,6 @@ public class ServiceDocLinkExtractor {
 
     @Autowired
     XmlDocumentFactory xmlDocumentFactory;
-
 
 
     public List<OnlineResource> extractOnlineResource(XmlMetadataDocument xml) throws Exception {

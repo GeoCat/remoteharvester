@@ -137,9 +137,9 @@ public class OGCFilterService {
                     .replace("PUT_MAX_RECORDS_HERE", Integer.toString(nrecords));
         }
         if (doNotSort)
-            xml = xml.replace("PUT_ORDERBY_HERE","");
+            xml = xml.replace("PUT_ORDERBY_HERE", "");
         else
-            xml = xml.replace("PUT_ORDERBY_HERE",ORDERBY);
+            xml = xml.replace("PUT_ORDERBY_HERE", ORDERBY);
         return xml;
     }
 

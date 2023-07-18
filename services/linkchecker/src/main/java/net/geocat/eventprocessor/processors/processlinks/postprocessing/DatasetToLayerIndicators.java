@@ -35,10 +35,8 @@ package net.geocat.eventprocessor.processors.processlinks.postprocessing;
 
 
 import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
 
 
 @Component
@@ -46,7 +44,7 @@ import org.springframework.stereotype.Component;
 public class DatasetToLayerIndicators {
 
 
-    public LocalDatasetMetadataRecord process (LocalDatasetMetadataRecord record) {
+    public LocalDatasetMetadataRecord process(LocalDatasetMetadataRecord record) {
 //        if (record.getFileIdentifier() == null || record.getDatasetIdentifier() == null) {// nothing to do
 //            record.setINDICATOR_LAYER_MATCHES(IndicatorStatus.FAIL);
 //            return record;
@@ -108,8 +106,6 @@ public class DatasetToLayerIndicators {
 //            record.setINDICATOR_LAYER_MATCHES_VIEW(IndicatorStatus.PASS);
 //
 //        }
-
-
 
 
         return record;

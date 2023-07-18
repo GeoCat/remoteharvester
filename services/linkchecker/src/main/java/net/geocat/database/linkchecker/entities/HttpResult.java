@@ -34,7 +34,6 @@
 package net.geocat.database.linkchecker.entities;
 
 import javax.persistence.*;
-import java.util.List;
 
 
 //simple object for caching the results of a HTTP request
@@ -42,18 +41,18 @@ import java.util.List;
 // see RetrievableSimpleLink
 @Entity
 @Table(name = "HttpResultCache"
-        ,indexes = {
-                @Index(
-                        name = "idx_httpresultcache_url",
-                        columnList = "URL",
-                        unique = false
-                ),
+        , indexes = {
+        @Index(
+                name = "idx_httpresultcache_url",
+                columnList = "URL",
+                unique = false
+        ),
         @Index(
                 name = "idx_httpresultcache_job_url",
                 columnList = "linkCheckJobId,URL",
                 unique = true
         ),
-} )
+})
 public class HttpResult {
 
     @Id
@@ -105,7 +104,7 @@ public class HttpResult {
 
     // cookies received from request (could be security tokens)
     @Column(columnDefinition = "text")
-    String  receivedCookie;
+    String receivedCookie;
 
     // is the SSL cert trusted by Java?
     boolean sslTrusted;
@@ -140,8 +139,6 @@ public class HttpResult {
         this.sslTrusted = other.sslTrusted;
         this.sslUnTrustedReason = other.sslUnTrustedReason;
     }
-
-
 
 
     public HttpResult(byte[] data) {
@@ -296,11 +293,11 @@ public class HttpResult {
         this.sentCookie = sentCookie;
     }
 
-    public  String  getReceivedCookie() {
+    public String getReceivedCookie() {
         return receivedCookie;
     }
 
-    public void setReceivedCookie( String receivedCookie) {
+    public void setReceivedCookie(String receivedCookie) {
         this.receivedCookie = receivedCookie;
     }
 

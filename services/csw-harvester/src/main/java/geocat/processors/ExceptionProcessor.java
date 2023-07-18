@@ -1,2 +1,4 @@
-package geocat.processors;public class ExceptionProcessor {
+package geocat.processors;
+
+public class ExceptionProcessor {
 }

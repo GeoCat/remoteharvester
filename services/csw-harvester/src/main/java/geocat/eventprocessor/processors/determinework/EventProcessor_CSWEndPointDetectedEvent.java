@@ -58,9 +58,9 @@ public class EventProcessor_CSWEndPointDetectedEvent extends BaseEventProcessor<
         if ((newEndpoints != null) && (!newEndpoints.isEmpty()))
             result.addAll(newEndpoints);
 
-            Event e = eventFactory.create_CSWEndpointWorkDetermined(getInitiatingEvent().getHarvesterId(),
-                    getInitiatingEvent().getEndPointId());
-            result.add(e);
+        Event e = eventFactory.create_CSWEndpointWorkDetermined(getInitiatingEvent().getHarvesterId(),
+                getInitiatingEvent().getEndPointId());
+        result.add(e);
 
         //  endpointJobService.updateState(getInitiatingEvent().getEndPointId(),EndpointJobState.WORK_DETERMINED);
         return result;

@@ -83,8 +83,7 @@ public class MetadataRecord extends UpdateCreateDateTimeEntity {
     CapabilitiesType INDICATOR_CAPABILITIES_TYPE;
 
 
-    public MetadataRecord()
-    {
+    public MetadataRecord() {
         super();
     }
 
@@ -155,13 +154,13 @@ public class MetadataRecord extends UpdateCreateDateTimeEntity {
         this.metadataRecordType = metadataRecordType;
     }
 
-     protected void onUpdate() {
+    protected void onUpdate() {
         super.onUpdate();
-     }
+    }
 
-     protected void onInsert() {
+    protected void onInsert() {
         super.onInsert();
-     }
+    }
 
     //---------------------------------------------------------------------------
 

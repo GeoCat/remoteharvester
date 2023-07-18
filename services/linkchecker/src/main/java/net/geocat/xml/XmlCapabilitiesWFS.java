@@ -68,17 +68,17 @@ public class XmlCapabilitiesWFS extends XmlCapabilitiesDocument {
     private void setup_srs_layer() throws Exception {
         List<String> allcrses = new ArrayList<>();
         Node main = getFirstNode();
-        Node secondary = findNode(main,"FeatureTypeList");
+        Node secondary = findNode(main, "FeatureTypeList");
         if (secondary == null)
             return; // no feature types
-        List<Node> nl = findNodes(secondary,"FeatureType");
+        List<Node> nl = findNodes(secondary, "FeatureType");
 
-        for(Node FTnode : nl) {
-            String defaultCRS = getNodeTextValue(findNode(FTnode,"DefaultCRS"));
+        for (Node FTnode : nl) {
+            String defaultCRS = getNodeTextValue(findNode(FTnode, "DefaultCRS"));
             if (defaultCRS != null)
                 allcrses.add(defaultCRS);
-            List<Node> otherCRSNodes = findNodes(FTnode,"OtherCRS");
-            for(Node otherCRSNode : otherCRSNodes){
+            List<Node> otherCRSNodes = findNodes(FTnode, "OtherCRS");
+            for (Node otherCRSNode : otherCRSNodes) {
                 String otherCR = getNodeTextValue(otherCRSNode);
                 if (otherCR != null)
                     allcrses.add(otherCR);
@@ -94,20 +94,20 @@ public class XmlCapabilitiesWFS extends XmlCapabilitiesDocument {
     private void setup_srs_main() throws Exception {
         SRSs = new ArrayList<>();
         Node main = getFirstNode();
-        Node op = findNode(main,"OperationsMetadata");
-        if (op ==null)
+        Node op = findNode(main, "OperationsMetadata");
+        if (op == null)
             return;
-        List<Node> ops = findNodes(op,"Parameter");
-        for(Node o : ops){
-            String name = attribute(o,"name");
-            if ( (name == null) || (!name.equalsIgnoreCase("srsName")))
+        List<Node> ops = findNodes(op, "Parameter");
+        for (Node o : ops) {
+            String name = attribute(o, "name");
+            if ((name == null) || (!name.equalsIgnoreCase("srsName")))
                 continue;
-            Node allowedValuesNode = findNode(o,"AllowedValues");
-            if (allowedValuesNode!=null) {
+            Node allowedValuesNode = findNode(o, "AllowedValues");
+            if (allowedValuesNode != null) {
                 List<Node> allowedValuesNodes = findNodes(allowedValuesNode, "Value");
                 for (Node allowedValue : allowedValuesNodes) {
                     String val = getNodeTextValue(allowedValue);
-                    if (val !=null)
+                    if (val != null)
                         SRSs.add(val);
                 }
             }
@@ -117,7 +117,7 @@ public class XmlCapabilitiesWFS extends XmlCapabilitiesDocument {
 
     private void setup_getversion() throws Exception {
         Node main = getFirstNode();
-        versionNumber = attribute(main,"version");
+        versionNumber = attribute(main, "version");
     }
 
     private void setup_getfeature11() throws Exception {
@@ -125,35 +125,35 @@ public class XmlCapabilitiesWFS extends XmlCapabilitiesDocument {
         Node op = findNode(main, Arrays.asList(new String[]{"Capability", "Request", "GetFeature", "DCPType", "HTTP", "Get"}));
         if (op == null)
             return;
-        String url = attribute(op,"onlineResource");
-        this.getFeatureEndpoint=url;
+        String url = attribute(op, "onlineResource");
+        this.getFeatureEndpoint = url;
     }
 
     private void setup_getfeature20() throws Exception {
         Node main = getFirstNode();
-        Node op = findNode(main,"OperationsMetadata");
-        if (op ==null)
+        Node op = findNode(main, "OperationsMetadata");
+        if (op == null)
             return;
-        List<Node> ops = findNodes(op,"Operation");
-        for(Node o : ops){
-            String name = attribute(o,"name");
-            if ( (name == null) || (!name.equalsIgnoreCase("GetFeature")))
+        List<Node> ops = findNodes(op, "Operation");
+        for (Node o : ops) {
+            String name = attribute(o, "name");
+            if ((name == null) || (!name.equalsIgnoreCase("GetFeature")))
                 continue;
-            Node getfeatureop = findNode(o,"DCP","HTTP","Get");
+            Node getfeatureop = findNode(o, "DCP", "HTTP", "Get");
             if (getfeatureop == null)
                 continue;
-            getFeatureEndpoint = attribute(getfeatureop,"xlink:href");
+            getFeatureEndpoint = attribute(getfeatureop, "xlink:href");
         }
 
     }
 
-    private String getLayerMetadataURL_inspire(Node spatialDatasetIdentifier) throws  Exception {
+    private String getLayerMetadataURL_inspire(Node spatialDatasetIdentifier) throws Exception {
         if (spatialDatasetIdentifier == null)
             return null;
 
         Node metadataURL = spatialDatasetIdentifier.getAttributes().getNamedItem("metadataURL");
 
-        if ( (metadataURL ==null) || (metadataURL.getTextContent() == null ) )
+        if ((metadataURL == null) || (metadataURL.getTextContent() == null))
             return null;
 
         String url = metadataURL.getTextContent().trim();
@@ -174,40 +174,39 @@ public class XmlCapabilitiesWFS extends XmlCapabilitiesDocument {
         List<Node> metadataURLs = findAllNodes(layer, "MetadataURL");
 
         return metadataURLs.stream()
-                .map(x->x.getAttributes().getNamedItem("xlink:href"))
-                .filter(x->x !=null && (x.getTextContent() != null) && (!x.getTextContent().trim().isEmpty()))
-                .map(x->x.getTextContent().trim())
+                .map(x -> x.getAttributes().getNamedItem("xlink:href"))
+                .filter(x -> x != null && (x.getTextContent() != null) && (!x.getTextContent().trim().isEmpty()))
+                .map(x -> x.getTextContent().trim())
                 .collect(Collectors.toList());
     }
-
 
 
     //alternative way - direct links
     private void setup_XmlCapabilitiesWFS_noinspire() throws Exception {
 
         Node main = getFirstNode();
-        Node secondary = findNode(main,"FeatureTypeList");
+        Node secondary = findNode(main, "FeatureTypeList");
         if (secondary == null)
             return; // no feature types
-        List<Node> nl = findNodes(secondary,"FeatureType");
+        List<Node> nl = findNodes(secondary, "FeatureType");
 
-        for(Node FTnode : nl) {
+        for (Node FTnode : nl) {
             String name = null;
-            Node nameNode = findNode(FTnode,"Name");
-            if (nameNode !=null)
+            Node nameNode = findNode(FTnode, "Name");
+            if (nameNode != null)
                 name = nameNode.getTextContent();
-            if (name !=null)
+            if (name != null)
                 name = name.trim();
 
             List<String> metadataURLs = findMetadataURLs(FTnode);
 
-            if  ( (metadataURLs == null) || (metadataURLs.isEmpty()) ) {
-                DatasetLink datasetLink = new DatasetLink(null,null);
+            if ((metadataURLs == null) || (metadataURLs.isEmpty())) {
+                DatasetLink datasetLink = new DatasetLink(null, null);
                 datasetLink.setOgcLayerName(name);
                 datasetLinksList.add(datasetLink);
             }
-            for (String url : metadataURLs){
-                DatasetLink datasetLink = new DatasetLink(null,url);
+            for (String url : metadataURLs) {
+                DatasetLink datasetLink = new DatasetLink(null, url);
                 datasetLink.setOgcLayerName(name);
                 datasetLinksList.add(datasetLink);
             }
@@ -248,11 +247,10 @@ public class XmlCapabilitiesWFS extends XmlCapabilitiesDocument {
     //--
 
 
-
     @Override
     public String toString() {
-        String result =  "XmlCapabilitiesWFS(has service reference URL="+( (getMetadataUrlRaw() !=null) && (!getMetadataUrlRaw().isEmpty())) ;
-        result += ", number of Dataset links = "+getDatasetLinksList().size();
+        String result = "XmlCapabilitiesWFS(has service reference URL=" + ((getMetadataUrlRaw() != null) && (!getMetadataUrlRaw().isEmpty()));
+        result += ", number of Dataset links = " + getDatasetLinksList().size();
         result += ")";
         return result;
     }

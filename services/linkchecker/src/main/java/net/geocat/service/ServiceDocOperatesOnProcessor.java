@@ -37,7 +37,6 @@ import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.OperatesOnLink;
 import net.geocat.database.linkchecker.entities.helper.LinkState;
 import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
-import net.geocat.service.capabilities.CapabilitiesDownloadingService;
 import net.geocat.service.helper.SharedForkJoinPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,53 +68,48 @@ public class ServiceDocOperatesOnProcessor {
     LocalServiceMetadataRecordRepo localServiceMetadataRecordRepo;
 
 
-
-    public void process(LocalServiceMetadataRecord localServiceMetadataRecord) throws  Exception {
+    public void process(LocalServiceMetadataRecord localServiceMetadataRecord) throws Exception {
         processOperatesOnLinks(localServiceMetadataRecord);
     }
 
 
     public void processOperatesOnLinks(LocalServiceMetadataRecord localServiceMetadataRecord)
-            throws ExecutionException, InterruptedException
-    {
+            throws ExecutionException, InterruptedException {
         int nlinks = localServiceMetadataRecord.getOperatesOnLinks().size();
-        logger.debug("processing  "+nlinks+ " operates on links for documentid="+localServiceMetadataRecord.getServiceMetadataDocumentId());
-
+        logger.debug("processing  " + nlinks + " operates on links for documentid=" + localServiceMetadataRecord.getServiceMetadataDocumentId());
 
 
         ForkJoinPool pool = sharedForkJoinPool.getPool();
         int nTotal = localServiceMetadataRecord.getOperatesOnLinks().size();
         AtomicInteger counter = new AtomicInteger(0);
 
-            pool.submit(() ->
-                            localServiceMetadataRecord.getOperatesOnLinks().stream().parallel()
-                                    .forEach(x -> {
-                                        handleOperatesOnLink(x);
-                                        int ndone = counter.incrementAndGet();
-                                        Marker marker = LoggingSupport.getMarker(x.getLinkCheckJobId());
-                                        String text = "processed operates on DS link " + ndone + " of " + nTotal;
-                                        logger.debug(marker,text);
-                                    })
-            ).get();
+        pool.submit(() ->
+                localServiceMetadataRecord.getOperatesOnLinks().stream().parallel()
+                        .forEach(x -> {
+                            handleOperatesOnLink(x);
+                            int ndone = counter.incrementAndGet();
+                            Marker marker = LoggingSupport.getMarker(x.getLinkCheckJobId());
+                            String text = "processed operates on DS link " + ndone + " of " + nTotal;
+                            logger.debug(marker, text);
+                        })
+        ).get();
 
 
-
-        logger.trace("FINISHED processing  "+nlinks+ " operates on links for documentid="+localServiceMetadataRecord.getServiceMetadataDocumentId());
+        logger.trace("FINISHED processing  " + nlinks + " operates on links for documentid=" + localServiceMetadataRecord.getServiceMetadataDocumentId());
     }
 
 
     private void handleOperatesOnLink(OperatesOnLink link) {
         try {
             String jobid = link.getLinkCheckJobId();
-            link = retrieveOperatesOnLink.process(link,jobid);
+            link = retrieveOperatesOnLink.process(link, jobid);
 
             link.setLinkState(LinkState.Complete);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Marker marker = LoggingSupport.getMarker(link.getLinkCheckJobId());
-            logger.error(marker,"error occurred while processing ServiceMetadataDocument, OperatesOnLink="+link+", error="+e.getMessage());
+            logger.error(marker, "error occurred while processing ServiceMetadataDocument, OperatesOnLink=" + link + ", error=" + e.getMessage());
             link.setLinkState(LinkState.ERROR);
-            link.setErrorMessage(  convertToString(e) );
+            link.setErrorMessage(convertToString(e));
 
         }
     }

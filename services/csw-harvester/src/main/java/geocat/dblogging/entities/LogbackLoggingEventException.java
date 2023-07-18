@@ -30,9 +30,8 @@ public class LogbackLoggingEventException {
     @Column(name = "trace_line", columnDefinition = "text")
     private String traceLine;
 
-    @Column(name = "caused_by_depth",columnDefinition = "smallint")
+    @Column(name = "caused_by_depth", columnDefinition = "smallint")
     private short causedByDepth;
-
 
 
     //----------------------

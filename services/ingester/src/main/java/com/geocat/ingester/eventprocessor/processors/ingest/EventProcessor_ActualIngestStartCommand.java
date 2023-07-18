@@ -30,7 +30,7 @@ public class EventProcessor_ActualIngestStartCommand extends BaseEventProcessor<
     public EventProcessor_ActualIngestStartCommand internalProcessing() throws Exception {
         ActualIngestStartCommand cmd = getInitiatingEvent();
 
-        ingesterServiceComplete =  ingesterService.run(cmd.getJobId(), cmd.getHarvesterJobId());
+        ingesterServiceComplete = ingesterService.run(cmd.getJobId(), cmd.getHarvesterJobId());
 
         return this;
     }
@@ -42,9 +42,9 @@ public class EventProcessor_ActualIngestStartCommand extends BaseEventProcessor<
 
     @Override
     public List<Event> newEventProcessing() throws Exception {
-        List<Event> result =  new ArrayList<>();
+        List<Event> result = new ArrayList<>();
         if (ingesterServiceComplete)
-            result.add( new ActualIngestCompleted(this.getInitiatingEvent().getJobId()));
+            result.add(new ActualIngestCompleted(this.getInitiatingEvent().getJobId()));
         return result;
     }
 }

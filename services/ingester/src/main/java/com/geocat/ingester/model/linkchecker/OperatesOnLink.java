@@ -117,7 +117,7 @@ public class OperatesOnLink extends RetrievableSimpleLink {
     }
 
     public void setDatasetIdentifiers(List<DatasetIdentifier> datasetIdentifiers) {
-        this.datasetIdentifiers = datasetIdentifiers.stream().map(x->new OperatesOnLinkDatasetIdentifier(x,this)).collect(Collectors.toList());
+        this.datasetIdentifiers = datasetIdentifiers.stream().map(x -> new OperatesOnLinkDatasetIdentifier(x, this)).collect(Collectors.toList());
         // this.datasetIdentifiers = datasetIdentifiers;
     }
 
@@ -144,7 +144,6 @@ public class OperatesOnLink extends RetrievableSimpleLink {
     public void setUuidref(String uuidref) {
         this.uuidref = uuidref;
     }
-
 
 
 //---------------------------------------------------------------------------

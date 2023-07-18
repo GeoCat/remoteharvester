@@ -36,13 +36,15 @@ package com.geocat.ingester.model.linkchecker.helper;
 
 import com.geocat.ingester.model.linkchecker.CapabilitiesDocument;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
 
 //Represents a link in a document
 @MappedSuperclass
-public abstract class DocumentLink extends  RetrievableSimpleLink {
+public abstract class DocumentLink extends RetrievableSimpleLink {
 
     //if the operation name was attached to the link, its recorded here (see XML XSL)
     @Column(columnDefinition = "text")
@@ -76,13 +78,13 @@ public abstract class DocumentLink extends  RetrievableSimpleLink {
         this.capabilitiesDocument = capabilitiesDocument;
     }
 
-    public DocumentLink(){
+    public DocumentLink() {
         super();
     }
 
     //--
 
-    public static List<String> validProtocols = Arrays.asList(new String[] {
+    public static List<String> validProtocols = Arrays.asList(new String[]{
             "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
             "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
             "http://www.opengis.net/def/serviceType/ogc/wfs".toLowerCase(),
@@ -101,7 +103,7 @@ public abstract class DocumentLink extends  RetrievableSimpleLink {
             "INSPIRE Atom".toLowerCase()
     });
 
-    public static List<String> validAppProfiles =  Arrays.asList(new String[] {
+    public static List<String> validAppProfiles = Arrays.asList(new String[]{
             "Download Service".toLowerCase(),
             "View Service".toLowerCase(),
             "http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/download".toLowerCase(),
@@ -109,9 +111,9 @@ public abstract class DocumentLink extends  RetrievableSimpleLink {
     });
 
     public boolean isInspireSimplifiedLink() {
-        if ( (rawURL == null) || (protocol ==null) || (applicationProfile == null))
+        if ((rawURL == null) || (protocol == null) || (applicationProfile == null))
             return false;
-        if ( rawURL.isEmpty() || protocol.isEmpty() || applicationProfile.isEmpty())
+        if (rawURL.isEmpty() || protocol.isEmpty() || applicationProfile.isEmpty())
             return false;
 
         if (!validProtocols.contains(protocol.toLowerCase()))

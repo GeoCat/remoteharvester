@@ -35,15 +35,14 @@ package com.geocat.ingester.model.linkchecker;
 
 import com.geocat.ingester.model.linkchecker.helper.CapabilitiesDatasetMetadataLinkDatasetIdentifier;
 import com.geocat.ingester.model.linkchecker.helper.DatasetIdentifier;
-import com.geocat.ingester.model.linkchecker.helper.DatasetMetadataRecordDatasetIdentifier;
 import com.geocat.ingester.model.linkchecker.helper.PartialDownloadHint;
 import com.geocat.ingester.model.linkchecker.helper.RetrievableSimpleLink;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +75,8 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(
             {
-                    @JoinColumn(name="cap_sha2",referencedColumnName = "sha2"),
-                    @JoinColumn(name="cap_jobId",referencedColumnName = "linkcheckjobid")
+                    @JoinColumn(name = "cap_sha2", referencedColumnName = "sha2"),
+                    @JoinColumn(name = "cap_jobId", referencedColumnName = "linkcheckjobid")
             }
     )
     private CapabilitiesDocument capabilitiesDocument;
@@ -91,7 +90,7 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
     @OneToMany(mappedBy = "capDatasetMetadataLink",
             cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
-    @BatchSize(size=500)
+    @BatchSize(size = 500)
     @OnDelete(action = OnDeleteAction.CASCADE)
     List<CapabilitiesDatasetMetadataLinkDatasetIdentifier> datasetIdentifiers;
 
@@ -126,7 +125,7 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
 
     public CapabilitiesDatasetMetadataLink() {
         this.setPartialDownloadHint(PartialDownloadHint.METADATA_ONLY);
-        this.datasetIdentifiers=new ArrayList<>();
+        this.datasetIdentifiers = new ArrayList<>();
     }
 
     //---------------------------------------------------------------------------
@@ -169,7 +168,7 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
     }
 
     public void setDatasetIdentifiers(List<DatasetIdentifier> datasetIdentifiers) {
-        this.datasetIdentifiers = datasetIdentifiers.stream().map(x->new CapabilitiesDatasetMetadataLinkDatasetIdentifier(x,this)).collect(Collectors.toList());
+        this.datasetIdentifiers = datasetIdentifiers.stream().map(x -> new CapabilitiesDatasetMetadataLinkDatasetIdentifier(x, this)).collect(Collectors.toList());
         // this.datasetIdentifiers = datasetIdentifiers;
     }
 

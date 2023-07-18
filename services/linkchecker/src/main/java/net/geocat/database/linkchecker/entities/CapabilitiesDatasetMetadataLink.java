@@ -35,14 +35,11 @@ package net.geocat.database.linkchecker.entities;
 
 import net.geocat.database.linkchecker.entities.helper.CapabilitiesDatasetMetadataLinkDatasetIdentifier;
 import net.geocat.database.linkchecker.entities.helper.DatasetIdentifier;
-import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecordDatasetIdentifier;
 import net.geocat.database.linkchecker.entities.helper.PartialDownloadHint;
 import net.geocat.database.linkchecker.entities.helper.RetrievableSimpleLink;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -81,13 +78,13 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(
             {
-                    @JoinColumn(name="cap_sha2",referencedColumnName = "sha2"),
-                    @JoinColumn(name="cap_jobId",referencedColumnName = "linkcheckjobid")
+                    @JoinColumn(name = "cap_sha2", referencedColumnName = "sha2"),
+                    @JoinColumn(name = "cap_jobId", referencedColumnName = "linkcheckjobid")
             }
     )
     private CapabilitiesDocument capabilitiesDocument;
 
-     @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text")
     String fileIdentifier;
 
     @Column(columnDefinition = "text")
@@ -96,8 +93,8 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
     @OneToMany(mappedBy = "capDatasetMetadataLink",
             cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
-            @BatchSize(size=500)
-   // @OnDelete(action = OnDeleteAction.CASCADE)
+    @BatchSize(size = 500)
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     List<CapabilitiesDatasetMetadataLinkDatasetIdentifier> datasetIdentifiers;
 
     @Column(columnDefinition = "text")
@@ -131,7 +128,7 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
 
     public CapabilitiesDatasetMetadataLink() {
         this.setPartialDownloadHint(PartialDownloadHint.METADATA_ONLY);
-        this.datasetIdentifiers=new ArrayList<>();
+        this.datasetIdentifiers = new ArrayList<>();
     }
 
     //---------------------------------------------------------------------------
@@ -174,7 +171,7 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
     }
 
     public void setDatasetIdentifiers(List<DatasetIdentifier> datasetIdentifiers) {
-        this.datasetIdentifiers = datasetIdentifiers.stream().map(x->new CapabilitiesDatasetMetadataLinkDatasetIdentifier(x,this)).collect(Collectors.toList());
+        this.datasetIdentifiers = datasetIdentifiers.stream().map(x -> new CapabilitiesDatasetMetadataLinkDatasetIdentifier(x, this)).collect(Collectors.toList());
         // this.datasetIdentifiers = datasetIdentifiers;
     }
 
@@ -231,7 +228,7 @@ public class CapabilitiesDatasetMetadataLink extends RetrievableSimpleLink {
         result += "      identity: " + identity + "\n";
         result += "      authority: " + authority + "\n";
         result += "      file Identifier: " + fileIdentifier + "\n";
-      //  result += "      dataset identifier: " + datasetIdentifier + "\n";
+        //  result += "      dataset identifier: " + datasetIdentifier + "\n";
         result += "      ogcLayerName: " + ogcLayerName + "\n";
 
         result += "\n";

@@ -49,10 +49,10 @@ public class AtomEntry {
     }
 
     public AtomLink findLink(String rel) {
-        if ( (links == null) || (links.isEmpty()))
+        if ((links == null) || (links.isEmpty()))
             return null;
 
-        for (AtomLink link:links) {
+        for (AtomLink link : links) {
             if (link.getRel().equals(rel))
                 return link;
         }
@@ -61,11 +61,11 @@ public class AtomEntry {
 
     public List<AtomLink> findLinks(String rel) {
         List<AtomLink> result = new ArrayList<>();
-        if ( (links == null) || (links.isEmpty()))
+        if ((links == null) || (links.isEmpty()))
             return null;
 
-        for (AtomLink link:links) {
-            if ( (link.getRel() !=null) && (link.getRel().equals(rel)))
+        for (AtomLink link : links) {
+            if ((link.getRel() != null) && (link.getRel().equals(rel)))
                 result.add(link);
         }
         if (!links.isEmpty())

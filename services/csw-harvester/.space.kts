@@ -50,8 +50,8 @@ job("Build, test and install CSW-harvester artifacts") {
 
 
     container(
-        displayName="Push Docker image in GeoCat Docker repository",
-        image="geocat.registry.jetbrains.space/p/jrc-inspire-portal/geocat-systems/crane:main"
+            displayName = "Push Docker image in GeoCat Docker repository",
+            image = "geocat.registry.jetbrains.space/p/jrc-inspire-portal/geocat-systems/crane:main"
     ) {
         env["GEOCAT_DOCKER_REGISTRY_URL"] = "docker-registry.geocat.net:5000"
         env["GEOCAT_DOCKER_REGISTRY_USER"] = Params("geocat_docker_registry_user")

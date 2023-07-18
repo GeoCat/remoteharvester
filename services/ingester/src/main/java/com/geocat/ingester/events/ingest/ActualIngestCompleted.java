@@ -5,7 +5,7 @@ import com.geocat.ingester.events.Event;
 
 public class ActualIngestCompleted extends Event {
 
-     private String jobId;
+    private String jobId;
 
     public ActualIngestCompleted() {
     }

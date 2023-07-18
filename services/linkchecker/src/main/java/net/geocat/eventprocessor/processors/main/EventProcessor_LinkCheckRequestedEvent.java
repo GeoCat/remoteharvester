@@ -74,11 +74,11 @@ public class EventProcessor_LinkCheckRequestedEvent extends BaseEventProcessor<L
         //first so getStatus will work while deleting...
         linkCheckJobService.createLinkCheckJobInDB(getInitiatingEvent());
 
-        deleteJobService.ensureAtMost( getInitiatingEvent().getLinkCheckRunConfig().getLongTermTag(),
+        deleteJobService.ensureAtMost(getInitiatingEvent().getLinkCheckRunConfig().getLongTermTag(),
                 getInitiatingEvent().getLinkCheckRunConfig().getStoreAtMostNHistoricalRuns(),
                 getInitiatingEvent().getLinkCheckJobId());
 
-         job = linkCheckJobService.updateLinkCheckJobStateInDB(getInitiatingEvent().getLinkCheckJobId(), LinkCheckJobState.FINDING_LINKS);
+        job = linkCheckJobService.updateLinkCheckJobStateInDB(getInitiatingEvent().getLinkCheckJobId(), LinkCheckJobState.FINDING_LINKS);
         return this;
     }
 

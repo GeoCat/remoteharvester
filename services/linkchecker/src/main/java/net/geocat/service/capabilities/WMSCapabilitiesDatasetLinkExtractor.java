@@ -43,7 +43,6 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,7 +67,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
     public static List<Node> findNodesFullSearch(Node n, String localName) {
         NodeList nl = n.getChildNodes();
         List<Node> result = new ArrayList<>();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
 
@@ -76,23 +75,23 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
                 result.add(nn);
             }
             if (nn.getNodeType() == ELEMENT_NODE)
-                result.addAll(findNodesFullSearch(nn,localName)); // recurse
+                result.addAll(findNodesFullSearch(nn, localName)); // recurse
         }
         return result;
     }
 
 
-    public static List<Node> findNodes(Node n,String localName) {
+    public static List<Node> findNodes(Node n, String localName) {
 
         NodeList nl = n.getChildNodes();
         List<Node> result = new ArrayList<>();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
 
             if (name.equals(localName)) {
                 result.add(nn);
-                result.addAll(findNodes(nn,localName)); // recurse
+                result.addAll(findNodes(nn, localName)); // recurse
             }
         }
         return result;
@@ -101,8 +100,8 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
     public Map<String, String> findAuthorityURLS(XmlDoc doc) throws Exception {
         Map<String, String> result = new HashMap<>();
 
-        List<Node> nodes = findNodesFullSearch(doc.getFirstNode(),"AuthorityURL");
-        for(Node node:nodes) {
+        List<Node> nodes = findNodesFullSearch(doc.getFirstNode(), "AuthorityURL");
+        for (Node node : nodes) {
             Node nameNode = node.getAttributes().getNamedItem("name");
             if (nameNode == null)
                 continue;
@@ -112,7 +111,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
             name = name.trim();
             if (name.isEmpty())
                 continue;
-            Node onlineNode = findNode(node,"OnlineResource");
+            Node onlineNode = findNode(node, "OnlineResource");
             if (onlineNode == null)
                 continue;
             Node urlNode = onlineNode.getAttributes().getNamedItem("xlink:href");
@@ -124,7 +123,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
             url = url.trim();
             if (url.isEmpty())
                 continue;
-            result.put(name,url);
+            result.put(name, url);
 
         }
 
@@ -138,17 +137,18 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
 
         Node main = doc.getFirstNode();
 
-        Map<String,String> authorityURLs = findAuthorityURLS(doc);
+        Map<String, String> authorityURLs = findAuthorityURLS(doc);
 
-        Node secondary = findNode(doc.getFirstNode(),"Capability");
+        Node secondary = findNode(doc.getFirstNode(), "Capability");
         if (secondary == null)
-            secondary = findNode(doc.getFirstNode(),"Contents");;
+            secondary = findNode(doc.getFirstNode(), "Contents");
+        ;
 
-        List<Node> ns = findNodes(secondary,"Layer");
+        List<Node> ns = findNodes(secondary, "Layer");
 
         int idx = 0;
-        for(Node n : ns) {
-          //  logger.debug("indx = "+idx);
+        for (Node n : ns) {
+            //  logger.debug("indx = "+idx);
             List<DatasetLink> links = processLayer(doc, n, authorityURLs);
             if (links != null)
                 result.addAll(links);
@@ -159,25 +159,25 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
         //return unique(result);
     }
 
-    public List<DatasetLink> processLayer(XmlDoc doc, Node layer,Map<String,String> authorityURLs) throws Exception {
+    public List<DatasetLink> processLayer(XmlDoc doc, Node layer, Map<String, String> authorityURLs) throws Exception {
         List<DatasetLink> result = new ArrayList<>();
 
         String identifier = searchIdentifier(doc, layer);
         List<String> metadataUrls = searchMetadataUrls(doc, layer);
-        String authority = searchAuthority(doc,layer);
+        String authority = searchAuthority(doc, layer);
 
         String name = null;
-        Node nameNode = findNode(layer,"Name");
-        if (nameNode !=null)
+        Node nameNode = findNode(layer, "Name");
+        if (nameNode != null)
             name = nameNode.getTextContent();
-        if (name !=null)
+        if (name != null)
             name = name.trim();
 
 //        if (name == null)
 //            name = identifier;
 
         if ((identifier != null) || (metadataUrls != null)) {
-            if (metadataUrls !=null) {
+            if (metadataUrls != null) {
                 for (String url : metadataUrls) {
                     DatasetLink item = new DatasetLink(identifier, url);
                     item.setOgcLayerName(name);
@@ -191,8 +191,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
                     }
                     result.add(item);
                 }
-            }
-            else {
+            } else {
                 DatasetLink item = new DatasetLink(identifier, null);
                 if ((authority != null) && (!authority.isEmpty())) {
                     authority = authority.trim();
@@ -213,11 +212,11 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
         List<Node> metadataURLs = findAllNodes(layer, "MetadataURL");
 
         return metadataURLs.stream()
-                .map(x-> findNode(x, "OnlineResource"))
-                .filter(x->x !=null)
-                .map(x->x.getAttributes().getNamedItem("xlink:href"))
-                .filter(x->x !=null && (x.getTextContent() != null) && (!x.getTextContent().trim().isEmpty()))
-                .map(x->x.getTextContent().trim())
+                .map(x -> findNode(x, "OnlineResource"))
+                .filter(x -> x != null)
+                .map(x -> x.getAttributes().getNamedItem("xlink:href"))
+                .filter(x -> x != null && (x.getTextContent() != null) && (!x.getTextContent().trim().isEmpty()))
+                .map(x -> x.getTextContent().trim())
                 .collect(Collectors.toList());
 
     }
@@ -235,7 +234,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
 
     public static Node findNode(Node n, String localName) {
         NodeList nl = n.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
             if (name.equals(localName)) {
@@ -249,7 +248,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
     public static List<Node> findAllNodes(Node n, String localName) {
         List<Node> result = new ArrayList<>();
         NodeList nl = n.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
             if (name.equals(localName)) {
@@ -262,7 +261,7 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
 
     private String findIdentifier(Node layer) throws Exception {
 //        Node n = XmlDoc.xpath_node(layer, namespaceIdentifier+":Identifier");
-        Node n= findNode(layer, "Identifier") ;
+        Node n = findNode(layer, "Identifier");
 
         if (n == null)
             return null;
@@ -281,14 +280,14 @@ public class WMSCapabilitiesDatasetLinkExtractor implements ICapabilitiesDataset
     }
 
     private String findAuthority(Node layer) throws Exception {
-      //  Node n = XmlDoc.xpath_node(layer, namespace+":Identifier");
-        Node n = findNode(layer,"Identifier");
+        //  Node n = XmlDoc.xpath_node(layer, namespace+":Identifier");
+        Node n = findNode(layer, "Identifier");
         if (n == null)
             return null;
         Node authorityNode = n.getAttributes().getNamedItem("authority");
         if (authorityNode == null)
             return null;
-        String authority  = authorityNode.getNodeValue();
+        String authority = authorityNode.getNodeValue();
         if (!authority.isEmpty())
             return authority;
         return null;

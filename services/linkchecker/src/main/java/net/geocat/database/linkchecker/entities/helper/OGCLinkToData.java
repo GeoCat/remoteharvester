@@ -37,28 +37,19 @@ import net.geocat.database.linkchecker.entities.OGCRequest;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("OGCLinkToData")
 public class OGCLinkToData extends LinkToData {
 
     @OneToOne(cascade = CascadeType.ALL,
-    fetch = FetchType.EAGER)
+            fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.JOIN)
-    @BatchSize(size=500)
-    @JoinColumn(name="ogcrequest_ogcrequestid")
-   // @OnDelete(action = OnDeleteAction.CASCADE)
+    @BatchSize(size = 500)
+    @JoinColumn(name = "ogcrequest_ogcrequestid")
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     OGCRequest ogcRequest; // might be null
 
     @Column(columnDefinition = "text")
@@ -76,13 +67,13 @@ public class OGCLinkToData extends LinkToData {
         this.ogcLayerName = ogcLayerName;
     }
 
-    public OGCLinkToData(String linkcheckjobid, String sha2, String capabilitiesdocumenttype, DatasetMetadataRecord datasetMetadataRecord ) {
+    public OGCLinkToData(String linkcheckjobid, String sha2, String capabilitiesdocumenttype, DatasetMetadataRecord datasetMetadataRecord) {
         super(linkcheckjobid, sha2, capabilitiesdocumenttype, datasetMetadataRecord);
-     }
+    }
 
     @Override
     public String key() {
-        return super.key() +"::"+getOgcLayerName();
+        return super.key() + "::" + getOgcLayerName();
     }
 
 

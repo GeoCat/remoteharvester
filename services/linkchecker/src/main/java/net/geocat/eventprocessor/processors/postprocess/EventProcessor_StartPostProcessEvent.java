@@ -33,17 +33,13 @@
 
 package net.geocat.eventprocessor.processors.postprocess;
 
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
 import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
 import net.geocat.eventprocessor.BaseEventProcessor;
 import net.geocat.eventprocessor.processors.processlinks.EventProcessor_ProcessServiceDocLinksEvent;
-import net.geocat.eventprocessor.processors.processlinks.EventProcessor_StartLinkProcessingEvent;
 import net.geocat.events.Event;
 import net.geocat.events.EventFactory;
 import net.geocat.events.postprocess.StartPostProcessEvent;
-import net.geocat.events.processlinks.StartLinkProcessingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +65,6 @@ public class EventProcessor_StartPostProcessEvent extends BaseEventProcessor<Sta
     LocalDatasetMetadataRecordRepo localDatasetMetadataRecordRepo;
 
 
-
     @Override
     public EventProcessor_StartPostProcessEvent externalProcessing() throws Exception {
         return this;
@@ -88,15 +83,15 @@ public class EventProcessor_StartPostProcessEvent extends BaseEventProcessor<Sta
 
         List<Event> result = new ArrayList<>();
 
-        List<Long> serviceIds =  localServiceMetadataRecordRepo.searchAllServiceIds(linkCheckJobId);
-        for(Long id : serviceIds){
-            Event e = eventFactory.createPostProcessServiceDocumentEvent(id,linkCheckJobId);
+        List<Long> serviceIds = localServiceMetadataRecordRepo.searchAllServiceIds(linkCheckJobId);
+        for (Long id : serviceIds) {
+            Event e = eventFactory.createPostProcessServiceDocumentEvent(id, linkCheckJobId);
             result.add(e);
         }
 
-        List<Long> datasetIds =  localDatasetMetadataRecordRepo.searchAllDatasetIds(linkCheckJobId);
-        for(Long id : datasetIds){
-            Event e = eventFactory.createPostProcessDatasetDocumentEvent(id,linkCheckJobId);
+        List<Long> datasetIds = localDatasetMetadataRecordRepo.searchAllDatasetIds(linkCheckJobId);
+        for (Long id : datasetIds) {
+            Event e = eventFactory.createPostProcessDatasetDocumentEvent(id, linkCheckJobId);
             result.add(e);
         }
 

@@ -44,7 +44,7 @@ import java.util.List;
 
 @Component
 @Scope("prototype")
-public interface InspireSpatialDatasetIdentifierRepo  extends CrudRepository<InspireSpatialDatasetIdentifier, String> {
+public interface InspireSpatialDatasetIdentifierRepo extends CrudRepository<InspireSpatialDatasetIdentifier, String> {
 
 
     public List<InspireSpatialDatasetIdentifier> findByCode(String code);

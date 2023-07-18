@@ -35,10 +35,8 @@ package net.geocat.service;
 
 import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
-import net.geocat.database.linkchecker.entities.ServiceDocumentLink;
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
 import net.geocat.database.linkchecker.entities.helper.LinkState;
-import net.geocat.eventprocessor.processors.processlinks.EventProcessor_ProcessServiceDocLinksEvent;
 import net.geocat.service.capabilities.CapabilitiesDownloadingService;
 import net.geocat.service.capabilities.CapabilitiesLinkFixer;
 import org.slf4j.Logger;
@@ -63,61 +61,59 @@ public class DocumentLinkToCapabilitiesProcessor {
     @Autowired
     CapabilitiesDownloadingService capabilitiesDownloadingService;
 
-    public void processDocumentLinks( LocalServiceMetadataRecord localServiceMetadataRecord) throws Exception {
+    public void processDocumentLinks(LocalServiceMetadataRecord localServiceMetadataRecord) throws Exception {
         List<? extends DocumentLink> links = new ArrayList<>(localServiceMetadataRecord.getServiceDocumentLinks());
         long docid = localServiceMetadataRecord.getServiceMetadataDocumentId();
         String serviceRecordType = localServiceMetadataRecord.getMetadataServiceType();
-        processDocumentLinks(links,docid,serviceRecordType);
+        processDocumentLinks(links, docid, serviceRecordType);
     }
 
-    public void processDocumentLinks( LocalDatasetMetadataRecord localDatasetMetadataRecord) throws Exception {
+    public void processDocumentLinks(LocalDatasetMetadataRecord localDatasetMetadataRecord) throws Exception {
         List<? extends DocumentLink> links = new ArrayList<>(localDatasetMetadataRecord.getDocumentLinks());
         links = links.stream()
-                .filter(x->x.isInspireSimplifiedLink())
+                .filter(x -> x.isInspireSimplifiedLink())
                 .collect(Collectors.toList());
         long docid = localDatasetMetadataRecord.getDatasetMetadataDocumentId();
         String serviceRecordType = null; // no service record -> no idea what type of service this is
-        processDocumentLinks(links,docid,serviceRecordType);
+        processDocumentLinks(links, docid, serviceRecordType);
     }
 
     public void processDocumentLinks(List<? extends DocumentLink> links, long documentId, String serviceRecordType) throws Exception {
 
         int nlinks = links.size();
 
-        fixURLs(links,serviceRecordType);
+        fixURLs(links, serviceRecordType);
         int linkIdx = 0;
         //  logger.trace("processing "+nlinks+" service document links for documentid="+getInitiatingEvent().getServiceMetadataId());
         List<String> processedURLs = new ArrayList<>();
         for (DocumentLink link : links) {
-            logger.debug("processing  document link "+linkIdx+" of "+nlinks+" links for  documentid="+documentId);
+            logger.debug("processing  document link " + linkIdx + " of " + nlinks + " links for  documentid=" + documentId);
             linkIdx++;
             String thisURL = link.getFixedURL();
-            if (processedURLs.contains(thisURL))
-            {
+            if (processedURLs.contains(thisURL)) {
                 // logger.debug("this url has already been processed - no action!");
                 link.setLinkState(LinkState.Redundant);
-            }
-            else {
+            } else {
                 processedURLs.add(link.getFixedURL());
                 capabilitiesDownloadingService.handleLink(link);
             }
         }
-        logger.trace("FINISHED processing service document links for documentid="+documentId);
+        logger.trace("FINISHED processing service document links for documentid=" + documentId);
     }
 
     // get a more cannonical list of URLs -- this way we can tell if they are the same easier...
     private List<String> fixURLs(List<? extends DocumentLink> links, String serviceRecordType) {
         return links.stream()
-                .map(x-> {
+                .map(x -> {
                     try {
-                        x.setFixedURL(capabilitiesLinkFixer.fix(x.getRawURL(),serviceRecordType,x));
+                        x.setFixedURL(capabilitiesLinkFixer.fix(x.getRawURL(), serviceRecordType, x));
                     } catch (Exception e) {
                         e.printStackTrace();
                         x.setFixedURL(x.getRawURL());
                     }
                     return x;
                 })
-                .map(x->x.getFixedURL())
+                .map(x -> x.getFixedURL())
                 .collect(Collectors.toList());
     }
 

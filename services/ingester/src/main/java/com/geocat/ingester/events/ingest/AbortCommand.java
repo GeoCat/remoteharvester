@@ -10,7 +10,7 @@ public class AbortCommand extends Event {
 
 
     public AbortCommand() {
-     }
+    }
 
     public AbortCommand(String ingestJobId) {
         this.ingestJobId = ingestJobId;

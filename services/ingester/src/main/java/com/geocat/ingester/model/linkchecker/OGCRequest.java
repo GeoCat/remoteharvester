@@ -36,16 +36,7 @@ package com.geocat.ingester.model.linkchecker;
 import com.geocat.ingester.model.linkchecker.helper.HTTPRequestCheckerType;
 import com.geocat.ingester.model.linkchecker.helper.RetrievableSimpleLink;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static com.geocat.ingester.model.linkchecker.helper.PartialDownloadHint.ALWAYS_PARTIAL;
 
@@ -77,14 +68,14 @@ public class OGCRequest extends RetrievableSimpleLink {
     HTTPRequestCheckerType httpRequestCheckerType;
 
     @Column(columnDefinition = "text")
-    String  unSuccessfulOGCRequestReason;
+    String unSuccessfulOGCRequestReason;
 
     public OGCRequest() {
         super();
         setPartialDownloadHint(ALWAYS_PARTIAL);
     }
 
-    public OGCRequest(String url,HTTPRequestCheckerType httpRequestCheckerType) {
+    public OGCRequest(String url, HTTPRequestCheckerType httpRequestCheckerType) {
         this();
         setRawURL(url);
         setFixedURL(url);
@@ -141,7 +132,7 @@ public class OGCRequest extends RetrievableSimpleLink {
 
     @Override
     public String toString() {
-        return "OGCRequest{\n      summary:" + summary +"\n " +
+        return "OGCRequest{\n      summary:" + summary + "\n " +
                 "    successfulOGCRequest=" + successfulOGCRequest +
                 "\n      unSuccessfulOGCRequestReason='" + unSuccessfulOGCRequestReason + '\'' + '\n'
                 + super.toString() +

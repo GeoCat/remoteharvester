@@ -36,7 +36,6 @@ package net.geocat.xml;
 import net.geocat.service.capabilities.WMSCapabilitiesDatasetLinkExtractor;
 import net.geocat.xml.helpers.OperatesOn;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,19 +64,19 @@ public class XmlServiceRecordDoc extends XmlMetadataDocument {
     }
 
     private void populateOperatesOn() throws Exception {
-      //  NodeList nl = xpath_nodeset("//srv:operatesOn");
+        //  NodeList nl = xpath_nodeset("//srv:operatesOn");
         Node main = getFirstNode();
-        Node secondary = WMSCapabilitiesDatasetLinkExtractor.findNode(main,"identificationInfo");
+        Node secondary = WMSCapabilitiesDatasetLinkExtractor.findNode(main, "identificationInfo");
         if (secondary == null)
             return; //nothing to process
-        secondary = WMSCapabilitiesDatasetLinkExtractor.findNode(secondary,"SV_ServiceIdentification");
+        secondary = WMSCapabilitiesDatasetLinkExtractor.findNode(secondary, "SV_ServiceIdentification");
         if (secondary == null)
             return; //nothing to process
-        List<Node> nl = WMSCapabilitiesDatasetLinkExtractor.findNodes(secondary,"operatesOn");
+        List<Node> nl = WMSCapabilitiesDatasetLinkExtractor.findNodes(secondary, "operatesOn");
         operatesOns = OperatesOn.create(nl);
     }
 
-    public String translateServiceType(String xmlServiceType){
+    public String translateServiceType(String xmlServiceType) {
         if (xmlServiceType == null)
             return null;
         if (xmlServiceType.equalsIgnoreCase("ogc:wms"))
@@ -97,18 +96,18 @@ public class XmlServiceRecordDoc extends XmlMetadataDocument {
     }
 
     public void populateServiceType() throws Exception {
-       // Node n = xpath_node("//srv:serviceType/gco:LocalName");
-       // Node n = xpath_node("//*[local-name()='serviceType']/*[local-name()='LocalName']");
-        Node serviceId = XmlDoc.findNode(parsedXml,"MD_Metadata","identificationInfo","SV_ServiceIdentification");
+        // Node n = xpath_node("//srv:serviceType/gco:LocalName");
+        // Node n = xpath_node("//*[local-name()='serviceType']/*[local-name()='LocalName']");
+        Node serviceId = XmlDoc.findNode(parsedXml, "MD_Metadata", "identificationInfo", "SV_ServiceIdentification");
         if (serviceId == null)
             return;
-        Node n = XmlDoc.findNode(serviceId,"serviceType","LocalName");
+        Node n = XmlDoc.findNode(serviceId, "serviceType", "LocalName");
         if (n != null) {
             serviceType = translateServiceType(n.getTextContent());
         }
-       // n = xpath_node("//srv:serviceTypeVersion/gco:CharacterString");
-    //    n = xpath_node("//*[local-name()='serviceTypeVersion']/*[local-name()='CharacterString']");
-        n = XmlDoc.findNode(serviceId,"serviceTypeVersion","CharacterString");
+        // n = xpath_node("//srv:serviceTypeVersion/gco:CharacterString");
+        //    n = xpath_node("//*[local-name()='serviceTypeVersion']/*[local-name()='CharacterString']");
+        n = XmlDoc.findNode(serviceId, "serviceTypeVersion", "CharacterString");
 
         if (n != null)
             serviceTypeVersion = n.getTextContent();
@@ -124,8 +123,8 @@ public class XmlServiceRecordDoc extends XmlMetadataDocument {
 
     @Override
     public String toString() {
-        String result =  "XmlServiceRecordDoc(fileIdentifier="+fileIdentifier;
-        result += ", serviceType = "+serviceType;
+        String result = "XmlServiceRecordDoc(fileIdentifier=" + fileIdentifier;
+        result += ", serviceType = " + serviceType;
         result += ")";
         return result;
     }

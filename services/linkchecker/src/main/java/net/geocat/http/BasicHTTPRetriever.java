@@ -67,14 +67,14 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
         }
     };
     Logger logger = LoggerFactory.getLogger(BasicHTTPRetriever.class);
-  //  int TIMEOUT_MS = 1 * 2 * 1000;
+    //  int TIMEOUT_MS = 1 * 2 * 1000;
     int initialReadSize = 4096;
 
     public IContinueReadingPredicate.ContinueReading shouldReadMore(byte[] tinyBuffer, IContinueReadingPredicate predicate) {
         if (predicate == null)
             return IContinueReadingPredicate.ContinueReading.CONTINUE_READING;
 
-        return predicate.continueReading(tinyBuffer)  ;
+        return predicate.continueReading(tinyBuffer);
     }
 
 //    public HttpResult retrieveJSON(String verb, String location, String body, String cookie, IContinueReadingPredicate predicate,int timeoutSeconds)
@@ -107,7 +107,7 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
      * @return response from server
      * @throws Exception
      */
-  //  public HttpResult retrieve (String verb, String location, String body, String cookie, IContinueReadingPredicate predicate,String contentType,String[] accept,int timeoutSeconds) throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
+    //  public HttpResult retrieve (String verb, String location, String body, String cookie, IContinueReadingPredicate predicate,String contentType,String[] accept,int timeoutSeconds) throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
     public HttpResult retrieve(HTTPRequest request) throws Exception {
         IContinueReadingPredicate.ContinueReading continueReading = IContinueReadingPredicate.ContinueReading.CONTINUE_READING;
         if (request.getBody() == null)
@@ -122,9 +122,9 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
         Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
 
         if (request.getBody().isEmpty())
-            logger.debug(marker,"      * " + request.getVerb() + " to " + request.getLocation() );
+            logger.debug(marker, "      * " + request.getVerb() + " to " + request.getLocation());
         else
-            logger.debug(marker,"      * " + request.getVerb() + " to " + request.getLocation() + " with body " + request.getBody().replace("\n", ""));
+            logger.debug(marker, "      * " + request.getVerb() + " to " + request.getLocation() + " with body " + request.getBody().replace("\n", ""));
 
         boolean isHTTPs = url.getProtocol().equalsIgnoreCase("HTTPS");
 
@@ -145,23 +145,22 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
         }
 
 
-
-        http.setConnectTimeout(request.getTimeoutSeconds()*1000);
-        http.setReadTimeout(request.getTimeoutSeconds()*1000);
+        http.setConnectTimeout(request.getTimeoutSeconds() * 1000);
+        http.setReadTimeout(request.getTimeoutSeconds() * 1000);
         http.setRequestMethod(request.getVerb());
         http.setDoOutput(true);
         http.setDoInput(true);
         if (request.getVerb().equals("POST")) {
             http.setFixedLengthStreamingMode(body_bytes.length);
-           // http.setRequestProperty("Content-Type", "application/xml");
+            // http.setRequestProperty("Content-Type", "application/xml");
         }
         if (request.getVerb().equals("POST")) {
             http.setRequestProperty("Content-Type", request.getContentType()); // some servers don't like this set if there's no body
         }
-        if (request.getAcceptsHeader() !=null) {
-           // for(String a:accept){
-                http.setRequestProperty("Accept", request.getAcceptsHeader());
-           // }
+        if (request.getAcceptsHeader() != null) {
+            // for(String a:accept){
+            http.setRequestProperty("Accept", request.getAcceptsHeader());
+            // }
         }
 
         if ((request.getCookie() != null) && (!request.getCookie().isEmpty()))
@@ -230,14 +229,14 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
             }
             errorResult.setFinalURL(url.toString());
             if (cookies != null)
-                errorResult.setReceivedCookie(String.join("\n",cookies));
+                errorResult.setReceivedCookie(String.join("\n", cookies));
             errorResult.setSentCookie(request.getCookie());
             errorResult.setFullyRead(false);
             errorResult.setErrorOccurred(true);
             errorResult.setHttpCode(http.getResponseCode());
             errorResult.setContentType(http.getHeaderField("Content-Type"));
             if ((cookies != null) && (!cookies.isEmpty()))
-                 errorResult.setSpecialToSendCookie(cookies.get(0));
+                errorResult.setSpecialToSendCookie(cookies.get(0));
             return errorResult;
 
 //            if ((cookies == null) || (cookies.isEmpty()))
@@ -275,14 +274,14 @@ public class BasicHTTPRetriever implements IHTTPRetriever {
             }
         }
         if (cookies != null)
-            result.setReceivedCookie(String.join("\n",cookies));
+            result.setReceivedCookie(String.join("\n", cookies));
         result.setSentCookie(request.getCookie());
         result.setFinalURL(url.toString());
 
 
         // we re-check the dataset...
-        if ((continueReading == IContinueReadingPredicate.ContinueReading.DOWNLOAD_MORE) && ( request.getPredicate() != null)) {
-            IContinueReadingPredicate.ContinueReading r =  request.getPredicate().continueReading(result.getData());
+        if ((continueReading == IContinueReadingPredicate.ContinueReading.DOWNLOAD_MORE) && (request.getPredicate() != null)) {
+            IContinueReadingPredicate.ContinueReading r = request.getPredicate().continueReading(result.getData());
 
             fullyRead = r == IContinueReadingPredicate.ContinueReading.CONTINUE_READING;
         }

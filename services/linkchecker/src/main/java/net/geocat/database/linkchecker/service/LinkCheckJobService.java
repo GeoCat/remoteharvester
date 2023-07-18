@@ -62,7 +62,7 @@ public class LinkCheckJobService {
 
     //run this code after the job is complete
     public void finalize(String linkCheckJobId) {
-        LinkCheckJob  job=getJobInfo(linkCheckJobId,true);
+        LinkCheckJob job = getJobInfo(linkCheckJobId, true);
 //        // we are using a cache - it might be out-of-date.
 //        // if the job isn't marked as complete (or error/abort), we re-load it
 //        if ( (job.getState() != LinkCheckJobState.ERROR) && (job.getState() != LinkCheckJobState.USERABORT) && (job.getState() != LinkCheckJobState.COMPLETE) )
@@ -74,24 +74,21 @@ public class LinkCheckJobService {
 
         if (job.getState() == LinkCheckJobState.ERROR) {
             _finalize(job);
-        }
-        else if (job.getState() == LinkCheckJobState.USERABORT) {
+        } else if (job.getState() == LinkCheckJobState.USERABORT) {
             _finalize(job);
-        }
-        else if (job.getState() == LinkCheckJobState.COMPLETE) {
+        } else if (job.getState() == LinkCheckJobState.COMPLETE) {
             _finalize(job);
-        }
-        else {
+        } else {
             _finalize(job);
         }
     }
 
-    private void _finalize(LinkCheckJob  job) {
-        if ( (job == null) || (job.getJobId() ==null) || (job.getJobId().isEmpty()) )
+    private void _finalize(LinkCheckJob job) {
+        if ((job == null) || (job.getJobId() == null) || (job.getJobId().isEmpty()))
             return; //shouldn't happen
         if (job.isDeleteHTTPCacheWhenComplete()) {
             Long nItemsDeleted = httpResultRepo.deleteByLinkCheckJobId(job.getJobId());
-            int t=0;
+            int t = 0;
         }
     }
 
@@ -99,24 +96,24 @@ public class LinkCheckJobService {
     public LinkCheckJob getJobInfo(String linkCheckJobId, boolean forceRefresh) {
         synchronized (lockObj) {
             LinkCheckJob result = jobs.get(linkCheckJobId);
-            if ( (result != null) && !forceRefresh)
+            if ((result != null) && !forceRefresh)
                 return result;
             Optional<LinkCheckJob> job = linkCheckJobRepo.findById(linkCheckJobId);
             if (!job.isPresent())
                 return null; //shouln't happen
-            jobs.put(linkCheckJobId,job.get());
+            jobs.put(linkCheckJobId, job.get());
             return job.get();
         }
     }
 
     public LinkCheckJob updateNumberofDocumentsInBatch(String linkCheckJobId, Long number) {
-        LinkCheckJob job =  linkCheckJobRepo.findById(linkCheckJobId).get();
-        job.setNumberOfDocumentsInBatch( number );
+        LinkCheckJob job = linkCheckJobRepo.findById(linkCheckJobId).get();
+        job.setNumberOfDocumentsInBatch(number);
         return linkCheckJobRepo.save(job);
     }
 
     public LinkCheckJob updateLinkCheckJobStateInDBToError(String guid) throws Exception {
-        LinkCheckJob result =  updateLinkCheckJobStateInDB(guid, LinkCheckJobState.ERROR);
+        LinkCheckJob result = updateLinkCheckJobStateInDB(guid, LinkCheckJobState.ERROR);
         finalize(guid);
         return result;
     }
@@ -125,13 +122,12 @@ public class LinkCheckJobService {
         LinkCheckJob job = linkCheckJobRepo.findById(guid).get();
         job.setState(state);
         return linkCheckJobRepo.save(job);
-     }
+    }
 
-    public LinkCheckJob find(String guid ) {
+    public LinkCheckJob find(String guid) {
         LinkCheckJob job = linkCheckJobRepo.findById(guid).get();
         return job;
     }
-
 
 
     public LinkCheckJob createLinkCheckJobInDB(LinkCheckRequestedEvent event) {
@@ -156,6 +152,6 @@ public class LinkCheckJobService {
         newJob.setMaxAtomSectionLinksToFollow(event.getLinkCheckRunConfig().getMaxAtomSectionLinksToFollow());
         newJob.setStoreAtMostNHistoricalRuns(event.getLinkCheckRunConfig().getStoreAtMostNHistoricalRuns());
         return linkCheckJobRepo.save(newJob);
-     }
+    }
 
 }

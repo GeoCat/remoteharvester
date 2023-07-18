@@ -55,11 +55,11 @@ public class XmlCapabilitiesAtom extends XmlCapabilitiesDocument {
     }
 
     public AtomEntry findEntry(String id) {
-        if ( (entries ==null) || (entries.isEmpty()))
+        if ((entries == null) || (entries.isEmpty()))
             return null;
 
-        for (AtomEntry entry: entries) {
-            if ((entry.getId() !=null ) && (entry.getId().equals(id)))
+        for (AtomEntry entry : entries) {
+            if ((entry.getId() != null) && (entry.getId().equals(id)))
                 return entry;
         }
 
@@ -67,7 +67,7 @@ public class XmlCapabilitiesAtom extends XmlCapabilitiesDocument {
     }
 
     public static String attribute(Node n, String attribute) {
-        if (n==null)
+        if (n == null)
             return null;
         Node att = n.getAttributes().getNamedItem(attribute);
         if (att == null)
@@ -84,70 +84,69 @@ public class XmlCapabilitiesAtom extends XmlCapabilitiesDocument {
     public void setup_entries() throws Exception {
         Node n = getFirstNode();
         //NodeList ns = xpath_nodeset("//atom:entry");
-        List<Node> ns = XmlDoc.findAllNodes(n,"entry");
-        for(int idx=0;idx<ns.size();idx++) {
+        List<Node> ns = XmlDoc.findAllNodes(n, "entry");
+        for (int idx = 0; idx < ns.size(); idx++) {
             Node entryNode = ns.get(idx);
-            Node idNode = findNode(entryNode,"id");
+            Node idNode = findNode(entryNode, "id");
             String id = null;
-            if ( (idNode!=null) && (idNode.getTextContent() !=null) && (!idNode.getTextContent().trim().isEmpty()) )
+            if ((idNode != null) && (idNode.getTextContent() != null) && (!idNode.getTextContent().trim().isEmpty()))
                 id = idNode.getTextContent().trim();
-            if ( (id ==null)||(id.isEmpty()))
+            if ((id == null) || (id.isEmpty()))
                 continue; // Atom spec says ID is required.  Also, we need it to identify which <entry> we are talking about
 
             List<AtomLink> atomLinks = new ArrayList<>();
-            List<Node> links = XmlDoc.findAllNodes(entryNode,"link");
-            for(int idx2=0;idx2<links.size();idx2++) {
+            List<Node> links = XmlDoc.findAllNodes(entryNode, "link");
+            for (int idx2 = 0; idx2 < links.size(); idx2++) {
                 Node linkNode = links.get(idx2);
                 AtomLink link = new AtomLink(
-                        attribute(linkNode,"href"),
-                        attribute(linkNode,"rel"),
-                        attribute(linkNode,"type"),
-                        attribute(linkNode,"hreflang"),
-                        attribute(linkNode,"title")
-                    );
+                        attribute(linkNode, "href"),
+                        attribute(linkNode, "rel"),
+                        attribute(linkNode, "type"),
+                        attribute(linkNode, "hreflang"),
+                        attribute(linkNode, "title")
+                );
                 atomLinks.add(link);
             }
-            AtomEntry entry = new AtomEntry(id,atomLinks);
+            AtomEntry entry = new AtomEntry(id, atomLinks);
             entries.add(entry);
         }
     }
 
 
     public Node findDescribedByLink(Node entryNode) {
-        List<Node> nodes = findNodes(entryNode,"link");
+        List<Node> nodes = findNodes(entryNode, "link");
         for (Node n : nodes) {
-             Node rel = n.getAttributes().getNamedItem("rel");
-             if ( (rel != null) && (rel.getNodeValue() !=null) && (!rel.getNodeValue().trim().isEmpty())) {
-                 if (rel.getNodeValue().trim().equals("describedby"))
-                     return n;
-             }
+            Node rel = n.getAttributes().getNamedItem("rel");
+            if ((rel != null) && (rel.getNodeValue() != null) && (!rel.getNodeValue().trim().isEmpty())) {
+                if (rel.getNodeValue().trim().equals("describedby"))
+                    return n;
+            }
         }
         return null;
     }
 
-    private void setup_XmlCapabilitiesAtom() throws  Exception {
+    private void setup_XmlCapabilitiesAtom() throws Exception {
         Node n = getFirstNode();
         //NodeList ns = xpath_nodeset("//atom:entry");
-        List<Node> ns = XmlDoc.findAllNodes(n,"entry");
-        for(int idx=0;idx<ns.size();idx++) {
+        List<Node> ns = XmlDoc.findAllNodes(n, "entry");
+        for (int idx = 0; idx < ns.size(); idx++) {
             String identity = null;
             String authority = null;
             String url = null;
             Node entryNode = ns.get(idx);
-           // Node spatial_dataset_identifier_codeNode = xpath_node(entryNode,"inspire_dls:spatial_dataset_identifier_code");
-            Node spatial_dataset_identifier_codeNode = findNode(entryNode,"spatial_dataset_identifier_code");
-            Node spatial_dataset_identifier_namesapceNode = findNode(entryNode,"spatial_dataset_identifier_namespace");
+            // Node spatial_dataset_identifier_codeNode = xpath_node(entryNode,"inspire_dls:spatial_dataset_identifier_code");
+            Node spatial_dataset_identifier_codeNode = findNode(entryNode, "spatial_dataset_identifier_code");
+            Node spatial_dataset_identifier_namesapceNode = findNode(entryNode, "spatial_dataset_identifier_namespace");
 
             // Node urlNode = xpath_node(entryNode,"atom:link[@rel='describedby']");
-            Node urlNode =findDescribedByLink(entryNode);
-            if (findNodes(entryNode,"spatial_dataset_identifier_code").size()>1)
-            {
-                int t=0;
+            Node urlNode = findDescribedByLink(entryNode);
+            if (findNodes(entryNode, "spatial_dataset_identifier_code").size() > 1) {
+                int t = 0;
             }
 
-            Node idNode = findNode(entryNode,"id");
+            Node idNode = findNode(entryNode, "id");
             String id = null;
-            if ( (idNode!=null) && (idNode.getTextContent() !=null) && (!idNode.getTextContent().trim().isEmpty()) )
+            if ((idNode != null) && (idNode.getTextContent() != null) && (!idNode.getTextContent().trim().isEmpty()))
                 id = idNode.getTextContent().trim();
 
             if (spatial_dataset_identifier_codeNode != null) {
@@ -168,8 +167,8 @@ public class XmlCapabilitiesAtom extends XmlCapabilitiesDocument {
                         url = null;
                 }
             }
-            if ( (url !=null) || (identity !=null)) {
-                DatasetLink dl = new DatasetLink(identity,url);
+            if ((url != null) || (identity != null)) {
+                DatasetLink dl = new DatasetLink(identity, url);
                 dl.setAuthority(authority);
                 dl.setOgcLayerName(id);
                 this.getDatasetLinksList().add(dl);
@@ -194,8 +193,8 @@ public class XmlCapabilitiesAtom extends XmlCapabilitiesDocument {
 
     @Override
     public String toString() {
-        String result =  "XmlCapabilitiesAtom(has service reference URL="+( (getMetadataUrlRaw() !=null) && (!getMetadataUrlRaw().isEmpty())) ;
-        result += ", number of Dataset links = "+getDatasetLinksList().size();
+        String result = "XmlCapabilitiesAtom(has service reference URL=" + ((getMetadataUrlRaw() != null) && (!getMetadataUrlRaw().isEmpty()));
+        result += ", number of Dataset links = " + getDatasetLinksList().size();
         result += ")";
         return result;
     }

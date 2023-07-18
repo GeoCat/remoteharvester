@@ -7,29 +7,24 @@ import net.geocat.model.HarvesterConfig;
 import net.geocat.model.LinkCheckRunConfig;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class JSONObjectSplit {
 
 
-    ObjectMapper objectMapper = new ObjectMapper()  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            ;
+    ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Test
     public void t1() throws JsonProcessingException {
         String json = "{\"url\":\"https://rpi.gov.sk/rpi_csw/service.svc/get\",\"longTermTag\":\"SK-Slovakia\",\"lookForNestedDiscoveryService\":false," +
-                 "\"maxDataLinksToFollow\":111 " +
+                "\"maxDataLinksToFollow\":111 " +
                 "}";
 
-        HarvesterConfig   objHarvesterConfig = objectMapper.readValue(json, HarvesterConfig.class);
+        HarvesterConfig objHarvesterConfig = objectMapper.readValue(json, HarvesterConfig.class);
         assertNotNull(objHarvesterConfig);
-        assertEquals("https://rpi.gov.sk/rpi_csw/service.svc/get",objHarvesterConfig.getUrl());
-        assertEquals("SK-Slovakia",objHarvesterConfig.getLongTermTag());
-        assertFalse( objHarvesterConfig.isLookForNestedDiscoveryService());
+        assertEquals("https://rpi.gov.sk/rpi_csw/service.svc/get", objHarvesterConfig.getUrl());
+        assertEquals("SK-Slovakia", objHarvesterConfig.getLongTermTag());
+        assertFalse(objHarvesterConfig.isLookForNestedDiscoveryService());
 
         LinkCheckRunConfig objLinkCheckRunConfig = objectMapper.readValue(json, LinkCheckRunConfig.class);
         assertNotNull(objLinkCheckRunConfig);
@@ -37,6 +32,6 @@ public class JSONObjectSplit {
         assertNull(objLinkCheckRunConfig.getMaxAtomEntriesToAttempt());
         assertNull(objLinkCheckRunConfig.isDeleteHTTPCacheWhenComplete());
 
-        int t=0;
+        int t = 0;
     }
 }

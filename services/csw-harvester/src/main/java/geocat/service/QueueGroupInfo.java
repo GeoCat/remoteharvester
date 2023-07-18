@@ -18,7 +18,8 @@ public class QueueGroupInfo {
     }
 
     static Object lockobject = new Object();
-    public   void useNextQueue() {
+
+    public void useNextQueue() {
         synchronized (lockobject) {
             nextQueueNumber++;
             if (nextQueueNumber >= numberOfQueues)

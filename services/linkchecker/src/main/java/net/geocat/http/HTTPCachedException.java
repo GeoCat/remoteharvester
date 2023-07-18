@@ -34,7 +34,7 @@
 package net.geocat.http;
 
 public class HTTPCachedException extends Exception {
-    public HTTPCachedException(String message){
+    public HTTPCachedException(String message) {
         super(message);
     }
 }

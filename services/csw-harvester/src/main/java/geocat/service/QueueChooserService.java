@@ -73,6 +73,7 @@ public class QueueChooserService {
     }
 
     static Object lockobject = new Object();
+
     public String chooseQueueByGroup(QueueGroupInfo groupInfo) {
         synchronized (lockobject) {
             QueueInfo result = groupInfo.currentQueueInfo();

@@ -43,15 +43,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.nio.charset.MalformedInputException;
 
 @Component
 @Scope("prototype")
 @Qualifier("cookieAttachingRetriever")
-public class CookieAttachingRetriever   {
+public class CookieAttachingRetriever {
 
     @Autowired
     @Qualifier("redirectAwareHTTPRetriever")
@@ -73,7 +71,7 @@ public class CookieAttachingRetriever   {
 //                request.getAcceptsHeader());
 //    }
 
-//        public HttpResult retrieve_underlying(boolean throwIfError,
+    //        public HttpResult retrieve_underlying(boolean throwIfError,
 //                                                 boolean throwIfTimeout,
 //                                                 String verb,
 //                                                 String location,
@@ -83,33 +81,27 @@ public class CookieAttachingRetriever   {
 //                                                 int timeoutSeconds,
 //                                                String acceptsHeader) throws IOException, SecurityException, ExceptionWithCookies, RedirectException
     public HttpResult retrieve_underlying(boolean throwIfError,
-                                                  boolean throwIfTimeout,
-                                                  HTTPRequest request) throws Exception
-    {
-            try {
-                HttpResult result = retriever.retrieve(request);
-                return result;
-            }
-            catch(SocketTimeoutException ste) {
-                Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
-                logger.debug(marker,"error occurred getting - "+request.getLocation()+", error="+ste.getClass().getSimpleName() + " - " + ste.getMessage());
-                if (throwIfTimeout)
-                    throw ste;
-                return null;
-            }
-            catch(MalformedURLException m)
-            {
-                throw m;//not recoverable with retry
-            }
-            catch (Exception e) {
-                Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
-                logger.debug(marker,"error occurred getting - "+request.getLocation()+", error="+e.getClass().getSimpleName() + " - " + e.getMessage());
-                 if (throwIfError)
-                    throw e;
-                return null;
-            }
+                                          boolean throwIfTimeout,
+                                          HTTPRequest request) throws Exception {
+        try {
+            HttpResult result = retriever.retrieve(request);
+            return result;
+        } catch (SocketTimeoutException ste) {
+            Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
+            logger.debug(marker, "error occurred getting - " + request.getLocation() + ", error=" + ste.getClass().getSimpleName() + " - " + ste.getMessage());
+            if (throwIfTimeout)
+                throw ste;
+            return null;
+        } catch (MalformedURLException m) {
+            throw m;//not recoverable with retry
+        } catch (Exception e) {
+            Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
+            logger.debug(marker, "error occurred getting - " + request.getLocation() + ", error=" + e.getClass().getSimpleName() + " - " + e.getMessage());
+            if (throwIfError)
+                throw e;
+            return null;
         }
-
+    }
 
 
 //    public HttpResult retrieve(String verb, String location, String body, String cookie, IContinueReadingPredicate predicate,int timeoutSeconds, String acceptsHeader) throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
@@ -117,39 +109,39 @@ public class CookieAttachingRetriever   {
 //    }
 
 
-    public HttpResult retrieve(HTTPRequest request) throws  Exception {
+    public HttpResult retrieve(HTTPRequest request) throws Exception {
 
-        HttpResult result = retrieve_underlying(false,false,request);
-        if ( (result !=null) && (result.getHttpCode() == 404))
+        HttpResult result = retrieve_underlying(false, false, request);
+        if ((result != null) && (result.getHttpCode() == 404))
             return result; // short cut -- not going to change with a retry
 
-        if (result==null || result.isErrorOccurred() || (result.getHttpCode() ==500) ) {
+        if (result == null || result.isErrorOccurred() || (result.getHttpCode() == 500)) {
             try {
                 Thread.sleep((long) (1 * 100));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
-            logger.debug(marker,"retrying - "+request.getLocation());
-            String _cookie = result !=null ? result.getSpecialToSendCookie(): null;
+            logger.debug(marker, "retrying - " + request.getLocation());
+            String _cookie = result != null ? result.getSpecialToSendCookie() : null;
             request.setCookie(_cookie);
-            result= retrieve_underlying(false,true,request);
+            result = retrieve_underlying(false, true, request);
         }
 
-        if  ( (result !=null) && ((result.getHttpCode() == 403) || (result.getHttpCode() == 401) ))
+        if ((result != null) && ((result.getHttpCode() == 403) || (result.getHttpCode() == 401)))
             return result; // short cut -- not going to change with a retry (probably shouldn't have re-tried in the first place, but...)
 
         //3rd try
-        if (result==null || result.isErrorOccurred() || (result.getHttpCode() ==500) ) {
+        if (result == null || result.isErrorOccurred() || (result.getHttpCode() == 500)) {
             try {
                 Thread.sleep((long) (1 * 100));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
-            logger.debug(marker,"retrying2 - "+request.getLocation());
-            String _cookie = result !=null ? result.getSpecialToSendCookie(): null;
-            result= retrieve_underlying(true,true,request);
+            logger.debug(marker, "retrying2 - " + request.getLocation());
+            String _cookie = result != null ? result.getSpecialToSendCookie() : null;
+            result = retrieve_underlying(true, true, request);
         }
 
 

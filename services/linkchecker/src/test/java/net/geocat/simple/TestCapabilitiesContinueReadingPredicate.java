@@ -38,61 +38,58 @@ import net.geocat.xml.XmlStringTools;
 import net.geocat.xml.helpers.CapabilityDeterminer;
 import org.junit.Test;
 
-import static junit.framework.TestCase.*;
-import static net.geocat.xml.XmlStringTools.getNS;
-import static net.geocat.xml.XmlStringTools.getPrefix;
-import static net.geocat.xml.XmlStringTools.getRootTag;
-import static net.geocat.xml.XmlStringTools.getTagName;
-import static net.geocat.xml.XmlStringTools.replaceXMLDecl;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static net.geocat.xml.XmlStringTools.*;
 
 public class TestCapabilitiesContinueReadingPredicate {
 
     @Test
-    public void test_ns(){
+    public void test_ns() {
         CapabilitiesContinueReadingPredicate pred = new CapabilitiesContinueReadingPredicate(new CapabilityDeterminer());
-        String s= "<?xml version=\"1.0\" encoding=\"UTF-8\"?><gmd:MD_Metadata xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd\">\n" +
+        String s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><gmd:MD_Metadata xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd\">\n" +
                 "  <gmd:fileIdentifier>\n" +
                 "    <gco:CharacterString>bf87f212-3ec2-4fcc-9163-1cbdf5fe334c</gco:CharacterString>\n" +
                 "  </gmd:fileIdentifier>\n" +
                 "  <gmd:lan";
 
         String s_nodecl = s.substring(38);
-        String s_rootOnly = s.substring(38,409);
+        String s_rootOnly = s.substring(38, 409);
 
-       assertTrue(XmlStringTools.isXML(s));
+        assertTrue(XmlStringTools.isXML(s));
 
-       assertEquals(s_nodecl,replaceXMLDecl(s));
+        assertEquals(s_nodecl, replaceXMLDecl(s));
 
-       assertEquals(s_rootOnly,getRootTag(s_nodecl));
+        assertEquals(s_rootOnly, getRootTag(s_nodecl));
 
-       assertEquals("MD_Metadata",getTagName(s_nodecl));
-        assertEquals("gmd",getPrefix(s_nodecl));
+        assertEquals("MD_Metadata", getTagName(s_nodecl));
+        assertEquals("gmd", getPrefix(s_nodecl));
 
-        assertEquals("http://www.isotc211.org/2005/gmd", getNS("gmd",s_rootOnly));
+        assertEquals("http://www.isotc211.org/2005/gmd", getNS("gmd", s_rootOnly));
     }
 
     @Test
-    public void test_no_ns(){
+    public void test_no_ns() {
         CapabilitiesContinueReadingPredicate pred = new CapabilitiesContinueReadingPredicate(new CapabilityDeterminer());
-        String s= "<?xml version=\"1.0\" encoding=\"UTF-8\"?><MD_Metadata xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns=\"http://www.isotc211.org/2005/gmd\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd\">\n" +
+        String s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><MD_Metadata xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns=\"http://www.isotc211.org/2005/gmd\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd\">\n" +
                 "  <fileIdentifier>\n" +
                 "    <gco:CharacterString>bf87f212-3ec2-4fcc-9163-1cbdf5fe334c</gco:CharacterString>\n" +
                 "  </fileIdentifier>\n" +
                 "  <lan";
 
         String s_nodecl = s.substring(38);
-        String s_rootOnly = s.substring(38,401);
+        String s_rootOnly = s.substring(38, 401);
 
         assertTrue(XmlStringTools.isXML(s));
 
-        assertEquals(s_nodecl,replaceXMLDecl(s));
+        assertEquals(s_nodecl, replaceXMLDecl(s));
 
-        assertEquals(s_rootOnly,getRootTag(s_nodecl));
+        assertEquals(s_rootOnly, getRootTag(s_nodecl));
 
-        assertEquals("MD_Metadata",getTagName(s_nodecl));
-        assertEquals(null,getPrefix(s_nodecl));
+        assertEquals("MD_Metadata", getTagName(s_nodecl));
+        assertEquals(null, getPrefix(s_nodecl));
 
-        assertEquals("http://www.isotc211.org/2005/gmd", getNS(null,s_rootOnly));
+        assertEquals("http://www.isotc211.org/2005/gmd", getNS(null, s_rootOnly));
 
     }
 }

@@ -2,11 +2,7 @@
 <WFS_Capabilities
         version="2.0.0"
         xmlns="http://www.opengis.net/wfs/2.0"
-        xmlns:wfs="http://www.opengis.net/wfs/2.0"
         xmlns:ows="http://www.opengis.net/ows/1.1"
-        xmlns:ogc="http://www.opengis.net/ogc"
-        xmlns:fes="http://www.opengis.net/fes/2.0"
-        xmlns:gml="http://www.opengis.net/gml"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd">
@@ -100,10 +96,10 @@
         </ows:Parameter>
 
         <ows:ExtendedCapabilities
-                                  xmlns:ows="http://www.opengis.net/ows/1.1"
-                                  xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
-                                  xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
-                                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                xmlns:ows="http://www.opengis.net/ows/1.1"
+                xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+                xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <inspire_dls:ExtendedCapabilities>
                 <inspire_common:MetadataUrl>
                     <inspire_common:URL>metadata_service_url</inspire_common:URL>
@@ -132,4 +128,4 @@
         </ows:ExtendedCapabilities>
     </ows:OperationsMetadata>
     <FeatureTypeList/>
- </WFS_Capabilities>
+</WFS_Capabilities>

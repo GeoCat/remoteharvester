@@ -33,18 +33,16 @@
 
 package net.geocat.xml;
 
+import net.geocat.database.linkchecker.entities.InspireSpatialDatasetIdentifier;
 import net.geocat.service.capabilities.DatasetLink;
 import net.geocat.xml.helpers.CapabilitiesType;
 import org.w3c.dom.Node;
-import net.geocat.database.linkchecker.entities.InspireSpatialDatasetIdentifier;
-
-import javax.xml.xpath.XPathExpressionException;
-
-import static net.geocat.service.capabilities.WMSCapabilitiesDatasetLinkExtractor.findNodes;
-import static net.geocat.xml.XmlStringTools.getNodeTextValue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.geocat.service.capabilities.WMSCapabilitiesDatasetLinkExtractor.findNodes;
+import static net.geocat.xml.XmlStringTools.getNodeTextValue;
 
 public class XmlCapabilitiesDocument extends XmlDoc {
 
@@ -70,14 +68,14 @@ public class XmlCapabilitiesDocument extends XmlDoc {
     }
 
     private void setup_lang() throws Exception {
-        Node extendedCap = findNode_recurse(getFirstNode(),"ExtendedCapabilities");
+        Node extendedCap = findNode_recurse(getFirstNode(), "ExtendedCapabilities");
 
-       // Node extendedCap = xpath_node("//*[local-name()='ExtendedCapabilities']");
-        if (extendedCap ==null)
+        // Node extendedCap = xpath_node("//*[local-name()='ExtendedCapabilities']");
+        if (extendedCap == null)
             return;
-        Node langNode = findNode(extendedCap,"ExtendedCapabilities","SupportedLanguages","DefaultLanguage","Language");
-        if (langNode ==null)
-           return;
+        Node langNode = findNode(extendedCap, "ExtendedCapabilities", "SupportedLanguages", "DefaultLanguage", "Language");
+        if (langNode == null)
+            return;
 
         String lang = getNodeTextValue(langNode);
         if (lang != null)
@@ -105,63 +103,63 @@ public class XmlCapabilitiesDocument extends XmlDoc {
     }
 
     private void setup_spatialdatasetidentifiers() throws Exception {
-       Node extendedCap = findNode_recurse(getFirstNode(),"ExtendedCapabilities");
-    //    Node extendedCap = xpath_node("//*[local-name()='ExtendedCapabilities']");
-        if (extendedCap ==null)
+        Node extendedCap = findNode_recurse(getFirstNode(), "ExtendedCapabilities");
+        //    Node extendedCap = xpath_node("//*[local-name()='ExtendedCapabilities']");
+        if (extendedCap == null)
             return;
-        Node extendedCap2 = findNode(extendedCap,"ExtendedCapabilities");
-        if (extendedCap2 !=null)
+        Node extendedCap2 = findNode(extendedCap, "ExtendedCapabilities");
+        if (extendedCap2 != null)
             extendedCap = extendedCap2;
 
-        List<Node> sdis = findNodes(extendedCap,"SpatialDataSetIdentifier");
+        List<Node> sdis = findNodes(extendedCap, "SpatialDataSetIdentifier");
         for (Node sdi : sdis) {
             // metadataURL
             String metadataURL = null;
             Node metadataURLNode = sdi.getAttributes().getNamedItem("metadataURL");
-            if ((metadataURLNode !=null ) && (metadataURLNode.getTextContent() !=null) && (!metadataURLNode.getTextContent().trim().isEmpty()))
+            if ((metadataURLNode != null) && (metadataURLNode.getTextContent() != null) && (!metadataURLNode.getTextContent().trim().isEmpty()))
                 metadataURL = metadataURLNode.getTextContent().trim();
 
             //Code
             String code = null;
-            Node codeNode = findNode(sdi,"Code");
-            if ((codeNode !=null ) && (codeNode.getTextContent() !=null) && (!codeNode.getTextContent().trim().isEmpty()))
+            Node codeNode = findNode(sdi, "Code");
+            if ((codeNode != null) && (codeNode.getTextContent() != null) && (!codeNode.getTextContent().trim().isEmpty()))
                 code = codeNode.getTextContent().trim();
 
             //Namespace
             String namespace = null;
-            Node namespaceNode = findNode(sdi,"Namespace");
-            if ((namespaceNode !=null ) && (namespaceNode.getTextContent() !=null) && (!namespaceNode.getTextContent().trim().isEmpty()))
+            Node namespaceNode = findNode(sdi, "Namespace");
+            if ((namespaceNode != null) && (namespaceNode.getTextContent() != null) && (!namespaceNode.getTextContent().trim().isEmpty()))
                 namespace = namespaceNode.getTextContent().trim();
 
-            if ( (code !=null)  )
-                inspireDatasetLinks.add(new InspireSpatialDatasetIdentifier(metadataURL,code,namespace));
+            if ((code != null))
+                inspireDatasetLinks.add(new InspireSpatialDatasetIdentifier(metadataURL, code, namespace));
         }
     }
 
 
-   public Node attemptToFindExtended(){
-        Node n = findNode(parsedXml,"WFS_Capabilities","OperationsMetadata","ExtendedCapabilities");
-        if (n!=null)
+    public Node attemptToFindExtended() {
+        Node n = findNode(parsedXml, "WFS_Capabilities", "OperationsMetadata", "ExtendedCapabilities");
+        if (n != null)
             return n;
 
-       n = findNode(parsedXml,"WMS_Capabilities","Capability","ExtendedCapabilities");
-       if (n!=null)
-           return n;
+        n = findNode(parsedXml, "WMS_Capabilities", "Capability", "ExtendedCapabilities");
+        if (n != null)
+            return n;
 
-      return null;
-   }
+        return null;
+    }
 
     private void setupExtendedCap() throws Exception {
         //we use this notation because of issues with NS accross servers
-        Node n=null;
-        Node nn=null;
-        Node nnn=null;
+        Node n = null;
+        Node nn = null;
+        Node nnn = null;
 
         n = attemptToFindExtended();
         if (n == null) {
-           n= findNode_recurse(getFirstNode(),"ExtendedCapabilities");
+            n = findNode_recurse(getFirstNode(), "ExtendedCapabilities");
 
-          //  n = xpath_node("//*[local-name()='ExtendedCapabilities']");
+            //  n = xpath_node("//*[local-name()='ExtendedCapabilities']");
             if (n == null) {
                 nn = xpath_node("//*[local-name()='feed']/*[local-name()='link'][@rel=\"describedby\"]/@href");
                 if (nn == n)
@@ -183,7 +181,7 @@ public class XmlCapabilitiesDocument extends XmlDoc {
             return;
         }
 
-        if (nnn !=null) {
+        if (nnn != null) {
             setup_wmts_extended(nnn);
             return;
         }
@@ -198,9 +196,9 @@ public class XmlCapabilitiesDocument extends XmlDoc {
     private void setup_extendedcap(Node n) throws Exception {
         if (n != null) {
             //Node nn = XmlDoc.xpath_node(n, "//inspire_common:MetadataUrl/inspire_common:URL");
-            Node nn = XmlDoc.findNode(n, "ExtendedCapabilities","MetadataUrl","URL");
-            if (nn ==null)
-                nn = XmlDoc.findNode(n, "MetadataUrl","URL");
+            Node nn = XmlDoc.findNode(n, "ExtendedCapabilities", "MetadataUrl", "URL");
+            if (nn == null)
+                nn = XmlDoc.findNode(n, "MetadataUrl", "URL");
             if (nn != null)
                 this.metadataUrlRaw = nn.getTextContent().trim();
         }
@@ -263,8 +261,8 @@ public class XmlCapabilitiesDocument extends XmlDoc {
 
     @Override
     public String toString() {
-        String result =  "XmlCapabilities (has service reference URL="+( (getMetadataUrlRaw() !=null) && (!getMetadataUrlRaw().isEmpty())) ;
-        result += ", number of Dataset links = "+getDatasetLinksList().size();
+        String result = "XmlCapabilities (has service reference URL=" + ((getMetadataUrlRaw() != null) && (!getMetadataUrlRaw().isEmpty()));
+        result += ", number of Dataset links = " + getDatasetLinksList().size();
         result += ")";
         return result;
     }

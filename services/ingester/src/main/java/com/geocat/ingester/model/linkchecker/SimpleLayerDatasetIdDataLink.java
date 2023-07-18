@@ -42,20 +42,19 @@ import javax.persistence.Entity;
 
 /**
  * This represents WMS, WMTS, and Atom "layers" that have an attached DatasetID
- *  WMS/WMTS: Identity and AuthorityURL
- *  Atom: InspireSpatialDatasetCode and Codespace
+ * WMS/WMTS: Identity and AuthorityURL
+ * Atom: InspireSpatialDatasetCode and Codespace
+ * <p>
+ * WMS/WMTS:
  *
- *  WMS/WMTS:
- *
- *   <AuthorityURL name="ABC">
- *      <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="URL" xlink:type="simple"/>
- *   </AuthorityURL>
- *    <Identifier authority="ABC">DatasetCODE</Identifier>
- *
- *    Atom:
- *      <inspire_dls:spatial_dataset_identifier_code>spatial_dataset_identifier_code1</inspire_dls:spatial_dataset_identifier_code>
- *      <inspire_dls:spatial_dataset_identifier_namespace>spatial_dataset_identifier_namespace1</inspire_dls:spatial_dataset_identifier_namespace>
- *
+ * <AuthorityURL name="ABC">
+ * <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="URL" xlink:type="simple"/>
+ * </AuthorityURL>
+ * <Identifier authority="ABC">DatasetCODE</Identifier>
+ * <p>
+ * Atom:
+ * <inspire_dls:spatial_dataset_identifier_code>spatial_dataset_identifier_code1</inspire_dls:spatial_dataset_identifier_code>
+ * <inspire_dls:spatial_dataset_identifier_namespace>spatial_dataset_identifier_namespace1</inspire_dls:spatial_dataset_identifier_namespace>
  */
 @Entity
 @DiscriminatorValue("SimpleLayerDatasetIdDataLink")
@@ -91,14 +90,14 @@ public class SimpleLayerDatasetIdDataLink extends OGCLinkToData {
 
     public SimpleLayerDatasetIdDataLink(String linkcheckjobid, String sha2, String capabilitiesdocumenttype,
                                         String ogcLayerName, String code, String codeSpace, DatasetMetadataRecord datasetMetadataRecord) {
-        super(linkcheckjobid,sha2,capabilitiesdocumenttype,datasetMetadataRecord,ogcLayerName);
+        super(linkcheckjobid, sha2, capabilitiesdocumenttype, datasetMetadataRecord, ogcLayerName);
         this.code = code;
         this.codeSpace = codeSpace;
     }
 
     @Override
     public String key() {
-        return super.key() +"::"+getOgcLayerName();
+        return super.key() + "::" + getOgcLayerName();
     }
 
 }

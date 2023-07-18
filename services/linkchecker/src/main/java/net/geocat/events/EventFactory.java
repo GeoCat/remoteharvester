@@ -62,8 +62,8 @@ public class EventFactory {
     @Autowired
     LinkCheckJobRepo linkCheckJobRepo;
 
-    public DataDownloadDatasetDocumentEvent createDataDownloadDatasetDocumentEvent( Long id,String linkCheckJobId) {
-        DataDownloadDatasetDocumentEvent result = new DataDownloadDatasetDocumentEvent(id,linkCheckJobId);
+    public DataDownloadDatasetDocumentEvent createDataDownloadDatasetDocumentEvent(Long id, String linkCheckJobId) {
+        DataDownloadDatasetDocumentEvent result = new DataDownloadDatasetDocumentEvent(id, linkCheckJobId);
         return result;
     }
 
@@ -98,7 +98,7 @@ public class EventFactory {
 
                                                                                        String sha2,
                                                                                        Long underlyingHarvestMetadataRecordId) {
-        ProcessLocalMetadataDocumentEvent result = new ProcessLocalMetadataDocumentEvent(linkCheckJobId,  sha2,underlyingHarvestMetadataRecordId);
+        ProcessLocalMetadataDocumentEvent result = new ProcessLocalMetadataDocumentEvent(linkCheckJobId, sha2, underlyingHarvestMetadataRecordId);
         return result;
     }
 
@@ -109,7 +109,7 @@ public class EventFactory {
 //    }
 
     public LinksFoundInAllDocuments createLinksFoundInAllDocuments(ProcessLocalMetadataDocumentEvent initiatingEvent) {
-        LinksFoundInAllDocuments result = new LinksFoundInAllDocuments(initiatingEvent.getLinkCheckJobId() );
+        LinksFoundInAllDocuments result = new LinksFoundInAllDocuments(initiatingEvent.getLinkCheckJobId());
         return result;
     }
 
@@ -120,30 +120,29 @@ public class EventFactory {
     }
 
 
-    public ProcessServiceDocLinksEvent createProcessServiceDocLinkEvent(long linkId, String linkCheckJobId){
-        ProcessServiceDocLinksEvent result = new ProcessServiceDocLinksEvent(linkId,linkCheckJobId);
+    public ProcessServiceDocLinksEvent createProcessServiceDocLinkEvent(long linkId, String linkCheckJobId) {
+        ProcessServiceDocLinksEvent result = new ProcessServiceDocLinksEvent(linkId, linkCheckJobId);
         return result;
     }
 
 
-
-    public PostProcessServiceDocumentEvent createPostProcessServiceDocumentEvent(long serviceMetadataId, String linkCheckJobId){
-        PostProcessServiceDocumentEvent result = new PostProcessServiceDocumentEvent(serviceMetadataId,linkCheckJobId);
+    public PostProcessServiceDocumentEvent createPostProcessServiceDocumentEvent(long serviceMetadataId, String linkCheckJobId) {
+        PostProcessServiceDocumentEvent result = new PostProcessServiceDocumentEvent(serviceMetadataId, linkCheckJobId);
         return result;
     }
 
-    public PostProcessDatasetDocumentEvent createPostProcessDatasetDocumentEvent(long serviceMetadataId, String linkCheckJobId){
-        PostProcessDatasetDocumentEvent result = new PostProcessDatasetDocumentEvent(serviceMetadataId,linkCheckJobId);
+    public PostProcessDatasetDocumentEvent createPostProcessDatasetDocumentEvent(long serviceMetadataId, String linkCheckJobId) {
+        PostProcessDatasetDocumentEvent result = new PostProcessDatasetDocumentEvent(serviceMetadataId, linkCheckJobId);
         return result;
     }
 
-    public ProcessServiceDocLinksEvent createProcessServiceDocLinksEvent(long serviceMetadataId, String linkCheckJobId){
-        ProcessServiceDocLinksEvent result = new ProcessServiceDocLinksEvent(serviceMetadataId,linkCheckJobId);
+    public ProcessServiceDocLinksEvent createProcessServiceDocLinksEvent(long serviceMetadataId, String linkCheckJobId) {
+        ProcessServiceDocLinksEvent result = new ProcessServiceDocLinksEvent(serviceMetadataId, linkCheckJobId);
         return result;
     }
 
-    public ProcessDatasetDocLinksEvent createProcessDatasetDocLinksEvent(long serviceMetadataId, String linkCheckJobId){
-        ProcessDatasetDocLinksEvent result = new ProcessDatasetDocLinksEvent(serviceMetadataId,linkCheckJobId);
+    public ProcessDatasetDocLinksEvent createProcessDatasetDocLinksEvent(long serviceMetadataId, String linkCheckJobId) {
+        ProcessDatasetDocLinksEvent result = new ProcessDatasetDocLinksEvent(serviceMetadataId, linkCheckJobId);
         return result;
     }
 
@@ -152,10 +151,10 @@ public class EventFactory {
         return result;
     }
 
-    public LinkCheckAbortEvent createLinkCheckAbortEvent( String processID  ) throws Exception {
+    public LinkCheckAbortEvent createLinkCheckAbortEvent(String processID) throws Exception {
         Optional<LinkCheckJob> job = linkCheckJobRepo.findById(processID);
         if (!job.isPresent())
-            throw new Exception("could not find processID="+processID);
+            throw new Exception("could not find processID=" + processID);
         LinkCheckAbortEvent result = new LinkCheckAbortEvent();
         result.setProcessID(processID);
         return result;

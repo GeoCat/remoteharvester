@@ -37,12 +37,12 @@ import net.geocat.events.Event;
 
 public class LinksFoundInAllDocuments extends Event {
     private String linkCheckJobId;
-   // private String harvestJobId;
+    // private String harvestJobId;
 
     public LinksFoundInAllDocuments() {
     }
 
-    public LinksFoundInAllDocuments(String linkCheckJobId ) {
+    public LinksFoundInAllDocuments(String linkCheckJobId) {
         this.linkCheckJobId = linkCheckJobId;
     }
 
@@ -56,9 +56,8 @@ public class LinksFoundInAllDocuments extends Event {
     }
 
 
-
     @Override
     public String toString() {
-        return "LinksFoundInAllDocuments - linkCheckJobId:" + linkCheckJobId ;
+        return "LinksFoundInAllDocuments - linkCheckJobId:" + linkCheckJobId;
     }
 }

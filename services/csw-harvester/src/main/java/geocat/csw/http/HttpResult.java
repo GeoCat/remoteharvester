@@ -41,7 +41,7 @@ import javax.persistence.*;
 // see RetrievableSimpleLink
 @Entity
 @Table(name = "HttpResultCache"
-        ,indexes = {
+        , indexes = {
 //                @Index(
 //                        name = "idx_httpresultcache_url",
 //                        columnList = "URL",
@@ -52,7 +52,7 @@ import javax.persistence.*;
                 columnList = "linkCheckJobId,URL",
                 unique = true
         ),
-} )
+})
 public class HttpResult {
 
     @Id
@@ -104,7 +104,7 @@ public class HttpResult {
 
     // cookies received from request (could be security tokens)
     @Column(columnDefinition = "text")
-    String  receivedCookie;
+    String receivedCookie;
 
     // is the SSL cert trusted by Java?
     boolean sslTrusted;
@@ -253,11 +253,11 @@ public class HttpResult {
         this.sentCookie = sentCookie;
     }
 
-    public  String  getReceivedCookie() {
+    public String getReceivedCookie() {
         return receivedCookie;
     }
 
-    public void setReceivedCookie( String receivedCookie) {
+    public void setReceivedCookie(String receivedCookie) {
         this.receivedCookie = receivedCookie;
     }
 

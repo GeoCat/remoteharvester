@@ -33,12 +33,13 @@
 
 package net.geocat.database.linkchecker.entities;
 
-import net.geocat.database.linkchecker.entities.helper.*;
+import net.geocat.database.linkchecker.entities.helper.CapabilitiesDocumentState;
+import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
+import net.geocat.database.linkchecker.entities.helper.SHA2JobIdCompositeKey;
+import net.geocat.database.linkchecker.entities.helper.UpdateCreateDateTimeEntity;
 import net.geocat.xml.helpers.CapabilitiesType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -79,9 +80,9 @@ public class CapabilitiesDocument extends UpdateCreateDateTimeEntity {
     private IndicatorStatus Indicator_HasServiceMetadataLink;
 
     //link to the service metadata referenced in the XML's ExtendedCapabilities
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "remoteServiceMetadataRecordLinkId")
-   // @OnDelete(action = OnDeleteAction.CASCADE)
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     private RemoteServiceMetadataRecordLink remoteServiceMetadataRecordLink;
 
 
@@ -91,8 +92,8 @@ public class CapabilitiesDocument extends UpdateCreateDateTimeEntity {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumns(
             {
-                    @JoinColumn(name="cap_sha2",referencedColumnName = "sha2"),
-                    @JoinColumn(name="cap_jobId",referencedColumnName = "linkcheckjobid")
+                    @JoinColumn(name = "cap_sha2", referencedColumnName = "sha2"),
+                    @JoinColumn(name = "cap_jobId", referencedColumnName = "linkcheckjobid")
             }
     )
     private List<CapabilitiesDatasetMetadataLink> capabilitiesDatasetMetadataLinkList;
@@ -103,12 +104,11 @@ public class CapabilitiesDocument extends UpdateCreateDateTimeEntity {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumns(
             {
-                    @JoinColumn(name="cap_sha2",referencedColumnName = "sha2"),
-                    @JoinColumn(name="cap_jobId",referencedColumnName = "linkcheckjobid")
+                    @JoinColumn(name = "cap_sha2", referencedColumnName = "sha2"),
+                    @JoinColumn(name = "cap_jobId", referencedColumnName = "linkcheckjobid")
             }
     )
     private List<InspireSpatialDatasetIdentifier> inspireSpatialDatasetIdentifiers;
-
 
 
     //number of layers (CapabilitiesDatasetMetadataLink) in this document -- saved for easy access
@@ -125,8 +125,7 @@ public class CapabilitiesDocument extends UpdateCreateDateTimeEntity {
     private String summary;
 
 
-
-    public CapabilitiesDocument(){
+    public CapabilitiesDocument() {
         this.capabilitiesDatasetMetadataLinkList = new ArrayList<>();
         this.state = CapabilitiesDocumentState.CREATED;
         this.inspireSpatialDatasetIdentifiers = new ArrayList<>();
@@ -251,9 +250,9 @@ public class CapabilitiesDocument extends UpdateCreateDateTimeEntity {
     public String toString(int indentSpaces) {
         String indent = "                                                     ".substring(0, indentSpaces);
         String result = indent + "CapabilitiesDocument {\n";
-       // result += indent + "      capabilitiesDocumentId: " + capabilitiesDocumentId + "\n";
+        // result += indent + "      capabilitiesDocumentId: " + capabilitiesDocumentId + "\n";
 
-        result+= super.toString();
+        result += super.toString();
 
         if ((sha2 != null) && (!sha2.isEmpty()))
             result += indent + "      sha2: " + sha2 + "\n";
@@ -274,8 +273,8 @@ public class CapabilitiesDocument extends UpdateCreateDateTimeEntity {
             result += indent + "      Remote Service Metadata URL: " + remoteServiceMetadataRecordLink.getRawURL() + "\n";
         }
 
-        result += indent + "      procGetSpatialDataSetName: "+procGetSpatialDataSetName+"\n";
-        result += indent + "      numberOfDatasetLinks: "+numberOfDatasetLinks+"\n";
+        result += indent + "      procGetSpatialDataSetName: " + procGetSpatialDataSetName + "\n";
+        result += indent + "      numberOfDatasetLinks: " + numberOfDatasetLinks + "\n";
 
 
         result += indent + "  }";

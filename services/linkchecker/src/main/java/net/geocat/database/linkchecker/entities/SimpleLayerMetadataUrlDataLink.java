@@ -42,13 +42,12 @@ import javax.persistence.Entity;
 
 /**
  * Represents a simple linkage between a dataset and layer in an OGC service (WFS/WMS/WMTS).
- *
- *     The service (capabilities) can be found using capabilitiesSha2,linkCheckJobId.
- *     The layer is in ogcLayerName.
- *
- *     In the capabilities file, you should find a layer/featuretype (Name=ogcLayerName) that has a metadataURL
- *     that points the Dataset Metadata document (via fileIdentifier and datasetIdentifier).
- *
+ * <p>
+ * The service (capabilities) can be found using capabilitiesSha2,linkCheckJobId.
+ * The layer is in ogcLayerName.
+ * <p>
+ * In the capabilities file, you should find a layer/featuretype (Name=ogcLayerName) that has a metadataURL
+ * that points the Dataset Metadata document (via fileIdentifier and datasetIdentifier).
  */
 @Entity
 @DiscriminatorValue("SimpleLayerMetadataUrlDataLink")
@@ -60,7 +59,7 @@ public class SimpleLayerMetadataUrlDataLink extends OGCLinkToData {
     }
 
     public SimpleLayerMetadataUrlDataLink(String linkcheckjobid, String sha2, String capabilitiesdocumenttype, DatasetMetadataRecord datasetMetadataRecord) {
-        super(linkcheckjobid,sha2,capabilitiesdocumenttype,datasetMetadataRecord);
+        super(linkcheckjobid, sha2, capabilitiesdocumenttype, datasetMetadataRecord);
     }
 
     //---
@@ -79,6 +78,6 @@ public class SimpleLayerMetadataUrlDataLink extends OGCLinkToData {
 
     @Override
     public String key() {
-        return super.key() +"::"+getOgcLayerName();
+        return super.key() + "::" + getOgcLayerName();
     }
 }

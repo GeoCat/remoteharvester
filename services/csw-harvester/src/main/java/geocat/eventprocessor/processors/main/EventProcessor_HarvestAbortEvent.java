@@ -36,14 +36,13 @@ public class EventProcessor_HarvestAbortEvent extends BaseEventProcessor<Harvest
         String processID = getInitiatingEvent().getProcessID();
         logger.warn("attempting to user abort for " + processID);
         HarvestJob job = harvestJobService.getById(processID);
-        if ( (job.getState() != HarvestJobState.COMPLETE)
+        if ((job.getState() != HarvestJobState.COMPLETE)
                 && (job.getState() != HarvestJobState.ERROR)
                 && (job.getState() != HarvestJobState.USERABORT)) {
             harvestJobService.updateHarvestJobStateInDB(processID, HarvestJobState.USERABORT);
             logger.warn("user abort processed for " + processID);
-        }
-        else {
-            logger.warn("user abort - process is already in state: " + job.getState() );
+        } else {
+            logger.warn("user abort - process is already in state: " + job.getState());
         }
         return this;
     }

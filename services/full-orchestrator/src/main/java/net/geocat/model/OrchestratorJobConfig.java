@@ -52,14 +52,14 @@ public class OrchestratorJobConfig {
     }
 
     public LinkCheckRunConfig asLinkCheckRunConfig() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper()  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        LinkCheckRunConfig   result = objectMapper.readValue(asJSON(), LinkCheckRunConfig.class);
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        LinkCheckRunConfig result = objectMapper.readValue(asJSON(), LinkCheckRunConfig.class);
         return result;
     }
 
     public HarvesterConfig asHarvesterConfig() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper()  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        HarvesterConfig   result = objectMapper.readValue(asJSON(), HarvesterConfig.class);
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        HarvesterConfig result = objectMapper.readValue(asJSON(), HarvesterConfig.class);
         return result;
     }
 

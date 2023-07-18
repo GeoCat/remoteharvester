@@ -34,12 +34,10 @@
 package net.geocat.service.html;
 
 import net.geocat.database.linkchecker.entities.AtomActualDataEntry;
-import net.geocat.database.linkchecker.entities.OGCRequest;
 import net.geocat.database.linkchecker.entities.SimpleAtomLinkToData;
 import net.geocat.database.linkchecker.entities.helper.AtomDataRequest;
 import net.geocat.database.linkchecker.entities.helper.AtomSubFeedRequest;
 import net.geocat.database.linkchecker.entities.helper.LinkToData;
-import net.geocat.database.linkchecker.entities.helper.OGCLinkToData;
 import net.geocat.database.linkchecker.entities.helper.RetrievableSimpleLink;
 import net.geocat.database.linkchecker.repos.LinkToDataRepo;
 import net.geocat.xml.XmlStringTools;
@@ -61,10 +59,10 @@ public class HtmlLinkToDataService {
         LinkToData link = linkToDataRepo.findById(linkId).get();
         String result = "<head><meta charset=\"UTF-8\"></head>\n";
 
-          result += "<h1>  "+link.getClass().getSimpleName()+" - "+linkId+"</h1>\n";
+        result += "<h1>  " + link.getClass().getSimpleName() + " - " + linkId + "</h1>\n";
 
         result += "<br>";
-        result += showDataLink(link,true,null,"");
+        result += showDataLink(link, true, null, "");
         result += "<br>";
 
 //        if (link instanceof OGCLinkToData) {
@@ -82,13 +80,13 @@ public class HtmlLinkToDataService {
 
     public static String toText(AtomSubFeedRequest request) {
         String result = "<br><br><b>ATOM SUBFEED REQUEST</b><br><Br>\n <table>";
-       // result += "<tr><td>summary: </td><Td>"+request.getSummary()+"</td></tr>\n";
-     //   result += "<tr><td>successfulOGCRequest: </td><Td>"+request.isSuccessfulOGCRequest()+"</td></tr>\n";
-        if (request.getUnSuccessfulAtomRequestReason() !=null)
-            result += "<tr><td> UnSuccessful   Request Reason: </td><Td>"+request.getUnSuccessfulAtomRequestReason()+"</td></tr>\n";
+        // result += "<tr><td>summary: </td><Td>"+request.getSummary()+"</td></tr>\n";
+        //   result += "<tr><td>successfulOGCRequest: </td><Td>"+request.isSuccessfulOGCRequest()+"</td></tr>\n";
+        if (request.getUnSuccessfulAtomRequestReason() != null)
+            result += "<tr><td> UnSuccessful   Request Reason: </td><Td>" + request.getUnSuccessfulAtomRequestReason() + "</td></tr>\n";
 
 //        result += "</table>";
-        result += showDownloadableLink(request,false);
+        result += showDownloadableLink(request, false);
         return result;
     }
 
@@ -96,7 +94,7 @@ public class HtmlLinkToDataService {
         String result = "";
         if (link.getAtomSubFeedRequest() != null) {
             result += "<br><h2>Sub Feed Request: </h3>";//<a href='"+link.getAtomSubFeedRequest().getFixedURL()+"'>"+link.getAtomSubFeedRequest().getFixedURL()+ "</a><br></h2>\n";
-            result += "Download Successful:"+link.getAtomSubFeedRequest().getSuccessfulAtomRequest()+"<br>\n";
+            result += "Download Successful:" + link.getAtomSubFeedRequest().getSuccessfulAtomRequest() + "<br>\n";
 //            if (!link.getAtomSubFeedRequest().getSuccessfulAtomRequest()) {
 //                result += "http code:"+link.getAtomSubFeedRequest().getLinkHTTPStatusCode()+"<br>\n";
 //                result += "problem: " + link.getAtomSubFeedRequest().getUnSuccessfulAtomRequestReason() + "<br>\n";
@@ -105,21 +103,21 @@ public class HtmlLinkToDataService {
 //            }
             result += toText(link.getAtomSubFeedRequest());
         }
-        if (link.getAtomActualDataEntryList() !=null) {
-            result += "<br><h2>SubFeed Entries - "+link.getAtomActualDataEntryList().size()+" entries</h2>\n";
+        if (link.getAtomActualDataEntryList() != null) {
+            result += "<br><h2>SubFeed Entries - " + link.getAtomActualDataEntryList().size() + " entries</h2>\n";
             for (AtomActualDataEntry entry : link.getAtomActualDataEntryList()) {
-                result += "<h3>entry: "+entry.getIndex()+" - id="+entry.getEntryId()+"</h3> \n";
-                result += "number of links to data: "+entry.getAtomDataRequestList().size()+"<br>\n";
-                if (entry.getSuccessfullyDownloaded() !=null){
-                    result += "successfully downloaded: "+entry.getAtomDataRequestList().size()+"<br>\n";
+                result += "<h3>entry: " + entry.getIndex() + " - id=" + entry.getEntryId() + "</h3> \n";
+                result += "number of links to data: " + entry.getAtomDataRequestList().size() + "<br>\n";
+                if (entry.getSuccessfullyDownloaded() != null) {
+                    result += "successfully downloaded: " + entry.getAtomDataRequestList().size() + "<br>\n";
 
                 }
                 int indx = 0;
                 for (AtomDataRequest dataRequest : entry.getAtomDataRequestList()) {
-                    result += "<h4> ENTRY: "+entry.getIndex()+", link to data actual data part# : "+indx+"</h4>\n";
+                    result += "<h4> ENTRY: " + entry.getIndex() + ", link to data actual data part# : " + indx + "</h4>\n";
 
                     indx++;
-                    result+= showDownloadableLink(dataRequest,true);
+                    result += showDownloadableLink(dataRequest, true);
 //                    result += "url: "+dataRequest.getFixedURL()+"<br>\n";
 //                    result += "success:"+dataRequest.getSuccessfullyDownloaded()+"<br>\n";
 //                    result += "http code:"+dataRequest.getLinkHTTPStatusCode()+"<br>\n";
@@ -134,9 +132,9 @@ public class HtmlLinkToDataService {
     private String showRequest(RetrievableSimpleLink request) {
         String result = "";
 
-        result += request.toString().replace("\n","<br>");
+        result += request.toString().replace("\n", "<br>");
         result += "<br>downloaded text:<br>";
-        result += "<xmp>"+XmlStringTools.bytea2String(request.getLinkContentHead())+"</xmp><br>";
+        result += "<xmp>" + XmlStringTools.bytea2String(request.getLinkContentHead()) + "</xmp><br>";
         return result;
     }
 }

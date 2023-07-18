@@ -6,13 +6,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.cookie.Cookie;
@@ -24,11 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,7 +90,7 @@ public class GeoNetworkClient {
         HttpGet httpGet = new HttpGet(url);
         httpGet.addHeader("Accept", acceptHeader);
         if (jsessionidCookie != null) {
-            httpGet.setHeader("Cookie", jsessionidCookie.getName()+"="+jsessionidCookie.getValue());
+            httpGet.setHeader("Cookie", jsessionidCookie.getName() + "=" + jsessionidCookie.getValue());
         }
 
         CloseableHttpResponse response = null;

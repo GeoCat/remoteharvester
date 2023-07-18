@@ -33,7 +33,6 @@
 
 package com.geocat.ingester.dao.linkchecker;
 
-import com.geocat.ingester.model.linkchecker.LinkCheckJob;
 import com.geocat.ingester.model.linkchecker.ServiceDocumentLink;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.CrudRepository;

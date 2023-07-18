@@ -34,7 +34,6 @@
 package net.geocat.service.helper;
 
 import net.geocat.database.linkchecker.service.MetadataDocumentService;
-import net.geocat.service.MetadataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,8 +42,7 @@ import java.util.Map;
 
 @Component
 // makes it so only ONE event is generated
-public class ShouldTransitionOutOfLinkFinding
-{
+public class ShouldTransitionOutOfLinkFinding {
     @Autowired
     MetadataDocumentService metadataDocumentService;
 
@@ -69,28 +67,28 @@ public class ShouldTransitionOutOfLinkFinding
             if (!done)
                 return false;
             // done - we need to prevent it from happening in the future
-            completedLinkCheckJobs.put(linkCheckJobId,underlyingHarvestMetadataRecordId);
+            completedLinkCheckJobs.put(linkCheckJobId, underlyingHarvestMetadataRecordId);
             return true;
 
         }
     }
 
-    public boolean isDone(String linkCheckJob){
+    public boolean isDone(String linkCheckJob) {
         Long nremaining = numberItemsRemaining.get(linkCheckJob);
         if (nremaining == null) {
-            nremaining =  metadataDocumentService.numberRemainingLinkExtract(linkCheckJob);
-             numberItemsRemaining.put(linkCheckJob, nremaining);
+            nremaining = metadataDocumentService.numberRemainingLinkExtract(linkCheckJob);
+            numberItemsRemaining.put(linkCheckJob, nremaining);
         }
         // more than 20 remaining - we're good.
         if (nremaining > 20) {
-            numberItemsRemaining.put(linkCheckJob,  nremaining -1 );
+            numberItemsRemaining.put(linkCheckJob, nremaining - 1);
             return false;
         }
 
         //less than 20 remaining, we check
-        nremaining= metadataDocumentService.numberRemainingLinkExtract(linkCheckJob);
-        numberItemsRemaining.put(linkCheckJob,nremaining);
-        return nremaining==0;
+        nremaining = metadataDocumentService.numberRemainingLinkExtract(linkCheckJob);
+        numberItemsRemaining.put(linkCheckJob, nremaining);
+        return nremaining == 0;
     }
 
 }

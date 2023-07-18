@@ -1,19 +1,12 @@
 package com.geocat.ingester.model.harvester;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 // create table harvest_job (long_term_tag text, job_id varchar(40), state varchar(40), look_for_nested_discovery_service bool, filter text, initial_url text, messages text);
 @Entity
-@Table(name="harvest_job")
+@Table(name = "harvest_job")
 public class HarvestJob {
     @Column(name = "initial_url")
     public String initialUrl;

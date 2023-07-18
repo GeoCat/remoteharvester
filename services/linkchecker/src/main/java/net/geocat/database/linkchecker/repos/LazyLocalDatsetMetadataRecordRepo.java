@@ -34,7 +34,6 @@
 package net.geocat.database.linkchecker.repos;
 
 import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -44,7 +43,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,16 +59,15 @@ public class LazyLocalDatsetMetadataRecordRepo {
     PlatformTransactionManager transactionManager;
 
 
-
     // replaces List<LocalDatasetMetadataRecord> findAllByFileIdentifierAndLinkCheckJobId
     // Only return the first instance (code was always using .get(0) )
     // Only return the most basic version of the LocalDatasetMetadataRecord (no operatesOn and no documentLinks).
     // DO NOT SAVE THESE OBJECTS
     // DO NOT ACCESS operateOn or documentLinks  (hibernate session is closed)
-    public synchronized Optional<LocalDatasetMetadataRecord> searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId){
+    public synchronized Optional<LocalDatasetMetadataRecord> searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId) {
 
 
-        EntityManager entityManager =  localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
+        EntityManager entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
         try {
 
             EntityGraph entityGraph = entityManager.getEntityGraph("LocalDatasetMetadataRecord-lazy-graph");
@@ -88,14 +85,13 @@ public class LazyLocalDatsetMetadataRecordRepo {
                 result = Optional.of((LocalDatasetMetadataRecord) results.get(0));
 
             return result;
-        }
-        finally {
+        } finally {
             entityManager.close();
         }
     }
 
-    public synchronized List<LocalDatasetMetadataRecord> searchByLinkCheckJobId(  String linkCheckJobId){
-        EntityManager entityManager =  localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
+    public synchronized List<LocalDatasetMetadataRecord> searchByLinkCheckJobId(String linkCheckJobId) {
+        EntityManager entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
         try {
 
             EntityGraph entityGraph = entityManager.getEntityGraph("LocalDatasetMetadataRecord-lazy-graph");
@@ -103,14 +99,12 @@ public class LazyLocalDatsetMetadataRecordRepo {
 
             Query query = entityManager.createQuery("SELECT lsmr FROM LocalDatasetMetadataRecord lsmr WHERE lsmr.linkCheckJobId = :linkCheckJobId  ")
                     .setHint("javax.persistence.fetchgraph", entityGraph)
-                    .setParameter("linkCheckJobId", linkCheckJobId)
-;
-                  //  .setMaxResults(1);
-          //  List<LocalDatasetMetadataRecord> results = new ArrayList<LocalDatasetMetadataRecord>(query.getResultList());
+                    .setParameter("linkCheckJobId", linkCheckJobId);
+            //  .setMaxResults(1);
+            //  List<LocalDatasetMetadataRecord> results = new ArrayList<LocalDatasetMetadataRecord>(query.getResultList());
 
             return query.getResultList();
-        }
-        finally {
+        } finally {
             entityManager.close();
         }
     }

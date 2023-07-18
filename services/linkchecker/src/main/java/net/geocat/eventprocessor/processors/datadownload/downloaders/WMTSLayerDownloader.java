@@ -35,27 +35,20 @@ package net.geocat.eventprocessor.processors.datadownload.downloaders;
 
 import net.geocat.database.linkchecker.entities.OGCRequest;
 import net.geocat.database.linkchecker.entities.helper.HTTPRequestCheckerType;
-import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
 import net.geocat.http.AlwaysAbortContinueReadingPredicate;
-import net.geocat.http.IHTTPRetriever;
 import net.geocat.http.SmartHTTPRetriever;
 import net.geocat.service.downloadhelpers.PartialDownloadPredicateFactory;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
-import net.geocat.xml.XmlCapabilitiesWMS;
 import net.geocat.xml.XmlCapabilitiesWMTS;
-import net.geocat.xml.helpers.WMSLayer;
-import net.geocat.xml.helpers.WMSLayerBBox;
 import net.geocat.xml.helpers.WMTSLayer;
 import net.geocat.xml.helpers.WMTSTile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.fixBaseURL;
-import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.isRecognizedImage;
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.setParameter;
 
 @Component
@@ -78,7 +71,7 @@ public class WMTSLayerDownloader {
     RetrievableSimpleLinkDownloader retrievableSimpleLinkDownloader;
 
 
-    public static String addBasicItemsToUrl(String baseUrl,String wmtsVersion) throws Exception {
+    public static String addBasicItemsToUrl(String baseUrl, String wmtsVersion) throws Exception {
         String url = baseUrl;
         url = setParameter(url, "REQUEST", "GetTile");
         url = setParameter(url, "SERVICE", "WMTS");
@@ -86,8 +79,8 @@ public class WMTSLayerDownloader {
         return url;
     }
 
-    public String findBestImageFormat(XmlCapabilitiesWMTS wmtsCap,WMTSLayer layer) throws Exception {
-         if (layer == null)
+    public String findBestImageFormat(XmlCapabilitiesWMTS wmtsCap, WMTSLayer layer) throws Exception {
+        if (layer == null)
             return null;
         if (layer.supportsFormat("image/png"))
             return "image/png";
@@ -101,33 +94,33 @@ public class WMTSLayerDownloader {
     public String createURL(XmlCapabilitiesWMTS wmtsCap, String layerName, String matrix) throws Exception {
         WMTSLayer layer = wmtsCap.findLayer(layerName);
         if (layer == null)
-            throw new Exception("no such WMTS layer :"+layerName);
+            throw new Exception("no such WMTS layer :" + layerName);
         String url = fixBaseURL(wmtsCap.getGetTileEndpoint());
         url = addBasicItemsToUrl(url, wmtsCap.getVersionNumber());
         url = setParameter(url, "LAYER", layerName);
 
-        String bestFormat = findBestImageFormat(wmtsCap,layer);
-        url = setParameter(url,"FORMAT",bestFormat);
+        String bestFormat = findBestImageFormat(wmtsCap, layer);
+        url = setParameter(url, "FORMAT", bestFormat);
 
-        WMTSTile tile = wmtsCap.sampleTile(layerName,matrix);
-        if (tile==null)
+        WMTSTile tile = wmtsCap.sampleTile(layerName, matrix);
+        if (tile == null)
             throw new Exception("could not determine a sample tile for WMTS");
 
-        url = setParameter(url,"TILEMATRIXSET",tile.getTileMatrixSetName());
-        url = setParameter(url,"TileMatrix",tile.getTileMatrixName());
-        url = setParameter(url,"TILEROW", String.valueOf(tile.getRow() ));
-        url = setParameter(url,"TILECOL", String.valueOf(tile.getCol() ));
+        url = setParameter(url, "TILEMATRIXSET", tile.getTileMatrixSetName());
+        url = setParameter(url, "TileMatrix", tile.getTileMatrixName());
+        url = setParameter(url, "TILEROW", String.valueOf(tile.getRow()));
+        url = setParameter(url, "TILECOL", String.valueOf(tile.getCol()));
 
         return url;
     }
 
 
     public OGCRequest setupRequest(XmlCapabilitiesWMTS wmtsCap, String layerName) throws Exception {
-        String url = createURL(wmtsCap,layerName,null);
+        String url = createURL(wmtsCap, layerName, null);
 
         OGCRequest ogcRequest = new OGCRequest(url, HTTPRequestCheckerType.IMAGE_ONLY);
-        ogcRequest.setSummary(getClass().getSimpleName()+", layer="+layerName);
+        ogcRequest.setSummary(getClass().getSimpleName() + ", layer=" + layerName);
 
         return ogcRequest;
-     }
+    }
 }

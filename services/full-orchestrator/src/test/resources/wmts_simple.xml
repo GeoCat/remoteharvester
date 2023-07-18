@@ -1,44 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Capabilities xmlns="http://www.opengis.net/wmts/1.0"
               xmlns:ows="http://www.opengis.net/ows/1.1"
-              xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs_ows11/1.0"
               xmlns:xlink="http://www.w3.org/1999/xlink">
 
-<ows:ServiceIdentification>
+    <ows:ServiceIdentification>
 
-</ows:ServiceIdentification>
-<ows:ServiceProvider>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
 
-</ows:ServiceProvider>
-<ows:OperationsMetadata>
-<!--    <inspire_vs:ExtendedCapabilities>-->
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <!--    <inspire_vs:ExtendedCapabilities>-->
 
-<!--    </inspire_vs:ExtendedCapabilities>-->
-</ows:OperationsMetadata>
-<Contents>
-<Layer>
+        <!--    </inspire_vs:ExtendedCapabilities>-->
+    </ows:OperationsMetadata>
+    <Contents>
+        <Layer>
 
-    <Title>title</Title>
-    <ows:Abstract>abstract</ows:Abstract>
-    <ows:Identifier>
-        layer1ID
-    </ows:Identifier>
-    <ows:Keywords>
-        <ows:Keyword>keyword</ows:Keyword>
+            <Title>title</Title>
+            <ows:Abstract>abstract</ows:Abstract>
+            <ows:Identifier>
+                layer1ID
+            </ows:Identifier>
+            <ows:Keywords>
+                <ows:Keyword>keyword</ows:Keyword>
 
-    </ows:Keywords>
-    <ows:WGS84BoundingBox>
-        <ows:LowerCorner>-180 -90</ows:LowerCorner>
-        <ows:UpperCorner>180 90</ows:UpperCorner>
-    </ows:WGS84BoundingBox>
-    <ows:Metadata
-            xlink:href="layerMetadataURL"/>
+            </ows:Keywords>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-180 -90</ows:LowerCorner>
+                <ows:UpperCorner>180 90</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:Metadata
+                    xlink:href="layerMetadataURL"/>
 
-</Layer>
+        </Layer>
 
-</Contents>
-<Themes>
+    </Contents>
+    <Themes>
 
-</Themes>
-<ServiceMetadataURL xlink:href="serviceMetadataURL"/>
+    </Themes>
+    <ServiceMetadataURL xlink:href="serviceMetadataURL"/>
 </Capabilities>

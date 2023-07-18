@@ -33,7 +33,6 @@
 
 package net.geocat.database.linkchecker.repos;
 
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.LocalNotProcessedMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.entities.helper.StatusQueryItem;
@@ -54,7 +53,7 @@ public interface LocalNotProcessedMetadataRecordRepo extends CrudRepository<Loca
 
     @Transactional
     @Modifying
-    @Query(value="UPDATE LocalNotProcessedMetadataRecord ldmr SET ldmr.state = :newState WHERE ldmr.localNotProcessedMetadataRecordId = :id ")
+    @Query(value = "UPDATE LocalNotProcessedMetadataRecord ldmr SET ldmr.state = :newState WHERE ldmr.localNotProcessedMetadataRecordId = :id ")
     void updateState(long id, ServiceMetadataDocumentState newState);
 
 

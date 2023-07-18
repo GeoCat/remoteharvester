@@ -47,11 +47,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -74,23 +70,21 @@ public class DeleteJobService {
         try {
             entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
             entityManager.getTransaction().begin();
-            for (String sql: sqls ) {
+            for (String sql : sqls) {
                 Query q = entityManager.createNativeQuery(sql);
                 if (sql.contains("?"))
-                    q.setParameter(1,linkCheckJobId);
+                    q.setParameter(1, linkCheckJobId);
                 int n = q.executeUpdate();
-              //  System.out.println("total="+n);
+                //  System.out.println("total="+n);
             }
             entityManager.getTransaction().commit();
-          //  entityManager.getTransaction().rollback();
-        }
-        finally {
+            //  entityManager.getTransaction().rollback();
+        } finally {
             if (entityManager != null) {
                 if (entityManager.getTransaction() != null) {
                     try {
                         entityManager.getTransaction().rollback();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         // do nothing
                     }
                 }
@@ -99,7 +93,7 @@ public class DeleteJobService {
         }
     }
 
-    static List<String> deleteSQLS = Arrays.asList( new String[] {
+    static List<String> deleteSQLS = Arrays.asList(new String[]{
 
             "ALTER TABLE linktodata DISABLE TRIGGER ALL;",
             "ALTER TABLE atomactualdataentry DISABLE TRIGGER ALL;",
@@ -120,19 +114,19 @@ public class DeleteJobService {
 
 
             "UPDATE linktodata   SET ogcrequest_ogcrequestid=NULL WHERE linkcheckjobid=?",
-          "DELETE FROM  ogcrequest WHERE linkcheckjobid=?",
+            "DELETE FROM  ogcrequest WHERE linkcheckjobid=?",
 
 
-          "DELETE FROM  atomdatarequest WHERE linkcheckjobid=?",
+            "DELETE FROM  atomdatarequest WHERE linkcheckjobid=?",
             "UPDATE linktodata   SET atomsubfeedrequest_atomsubfeedrequestid=NULL WHERE linkcheckjobid=?",
 
             "DELETE FROM  atomsubfeedrequest WHERE linkcheckjobid=?",
 
             //cleans up non-atom entries (will make table small)
-      //    "DELETE FROM  linktodata WHERE linkcheckjobid=? AND linktype != 'SimpleAtomLinkToData' ",
+            //    "DELETE FROM  linktodata WHERE linkcheckjobid=? AND linktype != 'SimpleAtomLinkToData' ",
 
             //delete all the atomactualdataentry
-          //  "DELETE FROM  atomactualdataentry    WHERE EXISTS (SELECT 1 FROM   linktodata WHERE linktodata.linkcheckjobid=? AND linktodata.linktype  = 'SimpleAtomLinkToData' AND  atomactualdataentry.simpleatomlinktodata_linktodataid = linktodata.linktodataid)",
+            //  "DELETE FROM  atomactualdataentry    WHERE EXISTS (SELECT 1 FROM   linktodata WHERE linktodata.linkcheckjobid=? AND linktodata.linktype  = 'SimpleAtomLinkToData' AND  atomactualdataentry.simpleatomlinktodata_linktodataid = linktodata.linktodataid)",
             "DELETE FROM  atomactualdataentry WHERE linkcheckjobid=?   ",
 
             "DELETE FROM  linktodata WHERE linkcheckjobid=?   ",
@@ -140,34 +134,32 @@ public class DeleteJobService {
 
             "DELETE FROM  inspirespatialdatasetidentifier WHERE cap_jobid=?",
 
-          "DELETE FROM datasetidentifier WHERE  operatesonlink_operatesonlinkid IN (SELECT operatesonlinkid FROM  operatesonlink WHERE linkcheckjobid=?)",
-          "DELETE FROM  operatesonlink WHERE linkcheckjobid=?",
+            "DELETE FROM datasetidentifier WHERE  operatesonlink_operatesonlinkid IN (SELECT operatesonlinkid FROM  operatesonlink WHERE linkcheckjobid=?)",
+            "DELETE FROM  operatesonlink WHERE linkcheckjobid=?",
 
-          "DELETE FROM datasetidentifier WHERE  capdatasetmetadatalink_capabilitiesdatasetmetadatalinkid IN (SELECT capabilitiesdatasetmetadatalinkid FROM  capabilitiesdatasetmetadatalink WHERE linkcheckjobid=?)",
-          "DELETE FROM  capabilitiesdatasetmetadatalink WHERE linkcheckjobid=?",
+            "DELETE FROM datasetidentifier WHERE  capdatasetmetadatalink_capabilitiesdatasetmetadatalinkid IN (SELECT capabilitiesdatasetmetadatalinkid FROM  capabilitiesdatasetmetadatalink WHERE linkcheckjobid=?)",
+            "DELETE FROM  capabilitiesdatasetmetadatalink WHERE linkcheckjobid=?",
             "DELETE FROM  capabilitiesdocument WHERE linkcheckjobid=?",
 
-          "DELETE FROM datasetidentifier WHERE  datasetmetadatarecord_datasetmetadatadocumentid IN (SELECT datasetmetadatadocumentid FROM  datasetmetadatarecord WHERE linkcheckjobid=?)",
+            "DELETE FROM datasetidentifier WHERE  datasetmetadatarecord_datasetmetadatadocumentid IN (SELECT datasetmetadatadocumentid FROM  datasetmetadatarecord WHERE linkcheckjobid=?)",
 
 
-           "DELETE FROM  logging_event WHERE jms_correlation_id = ? AND reference_flag NOT IN (2,3)",
-           "DELETE FROM  logging_event_exception WHERE event_id IN (SELECT event_id FROM logging_event WHERE jms_correlation_id = ?)",
-           "DELETE FROM  logging_event WHERE jms_correlation_id = ?",
+            "DELETE FROM  logging_event WHERE jms_correlation_id = ? AND reference_flag NOT IN (2,3)",
+            "DELETE FROM  logging_event_exception WHERE event_id IN (SELECT event_id FROM logging_event WHERE jms_correlation_id = ?)",
+            "DELETE FROM  logging_event WHERE jms_correlation_id = ?",
 
-           "DELETE FROM  httpresultcache WHERE linkcheckjobid=?",
+            "DELETE FROM  httpresultcache WHERE linkcheckjobid=?",
 
-           "DELETE FROM  datasetdocumentlink WHERE linkcheckjobid=?",
-           "DELETE FROM  servicedocumentlink WHERE linkcheckjobid=?",
-           "DELETE FROM  remoteservicemetadatarecordlink WHERE linkcheckjobid=?",
+            "DELETE FROM  datasetdocumentlink WHERE linkcheckjobid=?",
+            "DELETE FROM  servicedocumentlink WHERE linkcheckjobid=?",
+            "DELETE FROM  remoteservicemetadatarecordlink WHERE linkcheckjobid=?",
 
 
+            "DELETE FROM  datasetmetadatarecord WHERE linkcheckjobid=?",
+            "DELETE FROM  servicemetadatarecord WHERE linkcheckjobid=?",
+            "DELETE FROM  localnotprocessedmetadatarecord WHERE linkcheckjobid=?",
 
-           "DELETE FROM  datasetmetadatarecord WHERE linkcheckjobid=?",
-           "DELETE FROM  servicemetadatarecord WHERE linkcheckjobid=?",
-           "DELETE FROM  localnotprocessedmetadatarecord WHERE linkcheckjobid=?",
-
-           "DELETE FROM  linkcheckjob WHERE jobid=?",
-
+            "DELETE FROM  linkcheckjob WHERE jobid=?",
 
 
             "ALTER TABLE linktodata ENABLE TRIGGER ALL;",
@@ -195,16 +187,16 @@ public class DeleteJobService {
         linkCheckJobId = linkCheckJobId.trim();
         Optional<LinkCheckJob> _job = linkCheckJobRepo.findById(linkCheckJobId);
         if (!_job.isPresent())
-            throw new Exception("couldnt find that job id = "+linkCheckJobId);
+            throw new Exception("couldnt find that job id = " + linkCheckJobId);
         LinkCheckJob job = _job.get();
 
         linkCheckJobId = job.getJobId(); // this prevents sql injection
         if (linkCheckJobId.contains("'") || linkCheckJobId.contains("\\"))
             throw new Exception("bad linkcheck job"); // this shouldn't be possible
 
-        logger.debug("deleting linkcheckjobid: "+linkCheckJobId);
-        executeSql(deleteSQLS,linkCheckJobId);
-        logger.debug("finished deleting linkcheckjobid: "+linkCheckJobId);
+        logger.debug("deleting linkcheckjobid: " + linkCheckJobId);
+        executeSql(deleteSQLS, linkCheckJobId);
+        logger.debug("finished deleting linkcheckjobid: " + linkCheckJobId);
 
         return "DELETED";
     }
@@ -217,11 +209,11 @@ public class DeleteJobService {
         List<LinkCheckJob> jobs = linkCheckJobRepo.findByLongTermTag(longTermTag);
         // don't delete the one being created...
         jobs = jobs.stream()
-                .filter(x->!x.getJobId().equals(linkCheckJobIdDoNotDelete))
+                .filter(x -> !x.getJobId().equals(linkCheckJobIdDoNotDelete))
                 .collect(Collectors.toList());
 
         if (jobs.size() <= maxAllowed)
-            return "Nothing to do - job count="+jobs.size();
+            return "Nothing to do - job count=" + jobs.size();
 
         Collections.sort(jobs,
                 Comparator.comparing(UpdateCreateDateTimeEntity::getCreateTimeUTC));
@@ -229,7 +221,7 @@ public class DeleteJobService {
 
         //preferentially remove ERROR and USERABORT jobs (they aren't worth keeping)
         List<LinkCheckJob> jobsToDelete = jobs.stream()
-                .filter(x->x.getState() == LinkCheckJobState.USERABORT || x.getState() == LinkCheckJobState.ERROR)
+                .filter(x -> x.getState() == LinkCheckJobState.USERABORT || x.getState() == LinkCheckJobState.ERROR)
                 .collect(Collectors.toList());
 
         jobs.removeAll(jobsToDelete);
@@ -238,11 +230,11 @@ public class DeleteJobService {
             jobsToDelete.addAll(jobs.subList(maxAllowed, jobs.size()));
 
 
-        String  result  = jobsToDelete.size() +" jobs were deleted.";
+        String result = jobsToDelete.size() + " jobs were deleted.";
         for (LinkCheckJob job : jobsToDelete) {
-            logger.debug("ensureAtMost: deleting jobid="+job.getJobId());
+            logger.debug("ensureAtMost: deleting jobid=" + job.getJobId());
             deleteById(job.getJobId());
-            result+= job.getJobId()+",";
+            result += job.getJobId() + ",";
         }
         return result;
 

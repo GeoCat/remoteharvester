@@ -43,8 +43,8 @@ public class XmlCapabilitiesCSW extends XmlCapabilitiesDocument {
 
     @Override
     public String toString() {
-        String result =  "XmlCapabilitiesCSW(has service reference URL="+( (getMetadataUrlRaw() !=null) && (!getMetadataUrlRaw().isEmpty())) ;
-        result += ", number of Dataset links = "+getDatasetLinksList().size();
+        String result = "XmlCapabilitiesCSW(has service reference URL=" + ((getMetadataUrlRaw() != null) && (!getMetadataUrlRaw().isEmpty()));
+        result += ", number of Dataset links = " + getDatasetLinksList().size();
         result += ")";
         return result;
     }

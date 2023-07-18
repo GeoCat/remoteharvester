@@ -33,7 +33,6 @@
 
 package net.geocat.database.linkchecker.repos;
 
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecord;
 import org.springframework.data.repository.CrudRepository;
 

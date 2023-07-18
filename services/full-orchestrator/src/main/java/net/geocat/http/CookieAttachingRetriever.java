@@ -33,7 +33,7 @@
 
 package net.geocat.http;
 
- import net.geocat.database.linkchecker.entities.helper.HttpResult;
+import net.geocat.database.linkchecker.entities.helper.HttpResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

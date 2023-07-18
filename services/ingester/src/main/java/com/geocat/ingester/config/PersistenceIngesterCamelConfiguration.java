@@ -1,7 +1,6 @@
 package com.geocat.ingester.config;
 
 import com.google.common.base.Preconditions;
-import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

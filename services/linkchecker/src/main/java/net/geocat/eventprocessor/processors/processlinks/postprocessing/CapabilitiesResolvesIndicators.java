@@ -33,12 +33,12 @@
 
 package net.geocat.eventprocessor.processors.processlinks.postprocessing;
 
-import net.geocat.database.linkchecker.entities.*;
+import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
+import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
+import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
 import net.geocat.database.linkchecker.entities.helper.MetadataRecord;
-import net.geocat.database.linkchecker.entities.helper.SHA2JobIdCompositeKey;
 import net.geocat.database.linkchecker.repos.CapabilitiesDocumentRepo;
-import net.geocat.service.capabilities.DatasetLink;
 import net.geocat.xml.helpers.CapabilitiesType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -48,9 +48,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Component
@@ -61,15 +59,15 @@ public class CapabilitiesResolvesIndicators {
     @Autowired
     CapabilitiesDocumentRepo capabilitiesDocumentRepo;
 
-    public LocalServiceMetadataRecord process(LocalServiceMetadataRecord record,List<CapabilitiesDocument> capDocs) {
+    public LocalServiceMetadataRecord process(LocalServiceMetadataRecord record, List<CapabilitiesDocument> capDocs) {
         List<DocumentLink> links = new ArrayList<DocumentLink>(record.getServiceDocumentLinks());
-        process(record,links,capDocs);
+        process(record, links, capDocs);
         return record;
     }
 
-    public LocalDatasetMetadataRecord process (LocalDatasetMetadataRecord record,List<CapabilitiesDocument> capDocs) {
+    public LocalDatasetMetadataRecord process(LocalDatasetMetadataRecord record, List<CapabilitiesDocument> capDocs) {
         List<DocumentLink> links = new ArrayList<DocumentLink>(record.getDocumentLinks());
-        process(record,links,capDocs);
+        process(record, links, capDocs);
         return record;
     }
 
@@ -85,37 +83,36 @@ public class CapabilitiesResolvesIndicators {
     //populates
     //Integer INDICATOR_RESOLVES_TO_CAPABILITIES;
     //CapabilitiesType INDICATOR_CAPABILITIES_TYPE;
-    public void process(MetadataRecord record, List<DocumentLink> links,List<CapabilitiesDocument> capDocs) {
+    public void process(MetadataRecord record, List<DocumentLink> links, List<CapabilitiesDocument> capDocs) {
 
-        if ( (links ==null) || (links.isEmpty()) )
+        if ((links == null) || (links.isEmpty()))
             return;
 
         int nCapDocs = (int) capDocs.size();
         record.setINDICATOR_RESOLVES_TO_CAPABILITIES(nCapDocs);
 
-        if (nCapDocs ==0)
+        if (nCapDocs == 0)
             return; //nothing more to do
 
 
-
         List<CapabilitiesType> allTypes = capDocs.stream()
-                 .map(x->x.getCapabilitiesDocumentType())
+                .map(x -> x.getCapabilitiesDocumentType())
                 .collect(Collectors.toList());
 
-        if (nCapDocs == 1){
+        if (nCapDocs == 1) {
             record.setINDICATOR_CAPABILITIES_TYPE(allTypes.get(0));
             return;
         }
-        CapabilitiesType type =   mostCommon(allTypes);
+        CapabilitiesType type = mostCommon(allTypes);
         record.setINDICATOR_CAPABILITIES_TYPE(type);
     }
 
-    public CapabilitiesType mostCommon(List<CapabilitiesType> list){
-        Map<CapabilitiesType, Long> frequencyMap = list.stream().collect(Collectors.groupingBy(x->x, Collectors.counting()));
+    public CapabilitiesType mostCommon(List<CapabilitiesType> list) {
+        Map<CapabilitiesType, Long> frequencyMap = list.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
 
         long mostFrequentN = frequencyMap.entrySet().stream().max(Map.Entry.comparingByValue()).get().getValue();
 
-        CapabilitiesType result = frequencyMap.entrySet().stream().filter(x->x.getValue()==mostFrequentN).findFirst().get().getKey();
+        CapabilitiesType result = frequencyMap.entrySet().stream().filter(x -> x.getValue() == mostFrequentN).findFirst().get().getKey();
 
         return result;
     }

@@ -36,25 +36,19 @@ package com.geocat.ingester.model.linkchecker.helper;
 
 import com.geocat.ingester.model.linkchecker.AtomActualDataEntry;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import static com.geocat.ingester.model.linkchecker.helper.PartialDownloadHint.ALWAYS_PARTIAL;
 
 
 @Entity
-public class AtomDataRequest extends RetrievableSimpleLink  {
+public class AtomDataRequest extends RetrievableSimpleLink {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long atomDataRequestId;
 
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     AtomActualDataEntry atomActualDataEntry;
 
     Boolean successfullyDownloaded;
@@ -65,7 +59,7 @@ public class AtomDataRequest extends RetrievableSimpleLink  {
         setPartialDownloadHint(ALWAYS_PARTIAL);
     }
 
-    public AtomDataRequest(String url ) {
+    public AtomDataRequest(String url) {
         this();
         setRawURL(url);
         setFixedURL(url);

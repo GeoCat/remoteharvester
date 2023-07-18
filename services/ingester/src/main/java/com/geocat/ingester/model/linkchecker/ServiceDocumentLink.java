@@ -34,7 +34,6 @@
 package com.geocat.ingester.model.linkchecker;
 
 
-
 import com.geocat.ingester.model.linkchecker.helper.DocumentLink;
 import com.geocat.ingester.model.linkchecker.helper.PartialDownloadHint;
 import com.geocat.ingester.model.linkchecker.helper.ServiceMetadataRecord;
@@ -60,7 +59,7 @@ import javax.persistence.*;
 public class ServiceDocumentLink extends DocumentLink {
 
     //which service document did this link come from?
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     ServiceMetadataRecord serviceMetadataRecord;
 
     //summary info (for display/debugging)
@@ -81,7 +80,6 @@ public class ServiceDocumentLink extends DocumentLink {
 
 
     //---------------------------------------------------------------------------
-
 
 
     public ServiceMetadataRecord getServiceMetadataRecord() {
@@ -127,7 +125,7 @@ public class ServiceDocumentLink extends DocumentLink {
     public String toString() {
         String result = "ServiceDocumentLink {\n";
         result += "      serviceMetadataLinkId: " + serviceMetadataLinkId + "\n";
-        result += "      serviceMetadataRecord Id: "+ serviceMetadataRecord.getServiceMetadataDocumentId()+"\n";
+        result += "      serviceMetadataRecord Id: " + serviceMetadataRecord.getServiceMetadataDocumentId() + "\n";
 
         result += "\n";
         result += super.toString();

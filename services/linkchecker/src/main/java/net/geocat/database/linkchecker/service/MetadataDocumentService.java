@@ -38,7 +38,6 @@ import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.LocalNotProcessedMetadataRecord;
 import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
-
 import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
 import net.geocat.database.linkchecker.repos.LocalNotProcessedMetadataRecordRepo;
 import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
@@ -64,7 +63,6 @@ public class MetadataDocumentService {
 
 //    @Autowired
 //    public MetadataDocumentRepo metadataDocumentRepo;
-
 
 
 //    public LocalDatasetMetadataRecord findLocalDataset(String linkCheckJobId, String sha2) {
@@ -103,7 +101,7 @@ public class MetadataDocumentService {
 
     public boolean completeLinkExtract(String linkCheckJobId) {
         LinkCheckJob job = linkCheckJobService.find(linkCheckJobId);
-        if (job.getNumberOfDocumentsInBatch() ==null)
+        if (job.getNumberOfDocumentsInBatch() == null)
             return false;
 
         long nRecords = job.getNumberOfDocumentsInBatch();
@@ -112,12 +110,12 @@ public class MetadataDocumentService {
         long nrecordsDatasetComplete = localDatasetMetadataRecordRepo.countCompletedState(linkCheckJobId);
         long nrecordWillNotProcess = localNotProcessedMetadataRecordRepo.countCompletedState(linkCheckJobId);
 
-        return (nRecords ) == (nrecordsServiceComplete+nrecordsDatasetComplete+nrecordWillNotProcess);
-     }
+        return (nRecords) == (nrecordsServiceComplete + nrecordsDatasetComplete + nrecordWillNotProcess);
+    }
 
     public long numberRemainingLinkExtract(String linkCheckJobId) {
         LinkCheckJob job = linkCheckJobService.find(linkCheckJobId);
-        if (job.getNumberOfDocumentsInBatch() ==null)
+        if (job.getNumberOfDocumentsInBatch() == null)
             return 1;
 
         long nRecords = job.getNumberOfDocumentsInBatch();
@@ -126,6 +124,6 @@ public class MetadataDocumentService {
         long nrecordsDatasetComplete = localDatasetMetadataRecordRepo.countCompletedState(linkCheckJobId);
         long nrecordWillNotProcess = localNotProcessedMetadataRecordRepo.countCompletedState(linkCheckJobId);
 
-        return (nRecords ) - (nrecordsServiceComplete+nrecordsDatasetComplete+nrecordWillNotProcess);
+        return (nRecords) - (nrecordsServiceComplete + nrecordsDatasetComplete + nrecordWillNotProcess);
     }
 }

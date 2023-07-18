@@ -1,9 +1,9 @@
 package com.geocat.ingester.dblogging.service;
 
-import com.geocat.ingester.model.ingester.LogbackLoggingEvent;
-import com.geocat.ingester.model.ingester.LogbackLoggingEventException;
 import com.geocat.ingester.dao.ingester.LogbackLoggingEventExceptionRepo;
 import com.geocat.ingester.dao.ingester.LogbackLoggingEventRepo;
+import com.geocat.ingester.model.ingester.LogbackLoggingEvent;
+import com.geocat.ingester.model.ingester.LogbackLoggingEventException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -47,22 +47,22 @@ public class GetLogService {
         if (result.isException) {
             List<LogbackLoggingEventException> exceptionlines = logbackLoggingEventExceptionRepo.findByEventIdOrderByI(event.eventId);
             List<String> ex_messages = exceptionlines.stream()
-                    .filter(x->x.getI() == 0)
-                    .sorted(Comparator.comparingInt(x->x.getCausedByDepth()))
-                    .map(x->x.getTraceLine())
+                    .filter(x -> x.getI() == 0)
+                    .sorted(Comparator.comparingInt(x -> x.getCausedByDepth()))
+                    .map(x -> x.getTraceLine())
                     .collect(Collectors.toList());
 
-            result.message = String.join("\n  -> ",ex_messages);
+            result.message = String.join("\n  -> ", ex_messages);
 
             Map<Short, List<LogbackLoggingEventException>> grouped = exceptionlines.stream()
                     .collect(Collectors.groupingBy(LogbackLoggingEventException::getCausedByDepth));
 
             List<Map.Entry<Short, List<LogbackLoggingEventException>>> exceptions = grouped.entrySet().stream()
-                    .sorted(Comparator.comparingInt(x->x.getKey()))
+                    .sorted(Comparator.comparingInt(x -> x.getKey()))
                     .collect(Collectors.toList());
 
             List<String> single_stacktrace = exceptions.stream()
-                    .map( x-> makeString(x.getValue()))
+                    .map(x -> makeString(x.getValue()))
                     .collect(Collectors.toList());
 
             result.stackTraces = single_stacktrace.toArray(new String[0]);
@@ -73,9 +73,9 @@ public class GetLogService {
 
     public String makeString(List<LogbackLoggingEventException> items) {
         List<String> strs = items.stream()
-                .sorted(Comparator.comparingInt(x->x.getI()))
-                .map(x->x.getTraceLine())
+                .sorted(Comparator.comparingInt(x -> x.getI()))
+                .map(x -> x.getTraceLine())
                 .collect(Collectors.toList());
-        return String.join("\n   ",strs);
+        return String.join("\n   ", strs);
     }
 }

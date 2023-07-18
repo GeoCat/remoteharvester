@@ -1,4 +1,4 @@
- /**
+/**
  * JetBrains Space Automation
  * This Kotlin-script file lets you automate build activities
  * For more info, see https://www.jetbrains.com/help/space/automation.html
@@ -51,8 +51,8 @@ job("Build, test and install full-orchestrator artifacts") {
 
 
     container(
-        "Push Docker image in GeoCat Docker repository",
-        "geocat.registry.jetbrains.space/p/jrc-inspire-portal/geocat-systems/crane:main"
+            "Push Docker image in GeoCat Docker repository",
+            "geocat.registry.jetbrains.space/p/jrc-inspire-portal/geocat-systems/crane:main"
     ) {
         env["GEOCAT_DOCKER_REGISTRY_URL"] = "docker-registry.geocat.net:5000"
         env["GEOCAT_DOCKER_REGISTRY_USER"] = Params("geocat_docker_registry_user")

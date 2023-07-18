@@ -13,9 +13,9 @@ public class IngestStatus {
 
     public IngestStatus(IngestJob job) {
         this.processID = job.getJobId();
-        this.totalRecords = (job.getTotalRecords() == null?0:job.getTotalRecords());
-        this.numberOfRecordsIngested = (job.getTotalIngestedRecords() == null?0:job.getTotalIngestedRecords());
-        this.numberOfRecordsIndexed = (job.getTotalIndexedRecords() == null?0:job.getTotalIndexedRecords());
+        this.totalRecords = (job.getTotalRecords() == null ? 0 : job.getTotalRecords());
+        this.numberOfRecordsIngested = (job.getTotalIngestedRecords() == null ? 0 : job.getTotalIngestedRecords());
+        this.numberOfRecordsIndexed = (job.getTotalIndexedRecords() == null ? 0 : job.getTotalIndexedRecords());
         this.harvesterJobId = job.getHarvestJobId();
         this.state = job.getState().toString();
         this.createTimeUTC = job.getCreateTimeUTC().toInstant().toString();

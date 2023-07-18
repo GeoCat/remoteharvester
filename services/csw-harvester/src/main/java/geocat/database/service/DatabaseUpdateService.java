@@ -1,6 +1,5 @@
 package geocat.database.service;
 
-import geocat.MySpringApp;
 import geocat.csw.CSWMetadata;
 import geocat.csw.http.HttpResult;
 import geocat.csw.http.IHTTPRetriever;
@@ -72,15 +71,14 @@ public class DatabaseUpdateService {
     public boolean urlIsGood(String url) {
         HttpResult result;
         try {
-            result= retriever.retrieveXML("GET", url, null, null,null);
-        }
-        catch (Exception e){
-            logger.error("while attempting to get nested url - "+url+".  END POINT IGNORED.", e);
+            result = retriever.retrieveXML("GET", url, null, null, null);
+        } catch (Exception e) {
+            logger.error("while attempting to get nested url - " + url + ".  END POINT IGNORED.", e);
             return false;
         }
-        if (result.getHttpCode() !=200) {
-            logger.error("while attempting to get nested url - "+url+".  END POINT IGNORED.",
-                    new Exception("bad server response - expect 200, but got "+result.getHttpCode()));
+        if (result.getHttpCode() != 200) {
+            logger.error("while attempting to get nested url - " + url + ".  END POINT IGNORED.",
+                    new Exception("bad server response - expect 200, but got " + result.getHttpCode()));
             return false;
         }
         return true;
@@ -101,9 +99,10 @@ public class DatabaseUpdateService {
     }
 
     static Object lockobject = new Object();
+
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     //synchronized so other threads cannot update while we are writing...
-    public   void errorOccurred(Exchange exchange) {
+    public void errorOccurred(Exchange exchange) {
         synchronized (lockobject) {
             Exception e = (Exception) exchange.getMessage().getHeader("exception");
             if (e == null)
@@ -123,7 +122,6 @@ public class DatabaseUpdateService {
             HarvestJob j2 = harvestJobRepo.save(job);
         }
     }
-
 
 
     public static String convertToString(Throwable e) {

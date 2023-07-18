@@ -1,22 +1,16 @@
 package com.geocat.ingester.model.harvester;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 //create table record_set (record_set_id varchar(40), endpoint_job_id varchar(40), harvest_job_id varchar(40), start_record_number int, end_record_number int, expected_number_records int, actual_number_records int, get_record_response text, last_set bool);
 @Entity
-@Table(name="record_set",
-        indexes= {
+@Table(name = "record_set",
+        indexes = {
                 @Index(
-                        name="endpointJobId_idx",
-                        columnList="endpointJobId",
-                        unique=false
+                        name = "endpointJobId_idx",
+                        columnList = "endpointJobId",
+                        unique = false
                 )
         })
 

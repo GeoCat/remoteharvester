@@ -33,16 +33,9 @@
 
 package net.geocat.database.linkchecker.entities;
 
-import net.geocat.database.linkchecker.entities.helper.DatasetIdentifier;
-import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecordDatasetIdentifier;
-import net.geocat.database.linkchecker.entities.helper.OperatesOnLinkDatasetIdentifier;
-import net.geocat.database.linkchecker.entities.helper.PartialDownloadHint;
-import net.geocat.database.linkchecker.entities.helper.RetrievableSimpleLink;
-import net.geocat.database.linkchecker.entities.helper.ServiceMetadataRecord;
+import net.geocat.database.linkchecker.entities.helper.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -122,7 +115,7 @@ public class OperatesOnLink extends RetrievableSimpleLink {
     }
 
     public void setDatasetIdentifiers(List<DatasetIdentifier> datasetIdentifiers) {
-        this.datasetIdentifiers = datasetIdentifiers.stream().map(x->new OperatesOnLinkDatasetIdentifier(x,this)).collect(Collectors.toList());
+        this.datasetIdentifiers = datasetIdentifiers.stream().map(x -> new OperatesOnLinkDatasetIdentifier(x, this)).collect(Collectors.toList());
         // this.datasetIdentifiers = datasetIdentifiers;
     }
 
@@ -151,7 +144,6 @@ public class OperatesOnLink extends RetrievableSimpleLink {
     }
 
 
-
 //---------------------------------------------------------------------------
 
     @PreUpdate
@@ -177,10 +169,10 @@ public class OperatesOnLink extends RetrievableSimpleLink {
             result += "      uuidref: " + uuidref + "\n";
 
         result += "      file Identifier: " + fileIdentifier + "\n";
-      //  result += "      dataset identifier: " + datasetIdentifier + "\n";
+        //  result += "      dataset identifier: " + datasetIdentifier + "\n";
 
         result += super.toString();
-       // result += "      has dataset Metadata Record :" + (datasetMetadataRecord != null) + "\n";
+        // result += "      has dataset Metadata Record :" + (datasetMetadataRecord != null) + "\n";
 //        if (datasetMetadataRecord != null) {
 //            result += "      dataset Metadata Record file identifier: " + datasetMetadataRecord.getFileIdentifier() + "\n";
 //            result += "      dataset Metadata Record dataset identifier: " + datasetMetadataRecord.getDatasetIdentifier() + "\n";

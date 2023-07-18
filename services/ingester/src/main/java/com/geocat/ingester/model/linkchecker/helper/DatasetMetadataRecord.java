@@ -34,18 +34,18 @@
 package com.geocat.ingester.model.linkchecker.helper;
 
 
- import com.geocat.ingester.model.linkchecker.DatasetDocumentLink;
- import org.hibernate.annotations.Fetch;
+import com.geocat.ingester.model.linkchecker.DatasetDocumentLink;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
- import org.hibernate.annotations.OnDelete;
- import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
- import javax.persistence.*;
+import javax.persistence.*;
 import java.util.ArrayList;
- import java.util.HashSet;
- import java.util.List;
- import java.util.Set;
- import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 // Represents a Dataset Metadata Record
@@ -265,7 +265,7 @@ public class DatasetMetadataRecord extends MetadataRecord {
 //    }
 
     public void setDatasetIdentifiers(List<DatasetIdentifier> datasetIdentifiers) {
-        this.datasetIdentifiers = datasetIdentifiers.stream().map(x->new DatasetMetadataRecordDatasetIdentifier(x,this)).collect(Collectors.toSet());
+        this.datasetIdentifiers = datasetIdentifiers.stream().map(x -> new DatasetMetadataRecordDatasetIdentifier(x, this)).collect(Collectors.toSet());
         // this.datasetIdentifiers = datasetIdentifiers;
     }
 
@@ -296,7 +296,7 @@ public class DatasetMetadataRecord extends MetadataRecord {
         // result += "     dataset Identifier: " + datasetIdentifier + "\n";
         //  result += "     dataset Identifier codespace: " + datasetIdentifierCodeSpace + "\n";
         if (numberOfLinksFound != null)
-            result += "     number of links found: "+ numberOfLinksFound+"\n";
+            result += "     number of links found: " + numberOfLinksFound + "\n";
 
         return result;
     }

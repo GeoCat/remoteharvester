@@ -45,13 +45,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static net.geocat.service.capabilities.WMSCapabilitiesDatasetLinkExtractor.findNodes;
-import static net.geocat.service.capabilities.WMSCapabilitiesDatasetLinkExtractor.findNodesFullSearch;
 
 public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
 
-//    public String datasetIdentifier;
+    //    public String datasetIdentifier;
 //    public String datasetIdentifierCodeSpace;
     List<DatasetIdentifier> datasetIdentifiers;
+
     public XmlDatasetMetadataDocument(XmlDoc doc) throws Exception {
         super(doc);
         datasetIdentifiers = new ArrayList<>();
@@ -119,23 +119,23 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
 //        }
 //    }
 
-    private  DatasetIdentifier  parseIdentifier(  Node node) {
-         DatasetIdentifier   result= null;
+    private DatasetIdentifier parseIdentifier(Node node) {
+        DatasetIdentifier result = null;
         String mainNodeName = node.getLocalName() == null ? node.getNodeName() : node.getLocalName();
-        DatasetIdentifierNodeType datasetIdentifierNodeType =   DatasetIdentifierNodeType.valueOf(mainNodeName);
+        DatasetIdentifierNodeType datasetIdentifierNodeType = DatasetIdentifierNodeType.valueOf(mainNodeName);
 
-        Node codeNode = findNode(node,"code");
-        Node codespaceNode = findNode(node,"codeSpace");
+        Node codeNode = findNode(node, "code");
+        Node codespaceNode = findNode(node, "codeSpace");
 
         if (codeNode == null) {
-           return result; // should not happen (no code node)
+            return result; // should not happen (no code node)
         }
 
         List<String> codeValues = new ArrayList<>();
-        Node nodeCodeCharacterString = findNode(codeNode,"CharacterString");
+        Node nodeCodeCharacterString = findNode(codeNode, "CharacterString");
         Node nodeCodeAnchor = findNode(codeNode, "Anchor");
 
-        if ( (nodeCodeCharacterString == null) && (nodeCodeAnchor == null) ) {
+        if ((nodeCodeCharacterString == null) && (nodeCodeAnchor == null)) {
             return result; //ie. <gmd:code/>
         }
 
@@ -144,12 +144,11 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
 //            if  ( (nodeCodeAnchor.getTextContent() != null) && (!nodeCodeAnchor.getTextContent().trim().isEmpty()) )
 //                codeValues.add(nodeCodeAnchor.getTextContent().trim());
             Node link = nodeCodeAnchor.getAttributes().getNamedItem("xlink:href");
-            if ( (link !=null) && (link.getNodeValue() != null) && (!link.getNodeValue().trim().isEmpty()) )
+            if ((link != null) && (link.getNodeValue() != null) && (!link.getNodeValue().trim().isEmpty()))
                 codeValues.add(link.getNodeValue().trim());
-        }
-        else {
+        } else {
             //simple - use value in CharacterString
-            if  ( (nodeCodeCharacterString.getTextContent() != null) && (!nodeCodeCharacterString.getTextContent().trim().isEmpty()) )
+            if ((nodeCodeCharacterString.getTextContent() != null) && (!nodeCodeCharacterString.getTextContent().trim().isEmpty()))
                 codeValues.add(nodeCodeCharacterString.getTextContent().trim());
         }
 
@@ -157,11 +156,11 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
             return result;
 
         //make unique
-        codeValues = codeValues.stream().distinct().collect( Collectors.toList());
+        codeValues = codeValues.stream().distinct().collect(Collectors.toList());
 
         List<String> codespaceValues = new ArrayList<>();
-        if (codespaceNode !=null) {
-            Node nodeCodespaceCharacterString = findNode(codespaceNode,"CharacterString");
+        if (codespaceNode != null) {
+            Node nodeCodespaceCharacterString = findNode(codespaceNode, "CharacterString");
             Node nodeCodespaceAnchor = findNode(codespaceNode, "Anchor");
             if (nodeCodespaceAnchor != null) {
                 //I didn't find any examples of this in a set of 10k documents - included for completeness
@@ -169,20 +168,19 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
 //                if  ( (nodeCodespaceAnchor.getTextContent() != null) && (!nodeCodespaceAnchor.getTextContent().trim().isEmpty()) )
 //                    codespaceValues.add(nodeCodespaceAnchor.getTextContent().trim());
                 Node link = nodeCodespaceAnchor.getAttributes().getNamedItem("xlink:href");
-                if ( (link !=null) && (link.getNodeValue() != null) && (!link.getNodeValue().trim().isEmpty()) )
+                if ((link != null) && (link.getNodeValue() != null) && (!link.getNodeValue().trim().isEmpty()))
                     codespaceValues.add(link.getNodeValue().trim());
-            }
-            else {
+            } else {
                 //simple - use value in CharacterString
-                if  ( (nodeCodespaceCharacterString.getTextContent() != null) && (!nodeCodespaceCharacterString.getTextContent().trim().isEmpty()) )
+                if ((nodeCodespaceCharacterString.getTextContent() != null) && (!nodeCodespaceCharacterString.getTextContent().trim().isEmpty()))
                     codespaceValues.add(nodeCodespaceCharacterString.getTextContent().trim());
             }
         }
 
-        codespaceValues = codespaceValues.stream().distinct().collect( Collectors.toList());
+        codespaceValues = codespaceValues.stream().distinct().collect(Collectors.toList());
 
-        for(String code:codeValues) {
-            for (String codeSpace: codespaceValues) {
+        for (String code : codeValues) {
+            for (String codeSpace : codespaceValues) {
                 DatasetIdentifier item = new DatasetIdentifier(datasetIdentifierNodeType, code, codeSpace);
                 result = item;
             }
@@ -193,18 +191,17 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
         }
 
 
-
         return result;
     }
 
     //identifier is a <gmd:identifier>
     // find the FIRST MD_Identifier or RS_Identifier inside
-    public Node firstMD_RSIdentifier(Node identifier){
+    public Node firstMD_RSIdentifier(Node identifier) {
         NodeList nl = identifier.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
-            if (name.equals("MD_Identifier") || name.equals("RS_Identifier") ) {
+            if (name.equals("MD_Identifier") || name.equals("RS_Identifier")) {
                 return nn;
             }
         }
@@ -214,17 +211,17 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
     public List<DatasetIdentifier> findDatasetIdentifier() {
         List<DatasetIdentifier> result = new ArrayList<>();
         //finds first one...
-        Node n = findNode(parsedXml, Arrays.asList(new String[] {"MD_Metadata","identificationInfo","MD_DataIdentification","citation","CI_Citation"}));
+        Node n = findNode(parsedXml, Arrays.asList(new String[]{"MD_Metadata", "identificationInfo", "MD_DataIdentification", "citation", "CI_Citation"}));
         if (n == null)
             return new ArrayList<>();
 
-        List<Node> identifiers  =  findNodes(n,"identifier");
+        List<Node> identifiers = findNodes(n, "identifier");
 
-        for (Node identifier :identifiers){
+        for (Node identifier : identifiers) {
             Node MDRS_identifier = firstMD_RSIdentifier(identifier);
             if (MDRS_identifier != null) {
-                DatasetIdentifier  id  = parseIdentifier(MDRS_identifier);
-                if (id !=null)
+                DatasetIdentifier id = parseIdentifier(MDRS_identifier);
+                if (id != null)
                     result.add(id);
             }
         }
@@ -257,13 +254,12 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
 //            result.addAll(items);
 //        }
 
-    //    return result;
+        //    return result;
     }
 
 
-
     private void setup_XmlDatasetMetadataDocument() throws XPathExpressionException {
-     //   check();
+        //   check();
         datasetIdentifiers = findDatasetIdentifier();
 
 //        setupDatasetIdentifier();
@@ -284,8 +280,8 @@ public class XmlDatasetMetadataDocument extends XmlMetadataDocument {
 
     @Override
     public String toString() {
-        String result =  "XmlDatasetMetadataDocument(fileIdentifier="+fileIdentifier;
-        for(DatasetIdentifier id : this.datasetIdentifiers) {
+        String result = "XmlDatasetMetadataDocument(fileIdentifier=" + fileIdentifier;
+        for (DatasetIdentifier id : this.datasetIdentifiers) {
             result += id.toString();
         }
         result += ")";

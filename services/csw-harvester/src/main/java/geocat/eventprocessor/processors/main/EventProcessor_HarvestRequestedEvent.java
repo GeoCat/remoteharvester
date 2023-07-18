@@ -36,7 +36,7 @@ public class EventProcessor_HarvestRequestedEvent extends BaseEventProcessor<Har
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public EventProcessor_HarvestRequestedEvent externalProcessing() {
-        job =  harvestJobService.createNewHarvestJobInDB(getInitiatingEvent());
+        job = harvestJobService.createNewHarvestJobInDB(getInitiatingEvent());
         return this;
     }
 

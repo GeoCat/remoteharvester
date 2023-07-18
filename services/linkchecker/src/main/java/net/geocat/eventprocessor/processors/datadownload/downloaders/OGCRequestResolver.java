@@ -43,7 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.isRecognizedImage;
-import static net.geocat.http.HTTPRequest.ACCEPTS_HEADER_XML;
 import static net.geocat.http.HTTPRequest.ACCEPTS_HEADER_XML_IMAGE;
 import static net.geocat.xml.XmlStringTools.determineRootTagInfo;
 
@@ -55,22 +54,22 @@ public class OGCRequestResolver {
 
     public void resolve(OGCRequest ogcRequest) {
 
-        retrievableSimpleLinkDownloader.process(ogcRequest, 4096,ACCEPTS_HEADER_XML_IMAGE);
+        retrievableSimpleLinkDownloader.process(ogcRequest, 4096, ACCEPTS_HEADER_XML_IMAGE);
 
-        if (ogcRequest.getIndicator_LinkResolves() == IndicatorStatus.FAIL){
+        if (ogcRequest.getIndicator_LinkResolves() == IndicatorStatus.FAIL) {
             ogcRequest.setSuccessfulOGCRequest(false);
             ogcRequest.setUnSuccessfulOGCRequestReason("link did not resolve");
-            return  ;
+            return;
         }
 
         if (ogcRequest.getLinkHTTPStatusCode() != 200) {
             ogcRequest.setSuccessfulOGCRequest(false);
             ogcRequest.setUnSuccessfulOGCRequestReason("http result code is not 200");
-            return  ;
+            return;
         }
 
         validate(ogcRequest);
-        return  ;
+        return;
     }
 
     //should be done with test cases...
@@ -126,9 +125,8 @@ public class OGCRequestResolver {
             ogcRequest.setUnSuccessfulOGCRequestReason("couldnt validate - don't know validation type");
             ogcRequest.setSuccessfulOGCRequest(false);
             return;
-        }
-        catch (Exception e){
-            ogcRequest.setUnSuccessfulOGCRequestReason("couldnt validate error: "+e.getClass().getName()+" - "+e.getMessage());
+        } catch (Exception e) {
+            ogcRequest.setUnSuccessfulOGCRequestReason("couldnt validate error: " + e.getClass().getName() + " - " + e.getMessage());
             ogcRequest.setSuccessfulOGCRequest(false);
         }
     }

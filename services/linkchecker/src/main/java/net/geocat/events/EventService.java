@@ -35,8 +35,6 @@ package net.geocat.events;
 
 import net.geocat.database.harvester.entities.HarvestJob;
 import net.geocat.database.harvester.repos.HarvestJobRepo;
-import net.geocat.database.linkchecker.entities.LinkCheckJob;
-import net.geocat.database.linkchecker.entities.helper.OperatesOnLinkDatasetIdentifier;
 import net.geocat.database.linkchecker.repos.LinkCheckJobRepo;
 import net.geocat.model.LinkCheckRunConfig;
 import org.apache.camel.Message;
@@ -45,8 +43,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 

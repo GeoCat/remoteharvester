@@ -34,11 +34,10 @@
 package net.geocat.service;
 
 import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
+import net.geocat.database.linkchecker.entities.HttpResult;
 import net.geocat.database.linkchecker.entities.ServiceDocumentLink;
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
 import net.geocat.database.linkchecker.service.CapabilitiesDocumentService;
-import net.geocat.database.linkchecker.entities.HttpResult;
-import net.geocat.http.IHTTPRetriever;
 import net.geocat.service.capabilities.CapabilitiesLinkFixer;
 import net.geocat.service.downloadhelpers.CapabilitiesContinueReadingPredicate;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
@@ -47,7 +46,6 @@ import net.geocat.xml.XmlStringTools;
 import net.geocat.xml.helpers.CapabilitiesType;
 import net.geocat.xml.helpers.CapabilityDeterminer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -82,11 +80,11 @@ public class RetrieveServiceDocumentLink {
 
         String serviceType = null;
         if (link instanceof ServiceDocumentLink)
-            serviceType = ((ServiceDocumentLink)link).getLocalServiceMetadataRecord().getMetadataServiceType();
+            serviceType = ((ServiceDocumentLink) link).getLocalServiceMetadataRecord().getMetadataServiceType();
 
-        link.setFixedURL(capabilitiesLinkFixer.fix(link.getRawURL(), serviceType,link));
+        link.setFixedURL(capabilitiesLinkFixer.fix(link.getRawURL(), serviceType, link));
 
-         retrievableSimpleLinkDownloader.process(link);
+        retrievableSimpleLinkDownloader.process(link);
 
         if (!link.getUrlFullyRead())
             return link;

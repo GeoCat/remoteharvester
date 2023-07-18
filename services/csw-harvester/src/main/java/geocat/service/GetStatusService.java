@@ -62,7 +62,7 @@ public class GetStatusService {
     private void setupErrorMessages(HarvestStatus result) {
         List<LogbackLoggingEvent> exceptionLogMessages = logbackLoggingEventRepo.findExceptions(result.processID);
 
-        for(LogbackLoggingEvent exceptionLogMessage: exceptionLogMessages) {
+        for (LogbackLoggingEvent exceptionLogMessage : exceptionLogMessages) {
 
             List<LogbackLoggingEventException> exceptionlines = logbackLoggingEventExceptionRepo.findByEventIdOrderByI(exceptionLogMessage.eventId);
             List<String> ex_messages = exceptionlines.stream()
@@ -86,17 +86,17 @@ public class GetStatusService {
                     .map(x -> makeString(x.getValue()))
                     .collect(Collectors.toList());
 
-            result.stackTraces.add (single_stacktrace  );
+            result.stackTraces.add(single_stacktrace);
         }
     }
 
 
     public String makeString(List<LogbackLoggingEventException> items) {
         List<String> strs = items.stream()
-                .sorted(Comparator.comparingInt(x->x.getI()))
-                .map(x->x.getTraceLine())
+                .sorted(Comparator.comparingInt(x -> x.getI()))
+                .map(x -> x.getTraceLine())
                 .collect(Collectors.toList());
-        return String.join("\n   ",strs);
+        return String.join("\n   ", strs);
     }
 
     private long computeNumberReceived(EndpointJob endpointJob) {

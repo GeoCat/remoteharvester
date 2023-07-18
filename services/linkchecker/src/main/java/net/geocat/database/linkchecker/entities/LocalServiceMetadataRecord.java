@@ -43,7 +43,7 @@ import javax.persistence.*;
 @NamedEntityGraph(
         name = "LocalServiceMetadataRecord-lazy-graph",
         attributeNodes = {
-              //none - don't load sub-objects (operatesOn and documentLinks)
+                //none - don't load sub-objects (operatesOn and documentLinks)
         }
 )
 @Entity
@@ -70,7 +70,7 @@ public class LocalServiceMetadataRecord extends ServiceMetadataRecord {
     //-----------------------------
 
 
-    public LocalServiceMetadataRecord(){
+    public LocalServiceMetadataRecord() {
         super();
     }
 

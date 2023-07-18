@@ -60,7 +60,7 @@ import javax.persistence.*;
 public class DatasetDocumentLink extends DocumentLink {
 
     //which dataset metadata document did this link come from?
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     DatasetMetadataRecord datasetMetadataRecord;
 
     //for display - info about this link
@@ -76,7 +76,6 @@ public class DatasetDocumentLink extends DocumentLink {
 //    @JoinColumn(name = "capabilitiesDocumentId")
 //    @Fetch(value = FetchMode.SELECT)
 //    private CapabilitiesDocument capabilitiesDocument;
-
 
 
     //---------------------------------------------------------------------------

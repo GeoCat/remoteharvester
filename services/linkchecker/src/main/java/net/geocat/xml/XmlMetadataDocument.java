@@ -35,7 +35,6 @@ package net.geocat.xml;
 
 import net.geocat.xml.helpers.OnlineResource;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
@@ -66,9 +65,9 @@ public class XmlMetadataDocument extends XmlDoc {
         setupTitle();
 
         //Node n = xpath_node("/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue");
-        Node n = XmlDoc.findNode(parsedXml,"MD_Metadata","hierarchyLevel","MD_ScopeCode");
+        Node n = XmlDoc.findNode(parsedXml, "MD_Metadata", "hierarchyLevel", "MD_ScopeCode");
         if (n != null)
-            n= n.getAttributes().getNamedItem("codeListValue");
+            n = n.getAttributes().getNamedItem("codeListValue");
 
         String _metadataDocumentType = "";
 
@@ -80,28 +79,28 @@ public class XmlMetadataDocument extends XmlDoc {
 
         metadataDocumentType = determineMetadataDocumentType(_metadataDocumentType);
 
-       // n = xpath_node("/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString");
-        n = XmlDoc.findNode(this.parsedXml,"MD_Metadata","fileIdentifier","CharacterString");
+        // n = xpath_node("/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString");
+        n = XmlDoc.findNode(this.parsedXml, "MD_Metadata", "fileIdentifier", "CharacterString");
         fileIdentifier = n.getTextContent();
 
-        n = XmlDoc.findNode(this.parsedXml,"MD_Metadata","parentIdentifier","CharacterString");
-        if (n!= null) {
+        n = XmlDoc.findNode(this.parsedXml, "MD_Metadata", "parentIdentifier", "CharacterString");
+        if (n != null) {
             parentIdentifier = n.getTextContent();
         } else {
-            n = XmlDoc.findNode(this.parsedXml,"MD_Metadata","parentIdentifier","Anchor");
-            if (n!= null) {
+            n = XmlDoc.findNode(this.parsedXml, "MD_Metadata", "parentIdentifier", "Anchor");
+            if (n != null) {
                 parentIdentifier = n.getTextContent();
             }
         }
 
         //NodeList nl = xpath_nodeset("//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource");
         //NodeList nl = xpath_nodeset("//*[local-name()='transferOptions']/*[local-name()='MD_DigitalTransferOptions']/*[local-name()='onLine']/*[local-name()='CI_OnlineResource']");
-       // transferOptions = new ArrayList<>();
-        Node nn  = findNode(parsedXml,"MD_Metadata","distributionInfo","MD_Distribution");
-        if (nn !=null){
-            List<Node> nl = findNodes(nn,"transferOptions");
-            for(Node _n : nl){
-              //  _n = findNode(_n, "MD_DigitalTransferOptions","onLine","CI_OnlineResource");
+        // transferOptions = new ArrayList<>();
+        Node nn = findNode(parsedXml, "MD_Metadata", "distributionInfo", "MD_Distribution");
+        if (nn != null) {
+            List<Node> nl = findNodes(nn, "transferOptions");
+            for (Node _n : nl) {
+                //  _n = findNode(_n, "MD_DigitalTransferOptions","onLine","CI_OnlineResource");
                 _n = findNode(_n, "MD_DigitalTransferOptions");
                 if (_n != null) {
                     List<Node> nl2 = findNodes(_n, "onLine");
@@ -115,10 +114,10 @@ public class XmlMetadataDocument extends XmlDoc {
         }
 
 
-       // nl = xpath_nodeset("//srv:containsOperations/srv:SV_OperationMetadata");
-      //  NodeList nl = xpath_nodeset("//*[local-name()='containsOperations']/*[local-name()='SV_OperationMetadata']");
-        n = findNode(parsedXml,"MD_Metadata","identificationInfo","SV_ServiceIdentification");
-        if (n !=null) {
+        // nl = xpath_nodeset("//srv:containsOperations/srv:SV_OperationMetadata");
+        //  NodeList nl = xpath_nodeset("//*[local-name()='containsOperations']/*[local-name()='SV_OperationMetadata']");
+        n = findNode(parsedXml, "MD_Metadata", "identificationInfo", "SV_ServiceIdentification");
+        if (n != null) {
             List<Node> connNode = findNodes(n, "containsOperations");
             for (Node _n : connNode) {
                 _n = findNode(_n, "SV_OperationMetadata");
@@ -133,17 +132,17 @@ public class XmlMetadataDocument extends XmlDoc {
     }
 
     private void setupTitle() throws XPathExpressionException {
-          // Node n =  xpath_node("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
-       // Node n =  xpath_node("/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='MD_DataIdentification']/*[local-name()='citation']/*[local-name()='CI_Citation']/*[local-name()='title']/*[local-name()='CharacterString']");
-        Node n = findNode(parsedXml, Arrays.asList(new String[]{"MD_Metadata","identificationInfo","MD_DataIdentification","citation","CI_Citation","title","CharacterString"}));
-        if ( (n==null) || (n.getTextContent().trim().isEmpty())) {
-          //  n = xpath_node("/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
-           // n = xpath_node("/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='SV_ServiceIdentification']/*[local-name()='citation']/*[local-name()='CI_Citation']/*[local-name()='title']/*[local-name()='CharacterString']");
-           // n = xpath_node("/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='SV_ServiceIdentification']/*[local-name()='citation']/*[local-name()='CI_Citation']/*[local-name()='title']/*[local-name()='CharacterString']");
-             n = findNode(parsedXml, Arrays.asList(new String[]{"MD_Metadata","identificationInfo","SV_ServiceIdentification","citation","CI_Citation","title","CharacterString"}));
+        // Node n =  xpath_node("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
+        // Node n =  xpath_node("/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='MD_DataIdentification']/*[local-name()='citation']/*[local-name()='CI_Citation']/*[local-name()='title']/*[local-name()='CharacterString']");
+        Node n = findNode(parsedXml, Arrays.asList(new String[]{"MD_Metadata", "identificationInfo", "MD_DataIdentification", "citation", "CI_Citation", "title", "CharacterString"}));
+        if ((n == null) || (n.getTextContent().trim().isEmpty())) {
+            //  n = xpath_node("/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
+            // n = xpath_node("/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='SV_ServiceIdentification']/*[local-name()='citation']/*[local-name()='CI_Citation']/*[local-name()='title']/*[local-name()='CharacterString']");
+            // n = xpath_node("/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='SV_ServiceIdentification']/*[local-name()='citation']/*[local-name()='CI_Citation']/*[local-name()='title']/*[local-name()='CharacterString']");
+            n = findNode(parsedXml, Arrays.asList(new String[]{"MD_Metadata", "identificationInfo", "SV_ServiceIdentification", "citation", "CI_Citation", "title", "CharacterString"}));
         }
-       if ( (n !=null) && (!n.getTextContent().trim().isEmpty()) )
-           setTitle(n.getTextContent().trim());
+        if ((n != null) && (!n.getTextContent().trim().isEmpty()))
+            setTitle(n.getTextContent().trim());
 
     }
 
@@ -210,9 +209,9 @@ public class XmlMetadataDocument extends XmlDoc {
 
     @Override
     public String toString() {
-        String result =  "XmlMetadataDocument(fileIdentifier="+fileIdentifier;
-        result += ", metadataDocumentType = "+metadataDocumentType;
-        result += ", title="+title;
+        String result = "XmlMetadataDocument(fileIdentifier=" + fileIdentifier;
+        result += ", metadataDocumentType = " + metadataDocumentType;
+        result += ", title=" + title;
         result += ")";
         return result;
     }

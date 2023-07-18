@@ -38,15 +38,11 @@ import net.geocat.eventprocessor.RedirectEvent;
 import net.geocat.events.datadownload.AllDataDownloadedEvent;
 import net.geocat.events.datadownload.DataDownloadDatasetDocumentEvent;
 import net.geocat.events.datadownload.StartDataDownloadEvent;
-import net.geocat.events.findlinks.LinksFoundInAllDocuments;
-import net.geocat.events.findlinks.ProcessLocalMetadataDocumentEvent;
-import net.geocat.events.findlinks.StartProcessDocumentsEvent;
 import org.apache.camel.spring.SpringRouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-
 
 
 @Component

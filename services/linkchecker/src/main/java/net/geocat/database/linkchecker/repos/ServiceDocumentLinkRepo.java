@@ -33,7 +33,6 @@
 
 package net.geocat.database.linkchecker.repos;
 
-import net.geocat.database.linkchecker.entities.DatasetDocumentLink;
 import net.geocat.database.linkchecker.entities.ServiceDocumentLink;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.CrudRepository;
@@ -45,6 +44,6 @@ import java.util.List;
 @Component
 @Scope("prototype")
 public interface ServiceDocumentLinkRepo extends CrudRepository<ServiceDocumentLink, Long> {
- List<ServiceDocumentLink> findByLinkCheckJobIdAndSha2(String linkCheckJobId, String Sha2);
+    List<ServiceDocumentLink> findByLinkCheckJobIdAndSha2(String linkCheckJobId, String Sha2);
 
- }
+}

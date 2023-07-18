@@ -35,7 +35,10 @@ package net.geocat.eventprocessor.processors.processlinks.postprocessing;
 
 
 import net.geocat.database.harvester.repos.BlobStorageRepo;
-import net.geocat.database.linkchecker.entities.*;
+import net.geocat.database.linkchecker.entities.CapabilitiesDatasetMetadataLink;
+import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
+import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
+import net.geocat.database.linkchecker.entities.OperatesOnLink;
 import net.geocat.database.linkchecker.entities.helper.DatasetIdentifier;
 import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
 import net.geocat.database.linkchecker.repos.LinkCheckBlobStorageRepo;
@@ -63,29 +66,27 @@ public class ServiceOperatesOnIndicators {
         List<OperatesOnLink> links = new ArrayList<OperatesOnLink>(record.getOperatesOnLinks());
 
         List<OperatesOnLink> goodLinks = links.stream()
-                .filter(x->x.getSha2() != null)
+                .filter(x -> x.getSha2() != null)
                 .collect(Collectors.toList());
 
-        if ( (links.size() == goodLinks.size()) && (!links.isEmpty()) ) {
+        if ((links.size() == goodLinks.size()) && (!links.isEmpty())) {
             record.setINDICATOR_ALL_OPERATES_ON_RESOLVE(IndicatorStatus.PASS);
-        }
-        else {
+        } else {
             record.setINDICATOR_ALL_OPERATES_ON_RESOLVE(IndicatorStatus.FAIL);
             record.setINDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES(IndicatorStatus.FAIL);// cannot be true
 
         }
 
-        List<CapabilitiesDatasetMetadataLink>  capDatasetDocLinks =  capDocs.stream()
-                .map(x->x.getCapabilitiesDatasetMetadataLinkList())
+        List<CapabilitiesDatasetMetadataLink> capDatasetDocLinks = capDocs.stream()
+                .map(x -> x.getCapabilitiesDatasetMetadataLinkList())
                 .flatMap(List::stream)
-                .filter(x-> x != null && x.getFileIdentifier() !=null && ((x.getDatasetIdentifiers() != null) && (!x.getDatasetIdentifiers().isEmpty()) ))
+                .filter(x -> x != null && x.getFileIdentifier() != null && ((x.getDatasetIdentifiers() != null) && (!x.getDatasetIdentifiers().isEmpty())))
                 .collect(Collectors.toList());
 
 
-
-        boolean allMatch =true;
+        boolean allMatch = true;
         for (OperatesOnLink operatesOnLink : goodLinks) {
-            allMatch = allMatch && matches(operatesOnLink,capDatasetDocLinks);
+            allMatch = allMatch && matches(operatesOnLink, capDatasetDocLinks);
         }
 
         if (allMatch)
@@ -96,14 +97,14 @@ public class ServiceOperatesOnIndicators {
         return record;
     }
 
-    public boolean matches(List  list1, List  list2) {
-        if ((list1 ==null) || list1.isEmpty() || (list2 ==null) || list2.isEmpty())
-                return false;
-        for(Object _id1 : list1) {
-            for (Object _id2:list2) {
+    public boolean matches(List list1, List list2) {
+        if ((list1 == null) || list1.isEmpty() || (list2 == null) || list2.isEmpty())
+            return false;
+        for (Object _id1 : list1) {
+            for (Object _id2 : list2) {
                 DatasetIdentifier id1 = (DatasetIdentifier) _id1;
                 DatasetIdentifier id2 = (DatasetIdentifier) _id2;
-                if ((id1==null) || (id2==null) ||(id1.getCode()==null) || (id2.getCode()==null))
+                if ((id1 == null) || (id2 == null) || (id1.getCode() == null) || (id2.getCode() == null))
                     continue;
 
                 if (id1.getCode().equals(id2.getCode()))
@@ -113,10 +114,10 @@ public class ServiceOperatesOnIndicators {
         return false;
     }
 
-    public boolean matches(OperatesOnLink operatesOnLink,  List<CapabilitiesDatasetMetadataLink>  capDatasetDocLinks) {
-        CapabilitiesDatasetMetadataLink result= capDatasetDocLinks.stream()
-                .filter(x-> x.getFileIdentifier().equals(operatesOnLink.getFileIdentifier()) && matches(x.getDatasetIdentifiers(),operatesOnLink.getDatasetIdentifiers())  )
-                .findFirst( )
+    public boolean matches(OperatesOnLink operatesOnLink, List<CapabilitiesDatasetMetadataLink> capDatasetDocLinks) {
+        CapabilitiesDatasetMetadataLink result = capDatasetDocLinks.stream()
+                .filter(x -> x.getFileIdentifier().equals(operatesOnLink.getFileIdentifier()) && matches(x.getDatasetIdentifiers(), operatesOnLink.getDatasetIdentifiers()))
+                .findFirst()
                 .orElse(null);
         return result != null;
     }
@@ -135,8 +136,6 @@ public class ServiceOperatesOnIndicators {
 //        else
 //            localOpsOnDatasetRecord.setINDICATOR_MATCHES_A_CAP_DATASET_LAYER(IndicatorStatus.FAIL);
 //    }
-
-
 
 
 }

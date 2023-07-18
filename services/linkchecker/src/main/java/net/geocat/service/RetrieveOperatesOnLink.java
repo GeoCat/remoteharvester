@@ -34,7 +34,7 @@
 package net.geocat.service;
 
 import net.geocat.database.linkchecker.entities.OperatesOnLink;
- import net.geocat.database.linkchecker.service.MetadataDocumentFactory;
+import net.geocat.database.linkchecker.service.MetadataDocumentFactory;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
 import net.geocat.xml.XmlDatasetMetadataDocument;
 import net.geocat.xml.XmlDoc;
@@ -62,9 +62,9 @@ public class RetrieveOperatesOnLink {
     @Autowired
     LinkCheckBlobStorageService linkCheckBlobStorageService;
 
-    public OperatesOnLink process(OperatesOnLink link,String jobid) throws Exception {
+    public OperatesOnLink process(OperatesOnLink link, String jobid) throws Exception {
 
-        if ( (link.getFixedURL() == null) || link.getFixedURL().isEmpty())
+        if ((link.getFixedURL() == null) || link.getFixedURL().isEmpty())
             link.setFixedURL(link.getRawURL());
 
         if (link.getFixedURL() != null) {
@@ -73,7 +73,7 @@ public class RetrieveOperatesOnLink {
             link.setFixedURL(link.getFixedURL().replace("}", "%7D"));// this seems to happen a lot
 
         }
-        link.setFixedURL( canonicalize(link.getFixedURL()));
+        link.setFixedURL(canonicalize(link.getFixedURL()));
 
 
         link = (OperatesOnLink) retrievableSimpleLinkDownloader.process(link);
@@ -83,7 +83,7 @@ public class RetrieveOperatesOnLink {
 
         XmlDoc doc = xmlDocumentFactory.create(XmlStringTools.bytea2String(link.getFullData()));
 
-        if (doc !=null)
+        if (doc != null)
             link.setXmlDocInfo(doc.toString());
 
         if (!(doc instanceof XmlDatasetMetadataDocument))
@@ -98,10 +98,10 @@ public class RetrieveOperatesOnLink {
 
         link.setSha2(sha2);
         linkCheckBlobStorageService.ensureBlobExists(xmlStr, sha2);
-      //  OperatesOnRemoteDatasetMetadataRecord operatesOnRemoteDatasetMetadataRecord = metadataDocumentFactory.createRemoteDatasetMetadataRecord(link, xmlDatasetMetadataDocument, jobid);
-     //   operatesOnRemoteDatasetMetadataRecord.setSha2(sha2);
+        //  OperatesOnRemoteDatasetMetadataRecord operatesOnRemoteDatasetMetadataRecord = metadataDocumentFactory.createRemoteDatasetMetadataRecord(link, xmlDatasetMetadataDocument, jobid);
+        //   operatesOnRemoteDatasetMetadataRecord.setSha2(sha2);
 
-       // link.setDatasetMetadataRecord(operatesOnRemoteDatasetMetadataRecord);
+        // link.setDatasetMetadataRecord(operatesOnRemoteDatasetMetadataRecord);
 
         return link;
     }

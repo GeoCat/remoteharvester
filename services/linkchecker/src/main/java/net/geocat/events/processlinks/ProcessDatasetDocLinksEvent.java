@@ -37,15 +37,15 @@ import net.geocat.events.Event;
 
 public class ProcessDatasetDocLinksEvent extends Event {
 
-        private long datasetDocumentId;
-        private String linkCheckJobId;
+    private long datasetDocumentId;
+    private String linkCheckJobId;
 
     public ProcessDatasetDocLinksEvent() {
     }
 
     public ProcessDatasetDocLinksEvent(long datasetDocumentId, String linkCheckJobId) {
-            this.datasetDocumentId = datasetDocumentId;
-            this.linkCheckJobId = linkCheckJobId;
+        this.datasetDocumentId = datasetDocumentId;
+        this.linkCheckJobId = linkCheckJobId;
     }
 
     public long getDatasetDocumentId() {
@@ -57,15 +57,15 @@ public class ProcessDatasetDocLinksEvent extends Event {
     }
 
     public String getLinkCheckJobId() {
-            return linkCheckJobId;
-        }
+        return linkCheckJobId;
+    }
 
-        public void setLinkCheckJobId(String linkCheckJobId) {
-            this.linkCheckJobId = linkCheckJobId;
-        }
+    public void setLinkCheckJobId(String linkCheckJobId) {
+        this.linkCheckJobId = linkCheckJobId;
+    }
 
-        @Override
-        public String toString() {
-            return "ProcessDatasetDocLinksEvent  - datasetDocumentId:" + datasetDocumentId + ", linkcheckJobId:" + linkCheckJobId;
-        }
+    @Override
+    public String toString() {
+        return "ProcessDatasetDocLinksEvent  - datasetDocumentId:" + datasetDocumentId + ", linkcheckJobId:" + linkCheckJobId;
+    }
 }

@@ -37,8 +37,6 @@ package net.geocat.database.linkchecker.entities.helper;
 import net.geocat.database.linkchecker.entities.DatasetDocumentLink;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -82,7 +80,7 @@ public class DatasetMetadataRecord extends MetadataRecord {
     @OneToMany(mappedBy = "datasetMetadataRecord",
             cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.JOIN)
-  //  @OnDelete(action = OnDeleteAction.CASCADE)
+    //  @OnDelete(action = OnDeleteAction.CASCADE)
     Set<DatasetMetadataRecordDatasetIdentifier> datasetIdentifiers;
 
     // number of links found in the document
@@ -271,8 +269,8 @@ public class DatasetMetadataRecord extends MetadataRecord {
 //    }
 
     public void setDatasetIdentifiers(List<DatasetIdentifier> datasetIdentifiers) {
-        this.datasetIdentifiers = datasetIdentifiers.stream().map(x->new DatasetMetadataRecordDatasetIdentifier(x,this)).collect(Collectors.toSet());
-       // this.datasetIdentifiers = datasetIdentifiers;
+        this.datasetIdentifiers = datasetIdentifiers.stream().map(x -> new DatasetMetadataRecordDatasetIdentifier(x, this)).collect(Collectors.toSet());
+        // this.datasetIdentifiers = datasetIdentifiers;
     }
 
     //---------------------------------------------------------------------------
@@ -299,10 +297,10 @@ public class DatasetMetadataRecord extends MetadataRecord {
     public String toString() {
         String result = super.toString();
 
-       // result += "     dataset Identifier: " + datasetIdentifier + "\n";
-      //  result += "     dataset Identifier codespace: " + datasetIdentifierCodeSpace + "\n";
+        // result += "     dataset Identifier: " + datasetIdentifier + "\n";
+        //  result += "     dataset Identifier codespace: " + datasetIdentifierCodeSpace + "\n";
         if (numberOfLinksFound != null)
-            result += "     number of links found: "+ numberOfLinksFound+"\n";
+            result += "     number of links found: " + numberOfLinksFound + "\n";
 
         return result;
     }

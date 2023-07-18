@@ -42,7 +42,7 @@ public class DocumentTypeStatus {
 
     List<StatusType> statusTypes;
 
-    public DocumentTypeStatus( ) {
+    public DocumentTypeStatus() {
         statusTypes = new ArrayList<>();
     }
 

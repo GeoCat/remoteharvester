@@ -37,7 +37,6 @@ import net.geocat.database.linkchecker.entities.*;
 import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.MetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
-import net.geocat.database.linkchecker.entities.helper.ServiceMetadataRecord;
 import net.geocat.service.ServiceDocLinkExtractor;
 import net.geocat.xml.XmlDatasetMetadataDocument;
 import net.geocat.xml.XmlMetadataDocument;
@@ -89,8 +88,7 @@ public class MetadataDocumentFactory {
         datasetMetadataRecord.setDatasetIdentifiers(xml.getDatasetIdentifiers());
 
 
-
-         List<OnlineResource> links = serviceDocLinkExtractor.extractOnlineResource(xml);
+        List<OnlineResource> links = serviceDocLinkExtractor.extractOnlineResource(xml);
 
         List<DatasetDocumentLink> links2 = links.stream().map(x -> serviceDocumentLinkService.create(datasetMetadataRecord, x)).collect(Collectors.toList());
         datasetMetadataRecord.setDocumentLinks(links2);
@@ -132,10 +130,10 @@ public class MetadataDocumentFactory {
     }
 
     public LocalNotProcessedMetadataRecord createLocalNotProcessedMetadataRecord(XmlMetadataDocument doc,
-                                                                       Long underlyingHarvestMetadataRecordId,
-                                                                       String linkCheckJobId,
-                                                                       String sha2) throws Exception {
-        LocalNotProcessedMetadataRecord result =  new LocalNotProcessedMetadataRecord();
+                                                                                 Long underlyingHarvestMetadataRecordId,
+                                                                                 String linkCheckJobId,
+                                                                                 String sha2) throws Exception {
+        LocalNotProcessedMetadataRecord result = new LocalNotProcessedMetadataRecord();
 
         result.setTitle(doc.getTitle());
 

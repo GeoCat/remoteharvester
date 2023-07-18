@@ -127,12 +127,11 @@ public class MetadataExploderService {
         return writer.getBuffer().toString();
     }
 
-    public static void stripEmptyElements(Node node)
-    {
+    public static void stripEmptyElements(Node node) {
         NodeList children = node.getChildNodes();
-        for(int i = 0; i < children.getLength(); ++i) {
+        for (int i = 0; i < children.getLength(); ++i) {
             Node child = children.item(i);
-            if(child.getNodeType() == Node.TEXT_NODE) {
+            if (child.getNodeType() == Node.TEXT_NODE) {
                 if (child.getTextContent().trim().length() == 0) {
                     child.getParentNode().removeChild(child);
                     i--;

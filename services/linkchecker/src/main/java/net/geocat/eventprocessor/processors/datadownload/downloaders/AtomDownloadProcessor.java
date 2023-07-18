@@ -39,7 +39,6 @@ import net.geocat.database.linkchecker.entities.SimpleAtomLinkToData;
 import net.geocat.database.linkchecker.entities.helper.AtomDataRequest;
 import net.geocat.database.linkchecker.entities.helper.AtomSubFeedRequest;
 import net.geocat.database.linkchecker.service.LinkCheckJobService;
-import net.geocat.events.EventService;
 import net.geocat.model.LinkCheckRunConfig;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
 import net.geocat.xml.XmlCapabilitiesAtom;
@@ -63,7 +62,7 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 public class AtomDownloadProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger( AtomDownloadProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(AtomDownloadProcessor.class);
 
     private static int HEADER_LENGTH = 4096;
     private static String ACCEPT_MIME = "*/*";
@@ -81,12 +80,12 @@ public class AtomDownloadProcessor {
     LinkCheckJobService linkCheckJobService;
 
 
-    public void process(SimpleAtomLinkToData simpleAtomLinkToData,OGCInfoCacheItem ogcInfoCacheItem) throws Exception {
-        if ( (simpleAtomLinkToData ==null) || (ogcInfoCacheItem ==null))
+    public void process(SimpleAtomLinkToData simpleAtomLinkToData, OGCInfoCacheItem ogcInfoCacheItem) throws Exception {
+        if ((simpleAtomLinkToData == null) || (ogcInfoCacheItem == null))
             return;
 
-        AtomSubFeedRequest subFeedRequest= atomLayerDownloader.createSubFeedRequest(
-                (XmlCapabilitiesAtom)ogcInfoCacheItem.getXmlCapabilitiesDocument(),
+        AtomSubFeedRequest subFeedRequest = atomLayerDownloader.createSubFeedRequest(
+                (XmlCapabilitiesAtom) ogcInfoCacheItem.getXmlCapabilitiesDocument(),
                 simpleAtomLinkToData.getLayerId(),
                 simpleAtomLinkToData.getLinkCheckJobId());
         simpleAtomLinkToData.setAtomSubFeedRequest(subFeedRequest);
@@ -98,8 +97,8 @@ public class AtomDownloadProcessor {
             return;
         }
         String xmlAtomFeed2 = XmlStringTools.bytea2String(subFeedRequest.getFullData());
-        XmlDoc doc =  xmlDocumentFactory.create(xmlAtomFeed2);
-        if (!(doc instanceof  XmlCapabilitiesAtom)) {
+        XmlDoc doc = xmlDocumentFactory.create(xmlAtomFeed2);
+        if (!(doc instanceof XmlCapabilitiesAtom)) {
             simpleAtomLinkToData.setSuccessfullyDownloaded(false);
             return;
         }
@@ -109,18 +108,17 @@ public class AtomDownloadProcessor {
             return;
         }
         simpleAtomLinkToData.setAtomActualDataEntryList(new ArrayList<>());
-        int index=0;
+        int index = 0;
 
         //okay, 2nd phase -- try to find one dataset that fully downloads!
         List<AtomEntry> secondaryEntries = new ArrayList<>(secondaryAtom.getEntries());
-        LinkCheckJob job = linkCheckJobService.getJobInfo(simpleAtomLinkToData.getLinkCheckJobId(),false);
+        LinkCheckJob job = linkCheckJobService.getJobInfo(simpleAtomLinkToData.getLinkCheckJobId(), false);
         int nToProcess = job == null ? LinkCheckRunConfig.maxAtomEntriesToAttempt_default : job.getMaxAtomEntriesToAttempt();
-        if (secondaryEntries.size()> nToProcess)
-        {
-            Collections.sort(secondaryEntries,(entry1, entry2) ->{
+        if (secondaryEntries.size() > nToProcess) {
+            Collections.sort(secondaryEntries, (entry1, entry2) -> {
                 return entry1.getId().compareToIgnoreCase(entry2.getId());
             });
-            secondaryEntries = secondaryEntries.subList(0,nToProcess);
+            secondaryEntries = secondaryEntries.subList(0, nToProcess);
         }
 
         for (AtomEntry entry : secondaryEntries) {
@@ -131,33 +129,33 @@ public class AtomDownloadProcessor {
             atomActualDataEntry.setIndex(index);
             index++;
             List<AtomLink> links = entry.findLinks("alternate");
-            if ((links == null)||(links.isEmpty()))
+            if ((links == null) || (links.isEmpty()))
                 links = entry.findLinks("section");
-            if ((links == null)||(links.isEmpty()))
+            if ((links == null) || (links.isEmpty()))
                 continue; // nothing to process
 
             int nToProcessDownload = job == null ? LinkCheckRunConfig.maxAtomSectionLinksToFollow_default : job.getMaxAtomSectionLinksToFollow();
             if (links.size() > nToProcessDownload) {
-                Collections.sort(links,(link1, link2) ->{
+                Collections.sort(links, (link1, link2) -> {
                     return link1.getHref().compareToIgnoreCase(link2.getHref());
                 });
-                links = links.subList(0,nToProcessDownload);
+                links = links.subList(0, nToProcessDownload);
             }
 
             List<AtomDataRequest> requests = links.stream()
-                            .map(x->atomLayerDownloader.createAtomDataRequest(x,atomActualDataEntry,simpleAtomLinkToData.getLinkCheckJobId()))
-                                    .collect(Collectors.toList());
+                    .map(x -> atomLayerDownloader.createAtomDataRequest(x, atomActualDataEntry, simpleAtomLinkToData.getLinkCheckJobId()))
+                    .collect(Collectors.toList());
             atomActualDataEntry.setAtomDataRequestList(requests);
             simpleAtomLinkToData.getAtomActualDataEntryList().add(atomActualDataEntry);
         }
-        boolean success=doDownload(simpleAtomLinkToData);
+        boolean success = doDownload(simpleAtomLinkToData);
         simpleAtomLinkToData.setSuccessfullyDownloaded(success);
     }
 
     private boolean doDownload(SimpleAtomLinkToData simpleAtomLinkToData) {
         if (simpleAtomLinkToData.getAtomActualDataEntryList().isEmpty())
             return false;
-        for (AtomActualDataEntry entry: simpleAtomLinkToData.getAtomActualDataEntryList()){
+        for (AtomActualDataEntry entry : simpleAtomLinkToData.getAtomActualDataEntryList()) {
             boolean entryDownloads = doDownload(entry);
             entry.setSuccessfullyDownloaded(entryDownloads);
             if (entryDownloads)
@@ -170,8 +168,8 @@ public class AtomDownloadProcessor {
         if (entry.getAtomDataRequestList().isEmpty())
             return false;
 
-        boolean allGood= true;
-        for(AtomDataRequest request:entry.getAtomDataRequestList()){
+        boolean allGood = true;
+        for (AtomDataRequest request : entry.getAtomDataRequestList()) {
             doDownload(request);
             allGood = allGood && request.getSuccessfullyDownloaded();
             if (!allGood)
@@ -181,9 +179,9 @@ public class AtomDownloadProcessor {
     }
 
     private void doDownload(AtomDataRequest request) {
-        retrievableSimpleLinkDownloader.process(request,HEADER_LENGTH,ACCEPT_MIME);
-        boolean someDownloaded = (request.getLinkContentHead()!= null) && (request.getLinkContentHead().length>0);
-        boolean is200 = ( (request.getLinkHTTPStatusCode()!=null) && (request.getLinkHTTPStatusCode() == 200));
+        retrievableSimpleLinkDownloader.process(request, HEADER_LENGTH, ACCEPT_MIME);
+        boolean someDownloaded = (request.getLinkContentHead() != null) && (request.getLinkContentHead().length > 0);
+        boolean is200 = ((request.getLinkHTTPStatusCode() != null) && (request.getLinkHTTPStatusCode() == 200));
         request.setSuccessfullyDownloaded(someDownloaded && is200);
     }
 

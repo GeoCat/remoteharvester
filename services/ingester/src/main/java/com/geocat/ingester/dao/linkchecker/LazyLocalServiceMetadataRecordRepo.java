@@ -61,16 +61,15 @@ public class LazyLocalServiceMetadataRecordRepo {
     PlatformTransactionManager transactionManager;
 
 
-
     // replaces List<LocalServiceMetadataRecord> findAllByFileIdentifierAndLinkCheckJobId
     // Only return the first instance (code was always using .get(0) )
     // Only return the most basic version of the LocalServiceMetadataRecord (no operatesOn and no documentLinks).
     // DO NOT SAVE THESE OBJECTS
     // DO NOT ACCESS operateOn or documentLinks  (hibernate session is closed)
-    public synchronized   Optional<LocalServiceMetadataRecord>  searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId){
+    public synchronized Optional<LocalServiceMetadataRecord> searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId) {
 
 
-        EntityManager  entityManager =  localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
+        EntityManager entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
         try {
 
             EntityGraph entityGraph = entityManager.getEntityGraph("LocalServiceMetadataRecord-lazy-graph");
@@ -89,8 +88,7 @@ public class LazyLocalServiceMetadataRecordRepo {
             }
 
             return result;
-        }
-        finally {
+        } finally {
             entityManager.clear();
             entityManager.close();
         }

@@ -84,18 +84,18 @@ public class MainLoopRouteCreator {
                 .redeliveryDelay(1000));
 
         routeBuilder.onException().onExceptionOccurred(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Exception ex = exchange.getException();
-                exchange.getMessage().setHeader("exception", ex);
-                logger.error("exception occurred", ex);
-            }
-        })
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                        logger.error("exception occurred", ex);
+                    }
+                })
                 .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(2)
         ;
 
         ChoiceDefinition choice = routeBuilder
-                .from(from +"?concurrentConsumers="+concurrency)
+                .from(from + "?concurrentConsumers=" + concurrency)
                 .routeId(mainRouteName + ".eventprocessor")
                 .transacted("txPolicyName")
                 .unmarshal(jsonDefHarvesterConfig)
@@ -106,7 +106,7 @@ public class MainLoopRouteCreator {
         for (RedirectEvent redirectEvent : redirectEventList) {
             choice = choice
                     .when(routeBuilder.simple("${headers.eventType} == '" + redirectEvent.getEventType().getSimpleName() + "'"))
-                    .log(LoggingLevel.TRACE,mainRouteName + " redirecting event of type ${headers.eventType} to " + redirectEvent.getEndpoint())
+                    .log(LoggingLevel.TRACE, mainRouteName + " redirecting event of type ${headers.eventType} to " + redirectEvent.getEndpoint())
 //                    .process(new Processor() {
 //                        @Override
 //                        public void process(Exchange exchange) throws Exception {
@@ -126,7 +126,7 @@ public class MainLoopRouteCreator {
         for (Class eventType : eventTypes) {
             choice = choice
                     .when(routeBuilder.simple("${headers.eventType} == '" + eventType.getSimpleName() + "'"))
-                   // .log(mainRouteName + " received event of type ${headers.eventType} and body=${body} ")
+                    // .log(mainRouteName + " received event of type ${headers.eventType} and body=${body} ")
                     .to("direct:" + mainRouteName + "_" + eventType.getSimpleName());
         }
 

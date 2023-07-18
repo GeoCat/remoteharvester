@@ -1,4 +1,3 @@
-
 package net.geocat.config;
 
 
@@ -34,7 +33,7 @@ public class ConfigOrchestratorDB {
     Environment env;
 
 
-   // @Primary
+    // @Primary
     @Bean(name = "dataSourceOrchestrator")
     @ConfigurationProperties(prefix = "orchestrator.datasource")
     public DataSource dataSource() {
@@ -50,7 +49,7 @@ public class ConfigOrchestratorDB {
         return dataSource;
     }
 
-     @Primary
+    @Primary
     @Bean(name = "entityManagerFactoryOrchestrator")
     public LocalContainerEntityManagerFactoryBean
     entityManagerFactory(
@@ -66,7 +65,7 @@ public class ConfigOrchestratorDB {
                 .build();
     }
 
-   // @Primary
+    // @Primary
     @Bean(name = "transactionManager")
     public PlatformTransactionManager transactionManager(
             @Qualifier("entityManagerFactoryOrchestrator") EntityManagerFactory

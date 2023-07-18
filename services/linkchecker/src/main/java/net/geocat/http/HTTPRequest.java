@@ -33,8 +33,6 @@
 
 package net.geocat.http;
 
-import org.slf4j.MDC;
-
 public class HTTPRequest implements Cloneable {
 
     public static String ACCEPTS_HEADER_XML = "application/xml,application/xml; q=1.0,text/xml; q=1.0,application/atom+xml; q=0.9";
@@ -53,18 +51,16 @@ public class HTTPRequest implements Cloneable {
     int nRedirectsRemaining = maxRedirects;
 
     boolean useCache = true;
-    boolean saveToCache =true;
+    boolean saveToCache = true;
     boolean cacheUseOtherJobs = true;
     String linkCheckJobId;
 
     int timeoutSeconds = 20;  //vast majority will respond in this time..
     int timeoutSecondsOnRetry = 60; // some might take longer...
 
-    public HTTPRequest clone() throws CloneNotSupportedException
-    {
+    public HTTPRequest clone() throws CloneNotSupportedException {
         return (HTTPRequest) super.clone();
     }
-
 
 
     public String getContentType() {

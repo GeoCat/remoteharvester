@@ -68,7 +68,7 @@ public class CapabilitiesDatasetMetadataLinkService {
             item.setAuthorityName(link.getAuthorityName());
             item.setCapabilitiesDocument(cap);
 
-         //   item.setCapabilitiesDocument(cap);
+            //   item.setCapabilitiesDocument(cap);
             result.add(item);
         }
         return result;

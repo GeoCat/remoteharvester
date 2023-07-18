@@ -49,23 +49,23 @@ public class MainLoopRouteCreator {
                 .redeliveryDelay(1000));
 
         routeBuilder.onException().onExceptionOccurred(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Exception ex = exchange.getException();
-                exchange.getMessage().setHeader("exception", ex);
-                logger.error("exception occurred", ex);
-            }
-        })
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                        logger.error("exception occurred", ex);
+                    }
+                })
                 .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(1)
         ;
 
         ChoiceDefinition choice = routeBuilder
-                .from(from+"?concurrentConsumers="+concurrency)
+                .from(from + "?concurrentConsumers=" + concurrency)
                 .routeId(mainRouteName + ".eventprocessor")
                 .transacted()
                 .unmarshal(jsonDefHarvesterConfig)
                 .setHeader("eventType", routeBuilder.simple("${body.getClass().getSimpleName()}"))
-              //  .log(mainRouteName + " received event of type ${headers.eventType} and body=${body} ")
+                //  .log(mainRouteName + " received event of type ${headers.eventType} and body=${body} ")
                 .choice();
         // special events - re-broadcast to parent
         for (RedirectEvent redirectEvent : redirectEventList) {

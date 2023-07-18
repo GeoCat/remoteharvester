@@ -33,7 +33,6 @@
 
 package net.geocat.service.capabilities;
 
-import net.geocat.xml.XmlCapabilitiesDocument;
 import net.geocat.xml.XmlDoc;
 
 import java.util.List;

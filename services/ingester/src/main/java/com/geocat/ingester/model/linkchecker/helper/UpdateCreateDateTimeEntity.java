@@ -35,8 +35,6 @@ package com.geocat.ingester.model.linkchecker.helper;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -97,12 +95,12 @@ public class UpdateCreateDateTimeEntity {
     @Override
     public String toString() {
         String result = "";
-        if (createTimeUTC !=null)
-            result += "     createTimeUTC="+createTimeUTC+"\n";
-        if (lastUpdateUTC !=null)
-            result += "     lastUpdateUTC="+lastUpdateUTC+"\n";
-        if (errorMessage!=null)
-            result += "     ERROR MESSAGE:"+errorMessage+"\n";
+        if (createTimeUTC != null)
+            result += "     createTimeUTC=" + createTimeUTC + "\n";
+        if (lastUpdateUTC != null)
+            result += "     lastUpdateUTC=" + lastUpdateUTC + "\n";
+        if (errorMessage != null)
+            result += "     ERROR MESSAGE:" + errorMessage + "\n";
         return result;
     }
 }

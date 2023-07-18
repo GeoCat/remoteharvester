@@ -1,11 +1,11 @@
 /**
-* JetBrains Space Automation
-* This Kotlin-script file lets you automate build activities
-* For more info, see https://www.jetbrains.com/help/space/automation.html
-*/
+ * JetBrains Space Automation
+ * This Kotlin-script file lets you automate build activities
+ * For more info, see https://www.jetbrains.com/help/space/automation.html
+ */
 
 job("Build, test and install CSW-ingester artifacts") {
-    
+
     container(displayName = "Run mvn install", image = "maven:3-jdk-8") {
         // url of a Space Packages repository
         env["REPOSITORY_URL"] = "https://maven.pkg.jetbrains.space/geocat/p/jrc-inspire-portal/maven"
@@ -29,7 +29,7 @@ job("Build, test and install CSW-ingester artifacts") {
     }
 
     docker {
-         beforeBuildScript {
+        beforeBuildScript {
             // Create an env variable BRANCH,
             // use env var to get full branch name,
             // leave only the branch name without the 'refs/heads/' path
@@ -48,16 +48,16 @@ job("Build, test and install CSW-ingester artifacts") {
             tags("\$BRANCH", "\$BRANCH-\$JB_SPACE_EXECUTION_NUMBER")
         }
     }
-    
+
 
     container(
-        displayName="Push Docker image in GeoCat Docker repository", 
-        image="geocat.registry.jetbrains.space/p/jrc-inspire-portal/geocat-systems/crane:main"
+            displayName = "Push Docker image in GeoCat Docker repository",
+            image = "geocat.registry.jetbrains.space/p/jrc-inspire-portal/geocat-systems/crane:main"
     ) {
         env["GEOCAT_DOCKER_REGISTRY_URL"] = "docker-registry.geocat.net:5000"
         env["GEOCAT_DOCKER_REGISTRY_USER"] = Params("geocat_docker_registry_user")
         env["GEOCAT_DOCKER_REGISTRY_PASSWORD"] = Secrets("geocat_docker_registry_password")
-        
+
         shellScript {
             content = """
             	BRANCH=${'$'}(echo ${'$'}JB_SPACE_GIT_BRANCH | cut -d'/' -f 3)
@@ -70,6 +70,5 @@ job("Build, test and install CSW-ingester artifacts") {
         }
     }
 
-    
 
 }

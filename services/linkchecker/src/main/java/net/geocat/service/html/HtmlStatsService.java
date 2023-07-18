@@ -67,12 +67,12 @@ public class HtmlStatsService {
     @Autowired
     XmlDocumentFactory xmlDocumentFactory;
 
-    public static String lastLinkCheckJob(LinkCheckJobRepo linkCheckJobRepo){
+    public static String lastLinkCheckJob(LinkCheckJobRepo linkCheckJobRepo) {
         LinkCheckJob lastJob = null;
-        for(LinkCheckJob job : linkCheckJobRepo.findAll()){
+        for (LinkCheckJob job : linkCheckJobRepo.findAll()) {
             if (lastJob == null)
                 lastJob = job;
-            if (lastJob.getCreateTimeUTC().compareTo(job.getCreateTimeUTC()) <1)
+            if (lastJob.getCreateTimeUTC().compareTo(job.getCreateTimeUTC()) < 1)
                 lastJob = job;
         }
         return lastJob.getJobId();
@@ -83,71 +83,68 @@ public class HtmlStatsService {
             linkCheckJobId = lastLinkCheckJob(linkCheckJobRepo);
 
 
-
-
-
         List<LocalDatasetMetadataRecord> datasets = localDatasetMetadataRecordRepo.findByLinkCheckJobId(linkCheckJobId);
         if (datasets.isEmpty()) {
-            linkCheckJobId= lastLinkCheckJobByCountry(linkCheckJobRepo, linkCheckJobId);
+            linkCheckJobId = lastLinkCheckJobByCountry(linkCheckJobRepo, linkCheckJobId);
             datasets = localDatasetMetadataRecordRepo.findByLinkCheckJobId(linkCheckJobId);
-         }
+        }
 
         LinkCheckJob job = linkCheckJobRepo.findById(linkCheckJobId).get();
 
         String result = "<head><meta charset=\"UTF-8\"></head>\n";
 
-          result += "<h1>Stats - "  + job.getLongTermTag()+" - " + linkCheckJobId  +"</h1>\n";
-        result += "number of datasets - "+datasets.size()+"<br>\n";
+        result += "<h1>Stats - " + job.getLongTermTag() + " - " + linkCheckJobId + "</h1>\n";
+        result += "number of datasets - " + datasets.size() + "<br>\n";
 
         long nViewLinks = datasets.stream()
-                .filter(x->x.getNumberOfViewDataLinks() >0)
+                .filter(x -> x.getNumberOfViewDataLinks() > 0)
                 .count();
         long nDownloadLinks = datasets.stream()
-                .filter(x->x.getNumberOfDownloadDataLinks() >0)
+                .filter(x -> x.getNumberOfDownloadDataLinks() > 0)
                 .count();
-        result += "number viewable - "+nViewLinks+"<br>\n";
-        result += "number downloadable - "+nDownloadLinks+"<br>\n";
+        result += "number viewable - " + nViewLinks + "<br>\n";
+        result += "number downloadable - " + nDownloadLinks + "<br>\n";
         result += "<br><br>\n";
 
         result += "<table border=1>";
         result += "<tr><td></td><td style='text-align:center' colspan=3><b>VIEW</b></td><td></td><td style='text-align:center'  colspan=3><b>DOWNLOAD</b></td></tr>";
         result += "<tr><td>Dataset fileid</td><td>n view links</td><td>n view attempted</td><td>n view success</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>n download links</td><td>n download attempted</td><td>n  download success</td>";
 
-        for (LocalDatasetMetadataRecord record : datasets){
-            String row ="";
+        for (LocalDatasetMetadataRecord record : datasets) {
+            String row = "";
             String style = "";
-            row += "<tr><td><a href='/api/html/dataset/"+record.getLinkCheckJobId()+"/"+record.getFileIdentifier()+"'>"+ record.getFileIdentifier() + "</a></td>";
+            row += "<tr><td><a href='/api/html/dataset/" + record.getLinkCheckJobId() + "/" + record.getFileIdentifier() + "'>" + record.getFileIdentifier() + "</a></td>";
 
-            if (record.getNumberOfViewDataLinks() ==0)
+            if (record.getNumberOfViewDataLinks() == 0)
                 style = "background:#FFDDDD;";
 
-            row += "<td style='text-align: center;"+style+"'>"+ record.getNumberOfViewDataLinks() + "</td>";
+            row += "<td style='text-align: center;" + style + "'>" + record.getNumberOfViewDataLinks() + "</td>";
 
-            style=getStyle(record.getNumberOfViewDataLinks(),record.getNumberOfViewLinksAttempted());
+            style = getStyle(record.getNumberOfViewDataLinks(), record.getNumberOfViewLinksAttempted());
 
-            row += "<td style='text-align: center;"+style+"'>"+ record.getNumberOfViewLinksAttempted() + "</td>";
+            row += "<td style='text-align: center;" + style + "'>" + record.getNumberOfViewLinksAttempted() + "</td>";
 
-            style=getStyle(record.getNumberOfViewLinksAttempted(),record.getNumberOfViewLinksSuccessful());
-            row += "<td style='text-align: center;"+style+"'>"+ record.getNumberOfViewLinksSuccessful() + "</td>";
+            style = getStyle(record.getNumberOfViewLinksAttempted(), record.getNumberOfViewLinksSuccessful());
+            row += "<td style='text-align: center;" + style + "'>" + record.getNumberOfViewLinksSuccessful() + "</td>";
 
             row += "<td> </td>";
 
             style = "";
-            if (record.getNumberOfViewDataLinks() ==0)
+            if (record.getNumberOfViewDataLinks() == 0)
                 style = "background:#FFDDDD;";
 
-            row += "<td style='text-align: center;"+style+"'>"+ record.getNumberOfDownloadDataLinks() + "</td>";
+            row += "<td style='text-align: center;" + style + "'>" + record.getNumberOfDownloadDataLinks() + "</td>";
 
-            style=getStyle(record.getNumberOfDownloadDataLinks(),record.getNumberOfDownloadLinksAttempted());
+            style = getStyle(record.getNumberOfDownloadDataLinks(), record.getNumberOfDownloadLinksAttempted());
 
-            row += "<td style='text-align: center;"+style+"'>"+ record.getNumberOfDownloadLinksAttempted() + "</td>";
+            row += "<td style='text-align: center;" + style + "'>" + record.getNumberOfDownloadLinksAttempted() + "</td>";
 
-            style=getStyle(record.getNumberOfDownloadLinksAttempted(),record.getNumberOfDownloadLinksSuccessful());
+            style = getStyle(record.getNumberOfDownloadLinksAttempted(), record.getNumberOfDownloadLinksSuccessful());
 
-            row += "<td style='text-align: center;"+style+"'>"+ record.getNumberOfDownloadLinksSuccessful() + "</td>";
+            row += "<td style='text-align: center;" + style + "'>" + record.getNumberOfDownloadLinksSuccessful() + "</td>";
             row += "</tr>\n";
 
-            row = row.replace(">null<",">-<");
+            row = row.replace(">null<", ">-<");
 
             result += row;
         }
@@ -156,25 +153,24 @@ public class HtmlStatsService {
         return result;
     }
 
-    public static String lastLinkCheckJobByCountry(LinkCheckJobRepo linkCheckJobRepo,String country){
+    public static String lastLinkCheckJobByCountry(LinkCheckJobRepo linkCheckJobRepo, String country) {
         LinkCheckJob lastJob = null;
-        for(LinkCheckJob job : linkCheckJobRepo.findAll()){
+        for (LinkCheckJob job : linkCheckJobRepo.findAll()) {
             if (!job.getLongTermTag().toLowerCase().startsWith(country.toLowerCase()))
                 continue;
             if (lastJob == null)
                 lastJob = job;
-            if (lastJob.getCreateTimeUTC().compareTo(job.getCreateTimeUTC()) <1)
+            if (lastJob.getCreateTimeUTC().compareTo(job.getCreateTimeUTC()) < 1)
                 lastJob = job;
         }
         return lastJob.getJobId();
     }
 
 
-
     private String getStyle(Integer a, Integer b) {
-        if ((a ==null) && (b==null))
+        if ((a == null) && (b == null))
             return "";
-        if ((a ==null) || (b==null))
+        if ((a == null) || (b == null))
             return "background:#FFDDDD;";
         if ((a.equals(b)))
             return "";

@@ -33,14 +33,14 @@
 
 package net.geocat.service;
 
- import net.geocat.database.linkchecker.entities.RemoteServiceMetadataRecordLink;
+import net.geocat.database.linkchecker.entities.RemoteServiceMetadataRecordLink;
 import net.geocat.database.linkchecker.service.MetadataDocumentFactory;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
 import net.geocat.xml.XmlDoc;
 import net.geocat.xml.XmlDocumentFactory;
 import net.geocat.xml.XmlServiceRecordDoc;
- import net.geocat.xml.XmlStringTools;
- import org.springframework.beans.factory.annotation.Autowired;
+import net.geocat.xml.XmlStringTools;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -71,7 +71,7 @@ public class RemoteServiceMetadataRecordLinkRetriever {
 
         String xmlStr = XmlStringTools.bytea2String(link.getFullData());
         XmlDoc xmlDoc = xmlDocumentFactory.create(xmlStr);
-        if (xmlDoc !=null)
+        if (xmlDoc != null)
             link.setXmlDocInfo(xmlDoc.toString());
 
         if (!(xmlDoc instanceof XmlServiceRecordDoc))

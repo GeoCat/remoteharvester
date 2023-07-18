@@ -37,7 +37,6 @@ public class IngestMainOrchestrator extends SpringRouteBuilder {
         );
 
 
-
         // TODO: Distinguish by type for harvester / ingester?
         from("activemq:ActiveMQ.DLQ")
                 .routeId("MainOrchestrator.DLQ")

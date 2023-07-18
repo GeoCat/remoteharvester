@@ -36,47 +36,47 @@ public class EventProcessorRouteCreator {
                                   String to,
                                   String tag,
                                   boolean unmarshal //will unmarshal message + transacted
-                                  , List<RedirectEvent>  redirectEventList
+            , List<RedirectEvent> redirectEventList
     ) throws Exception {
         validate(eventType);
 
-        if (redirectEventList ==null)
+        if (redirectEventList == null)
             redirectEventList = new ArrayList<>();
 
         ProcessorDefinition<ExpressionNode> route;
         //=====================================================================
         if (unmarshal)
-             route = routeBuilder
+            route = routeBuilder
                     .from(from)  // ${body} will be JMS message - unmarshal
                     .transacted()
                     .unmarshal(jsonDefHarvesterConfig)
                     .routeId(tag + "_" + eventType.getSimpleName())
-                   // .log("processing event of type " + eventType.getSimpleName() + " from " + from)
-                    .log(from+": event = ${body}")
+                    // .log("processing event of type " + eventType.getSimpleName() + " from " + from)
+                    .log(from + ": event = ${body}")
                     .bean(StopProcessingMessageService.class, "checkIfShouldBeProcessed", BeanScope.Request)
                     .bean(EventProcessorFactory.class, "create( ${body} )", BeanScope.Request)
                     .transform().simple("${body.externalProcessing()}")
                     .transform().simple("${body.internalProcessing()}")
                     .transform().simple("${body.newEventProcessing()}")
                     .split().simple("${body}")
-                   // .marshal().json()
-                   // .to(to)
+                    // .marshal().json()
+                    // .to(to)
                     ;
         else
             route = routeBuilder
                     .from(from)  // ${body} will be of type eventType
                     .transacted()
                     .routeId(tag + "_" + eventType.getSimpleName())
-                   // .log("processing event of type " + eventType.getSimpleName() + " from " + from)
-                    .log(from+": event = ${body}")
+                    // .log("processing event of type " + eventType.getSimpleName() + " from " + from)
+                    .log(from + ": event = ${body}")
                     .bean(StopProcessingMessageService.class, "checkIfShouldBeProcessed", BeanScope.Request)
                     .bean(EventProcessorFactory.class, "create( ${body} )", BeanScope.Request)
                     .transform().simple("${body.externalProcessing()}")
                     .transform().simple("${body.internalProcessing()}")
                     .transform().simple("${body.newEventProcessing()}")
                     .split().simple("${body}")
-                   // .marshal().json()
-                   // .to(to)
+                    // .marshal().json()
+                    // .to(to)
                     ;
 
         // ------------------------------------------------------------------
@@ -107,10 +107,9 @@ public class EventProcessorRouteCreator {
             choice.otherwise()
                     .marshal().json()
                     .to(to);
-        }
-        else {
+        } else {
             route.marshal().json()
-             .to(to);
+                    .to(to);
         }
 
         //=====================================================================

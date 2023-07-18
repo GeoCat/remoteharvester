@@ -34,8 +34,7 @@
 package net.geocat.service;
 
 import net.geocat.database.linkchecker.entities.CapabilitiesDatasetMetadataLink;
- import net.geocat.database.linkchecker.service.MetadataDocumentFactory;
-import net.geocat.service.capabilities.CapabilitiesDownloadingService;
+import net.geocat.database.linkchecker.service.MetadataDocumentFactory;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
 import net.geocat.xml.XmlDatasetMetadataDocument;
 import net.geocat.xml.XmlDoc;
@@ -68,12 +67,12 @@ public class RetrieveCapabilitiesDatasetMetadataLink {
     @Autowired
     LinkCheckBlobStorageService linkCheckBlobStorageService;
 
-    public CapabilitiesDatasetMetadataLink process(CapabilitiesDatasetMetadataLink link,String jobid) throws Exception {
+    public CapabilitiesDatasetMetadataLink process(CapabilitiesDatasetMetadataLink link, String jobid) throws Exception {
 
-        if ( (link.getFixedURL() == null) || link.getFixedURL().isEmpty())
+        if ((link.getFixedURL() == null) || link.getFixedURL().isEmpty())
             link.setFixedURL(link.getRawURL());
 
-        link.setFixedURL( canonicalize(link.getFixedURL()));
+        link.setFixedURL(canonicalize(link.getFixedURL()));
 
 
         link = (CapabilitiesDatasetMetadataLink) retrievableSimpleLinkDownloader.process(link);
@@ -82,10 +81,9 @@ public class RetrieveCapabilitiesDatasetMetadataLink {
             return link;
 
 
-
         XmlDoc doc = xmlDocumentFactory.create(XmlStringTools.bytea2String(link.getFullData()));
 
-        if (doc !=null)
+        if (doc != null)
             link.setXmlDocInfo(doc.toString());
 
         if (!(doc instanceof XmlDatasetMetadataDocument))
@@ -106,7 +104,7 @@ public class RetrieveCapabilitiesDatasetMetadataLink {
 //        CapabilitiesRemoteDatasetMetadataDocument capabilitiesRemoteDatasetMetadataDocument = metadataDocumentFactory.createCapabilitiesRemoteDatasetMetadataDocument(link, xmlDatasetMetadataDocument,jobid);
 //        capabilitiesRemoteDatasetMetadataDocument.setSha2(sha2);
 
-       // link.setCapabilitiesRemoteDatasetMetadataDocument(capabilitiesRemoteDatasetMetadataDocument);
+        // link.setCapabilitiesRemoteDatasetMetadataDocument(capabilitiesRemoteDatasetMetadataDocument);
 
         return link;
     }

@@ -1,6 +1,5 @@
 package geocat.integrationtests;
 
-import geocat.MySpringApp;
 import geocat.database.entities.HarvestJob;
 import geocat.database.entities.HarvestJobState;
 import geocat.database.repos.HarvestJobRepo;
@@ -8,14 +7,13 @@ import geocat.database.service.HarvestJobService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.UUID;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertSame;
 
 
 //Access the database by;
@@ -28,7 +26,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT
-      //  classes = MySpringApp.class
+        //  classes = MySpringApp.class
 )
 @TestPropertySource(
         locations = "classpath:application-integrationtest.properties")
@@ -46,20 +44,20 @@ public class SimpleDBTests {
     @Test
     public void testDB() throws Exception {
         HarvestJob newJob = new HarvestJob();
-        newJob.setJobId( (UUID.randomUUID().toString()));
-       // newJob.setFilter(event.getFilter());
+        newJob.setJobId((UUID.randomUUID().toString()));
+        // newJob.setFilter(event.getFilter());
         newJob.setLookForNestedDiscoveryService(false);
         newJob.setInitialUrl("http://hi.com");
         newJob.setLongTermTag("testcase1");
         newJob.setState(HarvestJobState.CREATING);
-       // newJob.setProblematicResultsConfigurationJSON(event.getProblematicResultsConfigurationJSON());
+        // newJob.setProblematicResultsConfigurationJSON(event.getProblematicResultsConfigurationJSON());
         newJob.setNrecordsPerRequest(10);
-       // newJob.setGetRecordQueueHint(event.getGetRecordQueueHint());
-        HarvestJob newJob2 =  harvestJobRepo.save(newJob);
+        // newJob.setGetRecordQueueHint(event.getGetRecordQueueHint());
+        HarvestJob newJob2 = harvestJobRepo.save(newJob);
         harvestJobService.updateHarvestJobStateInDBToError(newJob2.getJobId());
         HarvestJob newJob3 = harvestJobRepo.findById(newJob2.getJobId()).get();
-        assertSame(HarvestJobState.ERROR,newJob3.getState());
-        Thread.sleep(100*1000); // access database
+        assertSame(HarvestJobState.ERROR, newJob3.getState());
+        Thread.sleep(100 * 1000); // access database
     }
 
 }

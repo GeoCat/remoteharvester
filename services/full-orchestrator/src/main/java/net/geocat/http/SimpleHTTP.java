@@ -1,17 +1,17 @@
 package net.geocat.http;
 
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
- import org.springframework.context.annotation.Scope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
- import sun.misc.IOUtils;
+import sun.misc.IOUtils;
 
- import java.io.IOException;
- import java.io.InputStream;
- import java.io.OutputStream;
- import java.net.*;
- import java.nio.charset.StandardCharsets;
- import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @Scope("prototype")
@@ -19,10 +19,10 @@ public class SimpleHTTP {
 
 
     Logger logger = LoggerFactory.getLogger(SimpleHTTP.class);
-    int TIMEOUT_MS =   20 * 1000;
+    int TIMEOUT_MS = 20 * 1000;
 
 
-    public String sendJSON(String verb, String location, String json) throws  Exception {
+    public String sendJSON(String verb, String location, String json) throws Exception {
         if (json == null)
             json = "";
         URL url = new URL(location);
@@ -63,19 +63,17 @@ public class SimpleHTTP {
         http.connect();
         try {
             // send body
-            if (body_bytes.length>0) {
+            if (body_bytes.length > 0) {
                 try (OutputStream os = http.getOutputStream()) {
                     os.write(body_bytes);
                 }
             }
             // get response
-            try (InputStream is = http.getInputStream()){
+            try (InputStream is = http.getInputStream()) {
                 response_bytes = IOUtils.readAllBytes(is);
-                response= new String(response_bytes,StandardCharsets.UTF_8);
+                response = new String(response_bytes, StandardCharsets.UTF_8);
             }
-        }
-
-        finally {
+        } finally {
             http.disconnect();
         }
 

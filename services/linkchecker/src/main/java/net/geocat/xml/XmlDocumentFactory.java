@@ -66,7 +66,7 @@ public class XmlDocumentFactory {
         if (isCSWMetadataDocument(doc)) {
             doc = new XmlMetadataDocument(doc);
             XmlMetadataDocument xmlMetadataDocument = (XmlMetadataDocument) doc;
-            if ( (xmlMetadataDocument.getMetadataDocumentType() == MetadataDocumentType.Dataset) || (xmlMetadataDocument.getMetadataDocumentType() == MetadataDocumentType.Series) ) {
+            if ((xmlMetadataDocument.getMetadataDocumentType() == MetadataDocumentType.Dataset) || (xmlMetadataDocument.getMetadataDocumentType() == MetadataDocumentType.Series)) {
                 XmlDatasetMetadataDocument xmlDatasetMetadataDocument = new XmlDatasetMetadataDocument(xmlMetadataDocument);
                 return xmlDatasetMetadataDocument;
             }
@@ -76,7 +76,7 @@ public class XmlDocumentFactory {
             CapabilitiesType type = capabilityDeterminer.determineCapabilitiesType(doc);
 //            System.out.println("parse time2: " + (System.currentTimeMillis() - startTime));
 
-            XmlDoc result =  XmlCapabilitiesDocument.create(doc, type);
+            XmlDoc result = XmlCapabilitiesDocument.create(doc, type);
 //            System.out.println("parse time3: " + (System.currentTimeMillis() - startTime));
 
             return result;
@@ -86,8 +86,8 @@ public class XmlDocumentFactory {
 
     private XmlDoc simplify(XmlDoc doc) throws Exception {
         if (doc.getRootTagName().equals("GetRecordByIdResponse")) {
-           // Node n = doc.xpath_node("//gmd:MD_Metadata");
-            Node n = XmlDoc.findNode(doc.getParsedXml(),"GetRecordByIdResponse","MD_Metadata");
+            // Node n = doc.xpath_node("//gmd:MD_Metadata");
+            Node n = XmlDoc.findNode(doc.getParsedXml(), "GetRecordByIdResponse", "MD_Metadata");
             if (n == null) // likely an empty response...
                 return doc;
             Document d = DocumentBuilderFactory.newInstance()
@@ -98,7 +98,7 @@ public class XmlDocumentFactory {
             return new XmlDoc(doc.getOriginalXmlString(), d);
         }
         if (doc.getRootTagName().equals("GetRecordsResponse")) {
-            Node n = XmlDoc.findNode(doc.getParsedXml(),"GetRecordsResponse","SearchResults","MD_Metadata");
+            Node n = XmlDoc.findNode(doc.getParsedXml(), "GetRecordsResponse", "SearchResults", "MD_Metadata");
             if (n == null) // likely an empty response...
                 return doc;
             Document d = DocumentBuilderFactory.newInstance()
@@ -129,10 +129,10 @@ public class XmlDocumentFactory {
         if (!isCSWMetadataDocument(xmlDoc))
             return false;
         //Node n = xmlDoc.xpath_node("/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue");
-        Node n = XmlDoc.findNode(xmlDoc.parsedXml,"MD_Metadata","hierarchyLevel","MD_ScopeCode");
+        Node n = XmlDoc.findNode(xmlDoc.parsedXml, "MD_Metadata", "hierarchyLevel", "MD_ScopeCode");
         if (n == null)
             return false;
-        n= n.getAttributes().getNamedItem("codeListValue");
+        n = n.getAttributes().getNamedItem("codeListValue");
         if (n == null)
             return false;
         if (n.getNodeValue().equals("service"))

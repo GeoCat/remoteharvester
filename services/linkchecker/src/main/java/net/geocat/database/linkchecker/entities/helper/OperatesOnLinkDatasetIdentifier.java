@@ -33,34 +33,31 @@
 
 package net.geocat.database.linkchecker.entities.helper;
 
-import net.geocat.database.linkchecker.entities.CapabilitiesDatasetMetadataLink;
 import net.geocat.database.linkchecker.entities.OperatesOnLink;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 
 @Entity
 @DiscriminatorValue("OperatesOnLnkDatasetIdentifier")
-public class OperatesOnLinkDatasetIdentifier extends DatasetIdentifier{
+public class OperatesOnLinkDatasetIdentifier extends DatasetIdentifier {
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     OperatesOnLink operatesOnLink;
 
-    public OperatesOnLinkDatasetIdentifier() {super();}
+    public OperatesOnLinkDatasetIdentifier() {
+        super();
+    }
 
     public OperatesOnLinkDatasetIdentifier(DatasetIdentifierNodeType identifierNodeType, String code, String codeSpace) {
-        super(identifierNodeType,code,codeSpace);
+        super(identifierNodeType, code, codeSpace);
     }
 
     public OperatesOnLinkDatasetIdentifier(DatasetIdentifier id) {
-        super(id.getIdentifierNodeType(),id.getCode(),id.getCodeSpace());
+        super(id.getIdentifierNodeType(), id.getCode(), id.getCodeSpace());
     }
 
-    public OperatesOnLinkDatasetIdentifier(DatasetIdentifier id, OperatesOnLink r ) {
+    public OperatesOnLinkDatasetIdentifier(DatasetIdentifier id, OperatesOnLink r) {
         this(id);
         this.operatesOnLink = r;
     }

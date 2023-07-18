@@ -63,42 +63,42 @@ public class MetadataService {
     LinkCheckJobRepo linkCheckJobRepo;
 
     public boolean linkProcessingComplete(String linkCheckJobId) {
-        LinkCheckJob job  = linkCheckJobRepo.findById(linkCheckJobId).get();
+        LinkCheckJob job = linkCheckJobRepo.findById(linkCheckJobId).get();
 //        long nService = localServiceMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
 //        long nDataset = localDatasetMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
 
-        Long nService =  job.getNumberOfLocalServiceRecords();
+        Long nService = job.getNumberOfLocalServiceRecords();
         Long nDataset = job.getNumberOfLocalDatasetRecords();
         Long nOther = job.getNumberOfNotProcessedDatasetRecords();
 
 
         long nDataset_complete = localDatasetMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_PROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
         if (nDataset_complete < nDataset.longValue())
             return false; //short cut - still more to do
 
         long nService_complete = localServiceMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_PROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
         if (nService_complete < nService.longValue())
             return false; //short cut - still more to do
 
 
         long nOther_complete = localNotProcessedMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_PROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
         if (nOther_complete < nOther.longValue())
             return false; //short cut - still more to do
@@ -112,47 +112,43 @@ public class MetadataService {
     }
 
     public long numberRemaininglinkProcessing(String linkCheckJobId) {
-        LinkCheckJob job  = linkCheckJobRepo.findById(linkCheckJobId).get();
+        LinkCheckJob job = linkCheckJobRepo.findById(linkCheckJobId).get();
 
 
-        Long nService =  job.getNumberOfLocalServiceRecords();
+        Long nService = job.getNumberOfLocalServiceRecords();
         Long nDataset = job.getNumberOfLocalDatasetRecords();
         Long nOther = job.getNumberOfNotProcessedDatasetRecords();
 
 
         long nDataset_complete = localDatasetMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_PROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
-
+                }));
 
 
         long nService_complete = localServiceMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_PROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
-
-
+                }));
 
 
         long nOther_complete = localNotProcessedMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_PROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
 
-
-        long total_records = nDataset+ nService +nOther;
-        long total_complete = nDataset_complete+nService_complete +nOther_complete;
+        long total_records = nDataset + nService + nOther;
+        long total_complete = nDataset_complete + nService_complete + nOther_complete;
         return total_records - total_complete;
 
-     }
+    }
 
 
     public boolean linkPostProcessingComplete(String linkCheckJobId) {
@@ -160,21 +156,21 @@ public class MetadataService {
         long nDataset = localDatasetMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
 
         long nDataset_complete = localDatasetMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_POSTPROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
         long nService_complete = localServiceMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_POSTPROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
-        long total_records = nDataset+ nService;
-        long total_complete = nDataset_complete+nService_complete;
+        long total_records = nDataset + nService;
+        long total_complete = nDataset_complete + nService_complete;
 
         return total_records == total_complete;
     }
@@ -184,35 +180,35 @@ public class MetadataService {
         long nDataset = localDatasetMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
 
         long nDataset_complete = localDatasetMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_POSTPROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
         long nService_complete = localServiceMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.LINKS_POSTPROCESSED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
-        long total_records = nDataset+ nService;
-        long total_complete = nDataset_complete+nService_complete;
+        long total_records = nDataset + nService;
+        long total_complete = nDataset_complete + nService_complete;
 
         return total_records - total_complete;
     }
 
     public long numberRemainingDataDownload(String linkCheckJobId) {
-       // long nService = localServiceMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
+        // long nService = localServiceMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
         long nDataset = localDatasetMetadataRecordRepo.countByLinkCheckJobId(linkCheckJobId);
 
         long nDataset_complete = localDatasetMetadataRecordRepo.countInStates(linkCheckJobId,
-                Arrays.asList(new String[] {
+                Arrays.asList(new String[]{
                         ServiceMetadataDocumentState.ERROR.toString(),
                         ServiceMetadataDocumentState.DATADOWNLOADED.toString(),
                         ServiceMetadataDocumentState.NOT_APPLICABLE.toString(),
-                })  ) ;
+                }));
 
 //        long nService_complete = localServiceMetadataRecordRepo.countInStates(linkCheckJobId,
 //                Arrays.asList(new String[] {

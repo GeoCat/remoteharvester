@@ -35,7 +35,6 @@ package net.geocat.database.linkchecker.entities;
 
 import net.geocat.database.linkchecker.entities.helper.MetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
-import net.geocat.database.linkchecker.entities.helper.ServiceMetadataRecord;
 
 import javax.persistence.*;
 
@@ -134,7 +133,7 @@ public class LocalNotProcessedMetadataRecord extends MetadataRecord {
     @Override
     public String toString() {
         String result = "LocalNotProcessedMetadataRecord {\n";
-        result += "      NOT PROCESSED Metadata Document Id: " + localNotProcessedMetadataRecordId+ "\n";
+        result += "      NOT PROCESSED Metadata Document Id: " + localNotProcessedMetadataRecordId + "\n";
         result += "     linkCheckJobId: " + linkCheckJobId + "\n";
         result += "     harvesterMetadataRecordId: " + harvesterMetadataRecordId + "\n";
         result += "     state: " + state + "\n";

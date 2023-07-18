@@ -37,12 +37,10 @@ package com.geocat.ingester.model.linkchecker;
 import com.geocat.ingester.model.linkchecker.helper.UpdateCreateDateTimeEntity;
 
 import javax.persistence.*;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 // represents a run of the link checker
 @Entity
-public class LinkCheckJob extends UpdateCreateDateTimeEntity  {
+public class LinkCheckJob extends UpdateCreateDateTimeEntity {
 
 
     @Id
@@ -50,33 +48,33 @@ public class LinkCheckJob extends UpdateCreateDateTimeEntity  {
     private String jobId;
 
     /**
-     *   When making HTTP/S requests, should we use (old) jobs in the HttpRequestCache?
+     * When making HTTP/S requests, should we use (old) jobs in the HttpRequestCache?
      */
-    boolean useOtherJobsHTTPCache ;
+    boolean useOtherJobsHTTPCache;
 
     /**
-     *  When the job is COMPLETE (or ERROR or USERABORT), should the data (for this job)
-     *  be deleted from the HttpRequestCache?
+     * When the job is COMPLETE (or ERROR or USERABORT), should the data (for this job)
+     * be deleted from the HttpRequestCache?
      */
-    boolean deleteHTTPCacheWhenComplete ;
+    boolean deleteHTTPCacheWhenComplete;
 
     /**
-     *  When downloading data, what is the maximum number of LinkToData links to follow?
+     * When downloading data, what is the maximum number of LinkToData links to follow?
      */
-    int maxDataLinksToFollow  ;
+    int maxDataLinksToFollow;
 
     /**
      * When processing an ATOM link, and there are multiple entries in the Dataset Feed, how many should we
      * follow?
      * NOTE: when a "good" entry is found, no others will be attempted.
      */
-    int maxAtomEntriesToAttempt ;
+    int maxAtomEntriesToAttempt;
 
     /**
      * When processing an ATOM Dataset Feed Entry and there are multiple "section" links, how many should we follow?
      * NOTE: ALL must be "good"
      */
-    int maxAtomSectionLinksToFollow ;
+    int maxAtomSectionLinksToFollow;
 
     //GUID of the havest job this is processing
     @Column(columnDefinition = "varchar(40)")
@@ -118,9 +116,6 @@ public class LinkCheckJob extends UpdateCreateDateTimeEntity  {
     }
 
     //------------------------------------
-
-
-
 
 
     public int getMaxDataLinksToFollow() {
@@ -239,18 +234,18 @@ public class LinkCheckJob extends UpdateCreateDateTimeEntity  {
     public String toString() {
         String result = "LinkCheckJob {";
 
-        result += "        jobId="+jobId+"\n";
-        if (state !=null)
-            result += "        state="+state+"\n";
-        if (harvestJobId !=null)
-            result += "        harvestJobId="+harvestJobId+"\n";
+        result += "        jobId=" + jobId + "\n";
+        if (state != null)
+            result += "        state=" + state + "\n";
+        if (harvestJobId != null)
+            result += "        harvestJobId=" + harvestJobId + "\n";
 
-        if (numberOfDocumentsInBatch !=null)
-            result += "        numberOfDocumentsInBatch="+numberOfDocumentsInBatch+"\n";
-        if (numberOfLocalServiceRecords !=null)
-            result += "        numberOfLocalServiceRecords="+numberOfLocalServiceRecords+"\n";
-        if (numberOfLocalDatasetRecords !=null)
-            result += "        numberOfLocalDatasetRecords="+numberOfLocalDatasetRecords+"\n";
+        if (numberOfDocumentsInBatch != null)
+            result += "        numberOfDocumentsInBatch=" + numberOfDocumentsInBatch + "\n";
+        if (numberOfLocalServiceRecords != null)
+            result += "        numberOfLocalServiceRecords=" + numberOfLocalServiceRecords + "\n";
+        if (numberOfLocalDatasetRecords != null)
+            result += "        numberOfLocalDatasetRecords=" + numberOfLocalDatasetRecords + "\n";
 
         result += "}\n";
 

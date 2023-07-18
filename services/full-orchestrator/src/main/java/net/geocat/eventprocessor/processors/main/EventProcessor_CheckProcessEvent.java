@@ -6,13 +6,11 @@ import net.geocat.database.orchestrator.repos.OrchestratedHarvestProcessRepo;
 import net.geocat.eventprocessor.BaseEventProcessor;
 import net.geocat.events.CheckProcessEvent;
 import net.geocat.events.Event;
-import net.geocat.events.OrchestratedHarvestAbortEvent;
 import net.geocat.model.HarvestStartResponse;
 import net.geocat.model.HarvestStatus;
 import net.geocat.model.IngestStatus;
 import net.geocat.model.LinkCheckStatus;
 import net.geocat.service.OrchestratedHarvestProcessService;
-import net.geocat.service.OrchestratedHarvestService;
 import net.geocat.service.ProcessLockingService;
 import net.geocat.service.exernalservices.HarvesterService;
 import net.geocat.service.exernalservices.IngesterService;
@@ -33,7 +31,7 @@ import java.util.concurrent.locks.Lock;
 @Scope("prototype")
 public class EventProcessor_CheckProcessEvent extends BaseEventProcessor<CheckProcessEvent> {
 
-    Logger logger = LoggerFactory.getLogger( EventProcessor_CheckProcessEvent.class);
+    Logger logger = LoggerFactory.getLogger(EventProcessor_CheckProcessEvent.class);
 
     @Autowired
     OrchestratedHarvestProcessRepo orchestratedHarvestProcessRepo;
@@ -71,7 +69,7 @@ public class EventProcessor_CheckProcessEvent extends BaseEventProcessor<CheckPr
             if (processOptional.isPresent()) {
                 OrchestratedHarvestProcess process = processOptional.get();
 
-                switch(process.getState()){
+                switch (process.getState()) {
                     case ERROR:
                     case USERABORT:
                     case COMPLETE:
@@ -89,8 +87,7 @@ public class EventProcessor_CheckProcessEvent extends BaseEventProcessor<CheckPr
                         break;
                 }
             }
-        }
-        finally {
+        } finally {
             lock.unlock();
         }
         return this;
@@ -148,7 +145,7 @@ public class EventProcessor_CheckProcessEvent extends BaseEventProcessor<CheckPr
     private void changePhaseFromHarvesting(OrchestratedHarvestProcess process) throws Exception {
         if (process.getExecuteLinkChecker()) {
             //transition to linkchecker
-            HarvestStartResponse response = linkCheckService.startLinkCheck(process );
+            HarvestStartResponse response = linkCheckService.startLinkCheck(process);
             process.setLinkCheckJobId(response.getProcessID());
             process.setState(OrchestratedHarvestProcessState.LINKCHECKING);
             orchestratedHarvestProcessRepo.save(process);
@@ -187,7 +184,7 @@ public class EventProcessor_CheckProcessEvent extends BaseEventProcessor<CheckPr
         }
 
         //handle ERROR, USERABORT
-        int t=0;
+        int t = 0;
     }
 
 

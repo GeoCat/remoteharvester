@@ -67,12 +67,12 @@ public class InspireSpatialDatasetIdentifier {
     @Column(columnDefinition = "text")
     private String namespace;
 
-//    //which capabilities record does this link belong to?
+    //    //which capabilities record does this link belong to?
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(
             {
-                    @JoinColumn(name="cap_sha2",referencedColumnName = "sha2"),
-                    @JoinColumn(name="cap_jobId",referencedColumnName = "linkcheckjobid")
+                    @JoinColumn(name = "cap_sha2", referencedColumnName = "sha2"),
+                    @JoinColumn(name = "cap_jobId", referencedColumnName = "linkcheckjobid")
             }
     )
     private CapabilitiesDocument capabilitiesDocument;

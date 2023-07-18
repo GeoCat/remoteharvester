@@ -33,9 +33,7 @@
 
 package net.geocat.xml.helpers;
 
-import net.geocat.xml.XmlDoc;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +56,7 @@ public class OperatesOn {
             throw new Exception("OperatesOn -- root node should be operatesOn");
 
         uuidref = getAttribute(node, "uuidref");
-        rawUrl = getAttribute(node,   "xlink:href");
+        rawUrl = getAttribute(node, "xlink:href");
 
 
 //        uuidref = XmlDoc.xpath_attribute(node, ".", "uuidref");
@@ -67,8 +65,8 @@ public class OperatesOn {
 
     public static List<OperatesOn> create(List<Node> nl) throws Exception {
         List<OperatesOn> result = new ArrayList<>(nl.size());
-        for (Node n: nl) {
-           // Node n = nl.item(idx);
+        for (Node n : nl) {
+            // Node n = nl.item(idx);
             OperatesOn opOn = new OperatesOn(n);
             result.add(opOn);
         }

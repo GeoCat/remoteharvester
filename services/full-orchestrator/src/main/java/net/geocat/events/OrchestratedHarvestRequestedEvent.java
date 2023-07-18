@@ -33,7 +33,6 @@
 
 package net.geocat.events;
 
-import net.geocat.model.HarvesterConfig;
 import net.geocat.model.OrchestratorJobConfig;
 
 public class OrchestratedHarvestRequestedEvent extends Event {
@@ -56,7 +55,6 @@ public class OrchestratedHarvestRequestedEvent extends Event {
     public void setHarvesterConfig(OrchestratorJobConfig harvesterConfig) {
         this.harvesterConfig = harvesterConfig;
     }
-
 
 
     @Override

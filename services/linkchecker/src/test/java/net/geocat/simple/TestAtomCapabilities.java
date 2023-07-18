@@ -35,7 +35,6 @@ package net.geocat.simple;
 
 import net.geocat.service.capabilities.WMSCapabilitiesDatasetLinkExtractor;
 import net.geocat.xml.XmlCapabilitiesAtom;
-import net.geocat.xml.XmlCapabilitiesWMS;
 import net.geocat.xml.XmlDocumentFactory;
 import net.geocat.xml.helpers.CapabilityDeterminer;
 import org.junit.Before;
@@ -43,9 +42,7 @@ import org.junit.Test;
 
 import java.util.Scanner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class TestAtomCapabilities {
 
@@ -62,45 +59,44 @@ public class TestAtomCapabilities {
 
         assertEquals(1, xmlCapabilitiesDocument.getDatasetLinksList().size());
 
-        assertEquals("spatial_dataset_identifier_code1",xmlCapabilitiesDocument.getDatasetLinksList().get(0).getIdentifier());
-        assertEquals("describedbyURL",xmlCapabilitiesDocument.getDatasetLinksList().get(0).getRawUrl());
+        assertEquals("spatial_dataset_identifier_code1", xmlCapabilitiesDocument.getDatasetLinksList().get(0).getIdentifier());
+        assertEquals("describedbyURL", xmlCapabilitiesDocument.getDatasetLinksList().get(0).getRawUrl());
 
         assertEquals(1, xmlCapabilitiesDocument.getEntries().size());
         assertEquals(2, xmlCapabilitiesDocument.getEntries().get(0).getLinks().size());
 
         assertEquals("spatial_dataset_identifier_namespace1", xmlCapabilitiesDocument.getDatasetLinksList().get(0).getAuthority());
         assertEquals("spatial_dataset_identifier_code1", xmlCapabilitiesDocument.getDatasetLinksList().get(0).getIdentifier());
-        assertNull( xmlCapabilitiesDocument.getDatasetLinksList().get(0).getAuthorityName());
+        assertNull(xmlCapabilitiesDocument.getDatasetLinksList().get(0).getAuthorityName());
 
-        assertEquals("describedby",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getRel());
-        assertEquals("describedbyURL",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getHref());
-        assertEquals("application/xml",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getType());
-        assertEquals("en",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getHreflang());
+        assertEquals("describedby", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getRel());
+        assertEquals("describedbyURL", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getHref());
+        assertEquals("application/xml", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getType());
+        assertEquals("en", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getHreflang());
         assertNull(xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(0).getTitle());
 
-        assertEquals("alternate",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getRel());
-        assertEquals("hrefALT",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getHref());
-        assertEquals("application/atom+xml",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getType());
-        assertEquals("nl",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getHreflang());
-        assertEquals("geology",xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getTitle());
+        assertEquals("alternate", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getRel());
+        assertEquals("hrefALT", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getHref());
+        assertEquals("application/atom+xml", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getType());
+        assertEquals("nl", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getHreflang());
+        assertEquals("geology", xmlCapabilitiesDocument.getEntries().get(0).getLinks().get(1).getTitle());
 
     }
-
 
 
     public XmlCapabilitiesAtom read(String fname) throws Exception {
         String text = new Scanner(TestWMSCapabilitiesDatasetLinkExtractor.class.getClassLoader().getResourceAsStream(fname), "UTF-8")
                 .useDelimiter("\\A").next();
-        return (XmlCapabilitiesAtom)xmlDocumentFactory.create(text);
+        return (XmlCapabilitiesAtom) xmlDocumentFactory.create(text);
     }
 
 
     @Before
-    public void setup(){
+    public void setup() {
         xmlDocumentFactory = new XmlDocumentFactory();
         xmlDocumentFactory.capabilityDeterminer = new CapabilityDeterminer();
 
-        wmsCapabilitiesDatasetLinkExtractor =  new WMSCapabilitiesDatasetLinkExtractor();
+        wmsCapabilitiesDatasetLinkExtractor = new WMSCapabilitiesDatasetLinkExtractor();
     }
 
 }

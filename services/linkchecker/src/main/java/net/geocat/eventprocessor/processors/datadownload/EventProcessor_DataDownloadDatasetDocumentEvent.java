@@ -33,14 +33,7 @@
 
 package net.geocat.eventprocessor.processors.datadownload;
 
-import net.geocat.database.linkchecker.entities.LinkCheckJob;
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-import net.geocat.database.linkchecker.entities.OGCRequest;
-import net.geocat.database.linkchecker.entities.SimpleAtomLinkToData;
-import net.geocat.database.linkchecker.entities.SimpleLayerDatasetIdDataLink;
-import net.geocat.database.linkchecker.entities.SimpleLayerMetadataUrlDataLink;
-import net.geocat.database.linkchecker.entities.SimpleSpatialDSIDDataLink;
-import net.geocat.database.linkchecker.entities.SimpleStoredQueryDataLink;
+import net.geocat.database.linkchecker.entities.*;
 import net.geocat.database.linkchecker.entities.helper.LinkToData;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
@@ -52,7 +45,6 @@ import net.geocat.eventprocessor.processors.datadownload.downloaders.OGCRequestG
 import net.geocat.eventprocessor.processors.datadownload.downloaders.OGCRequestResolver;
 import net.geocat.events.Event;
 import net.geocat.events.EventFactory;
-import net.geocat.events.EventService;
 import net.geocat.events.datadownload.DataDownloadDatasetDocumentEvent;
 import net.geocat.model.LinkCheckRunConfig;
 import net.geocat.service.LoggingSupport;
@@ -66,11 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
@@ -125,20 +113,17 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
             localDatasetMetadataRecord.setNumberOfViewLinksSuccessful(0);
 
             save();
-        }
-        else
-        {
-            try{
+        } else {
+            try {
                 process();
                 localDatasetMetadataRecord.setState(ServiceMetadataDocumentState.DATADOWNLOADED);
                 save();
-                logger.debug("finished DATADOWNLOADED dataset documentid="+getInitiatingEvent().getDatasetDocumentId()  );
+                logger.debug("finished DATADOWNLOADED dataset documentid=" + getInitiatingEvent().getDatasetDocumentId());
 
-            }
-            catch(Exception e){
-                logger.error("DATADOWNLOADED exception for datasetMetadataRecordId="+getInitiatingEvent().getDatasetDocumentId(),e);
+            } catch (Exception e) {
+                logger.error("DATADOWNLOADED exception for datasetMetadataRecordId=" + getInitiatingEvent().getDatasetDocumentId(), e);
                 localDatasetMetadataRecord.setState(ServiceMetadataDocumentState.ERROR);
-                localDatasetMetadataRecord.setErrorMessage(  convertToString(e) );
+                localDatasetMetadataRecord.setErrorMessage(convertToString(e));
                 save();
             }
         }
@@ -148,19 +133,19 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
 
     private void process() throws Exception {
         //break into download and view links
-        if ( (localDatasetMetadataRecord.getDataLinks() == null) || (localDatasetMetadataRecord.getDataLinks().isEmpty()))
+        if ((localDatasetMetadataRecord.getDataLinks() == null) || (localDatasetMetadataRecord.getDataLinks().isEmpty()))
             return;
 
         List<LinkToData> viewLinks = localDatasetMetadataRecord.getDataLinks().stream()
-                .filter(x->x.getCapabilitiesDocumentType() == CapabilitiesType.WMS ||x.getCapabilitiesDocumentType() == CapabilitiesType.WMTS )
+                .filter(x -> x.getCapabilitiesDocumentType() == CapabilitiesType.WMS || x.getCapabilitiesDocumentType() == CapabilitiesType.WMTS)
                 .collect(Collectors.toList());
         List<LinkToData> downloadLinks = localDatasetMetadataRecord.getDataLinks().stream()
-                .filter(x->x.getCapabilitiesDocumentType() == CapabilitiesType.WFS ||x.getCapabilitiesDocumentType() == CapabilitiesType.Atom)
+                .filter(x -> x.getCapabilitiesDocumentType() == CapabilitiesType.WFS || x.getCapabilitiesDocumentType() == CapabilitiesType.Atom)
                 .collect(Collectors.toList());
 
         Map<String, OGCInfoCacheItem> ogcInfoCache = new HashMap<>();
-        List<String> cap_sha2s = localDatasetMetadataRecord.getDataLinks(). stream()
-                .map(x->x.getCapabilitiesSha2())
+        List<String> cap_sha2s = localDatasetMetadataRecord.getDataLinks().stream()
+                .map(x -> x.getCapabilitiesSha2())
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -168,20 +153,20 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
             OGCInfoCacheItem ogcInfoCacheItem = ogcRequestGenerator.prep(localDatasetMetadataRecord.getLinkCheckJobId(), capSha2);
             ogcInfoCache.put(capSha2, ogcInfoCacheItem);
         }
-        LinkCheckJob job = linkCheckJobService.getJobInfo(localDatasetMetadataRecord.getLinkCheckJobId(),false);
-        processView(viewLinks,ogcInfoCache,job);
-        processDownload(downloadLinks,ogcInfoCache,job);
-     }
+        LinkCheckJob job = linkCheckJobService.getJobInfo(localDatasetMetadataRecord.getLinkCheckJobId(), false);
+        processView(viewLinks, ogcInfoCache, job);
+        processDownload(downloadLinks, ogcInfoCache, job);
+    }
 
     private void processDownload(List<LinkToData> downloadLinks, Map<String, OGCInfoCacheItem> ogcInfoCache, LinkCheckJob job) {
-        int MAX_LINKS_TO_FOLLOW = job==null ? LinkCheckRunConfig.maxDataLinksToFollow_default : job.getMaxDataLinksToFollow();
+        int MAX_LINKS_TO_FOLLOW = job == null ? LinkCheckRunConfig.maxDataLinksToFollow_default : job.getMaxDataLinksToFollow();
 
         if (downloadLinks.size() > MAX_LINKS_TO_FOLLOW) {
             // we want to always grab the same set of links...
-            Collections.sort(downloadLinks,( link1,link2) ->{
+            Collections.sort(downloadLinks, (link1, link2) -> {
                 return link1.key().compareToIgnoreCase(link2.key());
             });
-            downloadLinks = downloadLinks.subList(0,MAX_LINKS_TO_FOLLOW);
+            downloadLinks = downloadLinks.subList(0, MAX_LINKS_TO_FOLLOW);
         }
         localDatasetMetadataRecord.setNumberOfDownloadLinksAttempted(downloadLinks.size());
         List<LinkToData> downloadLinksToProcess = downloadLinks;
@@ -193,21 +178,20 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
                 });
 
         long numberSuccessful = downloadLinksToProcess.stream()
-                .filter(x->x.getSuccessfullyDownloaded())
+                .filter(x -> x.getSuccessfullyDownloaded())
                 .count();
-        localDatasetMetadataRecord.setNumberOfDownloadLinksSuccessful((int)numberSuccessful);
+        localDatasetMetadataRecord.setNumberOfDownloadLinksSuccessful((int) numberSuccessful);
     }
 
 
-
     private void processView(List<LinkToData> viewLinks, Map<String, OGCInfoCacheItem> ogcInfoCache, LinkCheckJob job) throws Exception {
-        int MAX_LINKS_TO_FOLLOW = job==null ? LinkCheckRunConfig.maxDataLinksToFollow_default : job.getMaxDataLinksToFollow();
+        int MAX_LINKS_TO_FOLLOW = job == null ? LinkCheckRunConfig.maxDataLinksToFollow_default : job.getMaxDataLinksToFollow();
 
-         if (viewLinks.size() > MAX_LINKS_TO_FOLLOW) {
-             Collections.sort(viewLinks,( link1,link2) ->{
-                 return link1.key().compareToIgnoreCase(link2.key());
-             });
-            viewLinks = viewLinks.subList(0,MAX_LINKS_TO_FOLLOW);
+        if (viewLinks.size() > MAX_LINKS_TO_FOLLOW) {
+            Collections.sort(viewLinks, (link1, link2) -> {
+                return link1.key().compareToIgnoreCase(link2.key());
+            });
+            viewLinks = viewLinks.subList(0, MAX_LINKS_TO_FOLLOW);
         }
         localDatasetMetadataRecord.setNumberOfViewLinksAttempted(viewLinks.size());
 
@@ -224,18 +208,18 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
 
 
         long numberSuccessful = viewLinksToProcess.stream()
-                .filter(x->x.getSuccessfullyDownloaded())
+                .filter(x -> x.getSuccessfullyDownloaded())
                 .count();
 
-        localDatasetMetadataRecord.setNumberOfViewLinksSuccessful((int)numberSuccessful);
+        localDatasetMetadataRecord.setNumberOfViewLinksSuccessful((int) numberSuccessful);
     }
 
-    public void processSingleDownload(LinkToData link, Map<String, OGCInfoCacheItem> ogcInfoCache)  {
+    public void processSingleDownload(LinkToData link, Map<String, OGCInfoCacheItem> ogcInfoCache) {
         try {
             if (link instanceof SimpleLayerMetadataUrlDataLink) {
                 SimpleLayerMetadataUrlDataLink _link = (SimpleLayerMetadataUrlDataLink) link;
                 processDownloadLink_SimpleLayerMetadataUrlDataLink(_link, ogcInfoCache);
-                boolean successful =  (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
+                boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
             if (link instanceof SimpleLayerDatasetIdDataLink) {
@@ -244,28 +228,27 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
                 boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
-            if (link instanceof SimpleSpatialDSIDDataLink){
+            if (link instanceof SimpleSpatialDSIDDataLink) {
                 SimpleSpatialDSIDDataLink _link = (SimpleSpatialDSIDDataLink) link;
                 processDownloadLink_SimpleSpatialDSIDDataLink(_link, ogcInfoCache);
                 boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
-            if (link instanceof SimpleStoredQueryDataLink){
+            if (link instanceof SimpleStoredQueryDataLink) {
                 SimpleStoredQueryDataLink _link = (SimpleStoredQueryDataLink) link;
                 processDownloadLink_SimpleStoredQueryDataLink(_link, ogcInfoCache);
                 boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
-            if (link instanceof SimpleAtomLinkToData){
+            if (link instanceof SimpleAtomLinkToData) {
                 SimpleAtomLinkToData _link = (SimpleAtomLinkToData) link;
                 processDownloadLink_SimpleAtomLinkToData(_link, ogcInfoCache);
-              //  boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
-            //    link.setSuccessfullyDownloaded(successful);
+                //  boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
+                //    link.setSuccessfullyDownloaded(successful);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             link.setSuccessfullyDownloaded(false);
-            link.setErrorInfo(e.getClass().getSimpleName()+" - "+e.getMessage());
+            link.setErrorInfo(e.getClass().getSimpleName() + " - " + e.getMessage());
             logger.debug("exception occurred while attempting to download a download", e);
         }
     }
@@ -276,36 +259,36 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
     }
 
     private void processDownloadLink_SimpleSpatialDSIDDataLink(SimpleSpatialDSIDDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
     private void processDownloadLink_SimpleStoredQueryDataLink(SimpleStoredQueryDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
     private void processDownloadLink_SimpleLayerDatasetIdDataLink(SimpleLayerDatasetIdDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
     private void processDownloadLink_SimpleLayerMetadataUrlDataLink(SimpleLayerMetadataUrlDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
 
-    public void processSingleView(LinkToData link, Map<String, OGCInfoCacheItem> ogcInfoCache)  {
+    public void processSingleView(LinkToData link, Map<String, OGCInfoCacheItem> ogcInfoCache) {
         try {
             if (link instanceof SimpleLayerMetadataUrlDataLink) {
                 SimpleLayerMetadataUrlDataLink _link = (SimpleLayerMetadataUrlDataLink) link;
                 processViewLink_SimpleLayerMetadataUrlDataLink(_link, ogcInfoCache);
-                boolean successful =  (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
+                boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
             if (link instanceof SimpleLayerDatasetIdDataLink) {
@@ -314,41 +297,40 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
                 boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
-            if (link instanceof SimpleSpatialDSIDDataLink){
+            if (link instanceof SimpleSpatialDSIDDataLink) {
                 SimpleSpatialDSIDDataLink _link = (SimpleSpatialDSIDDataLink) link;
                 processViewLink_SimpleSpatialDSIDDataLink(_link, ogcInfoCache);
                 boolean successful = (_link.getOgcRequest().isSuccessfulOGCRequest() == null) ? false : _link.getOgcRequest().isSuccessfulOGCRequest();
                 link.setSuccessfullyDownloaded(successful);
             }
             //throw new Exception("don't know how to process - "+link.getClass().getCanonicalName());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             link.setSuccessfullyDownloaded(false);
             Marker marker = LoggingSupport.getMarker(link.getLinkCheckJobId());
-            logger.debug(marker,"exception occurred while attempting to download a view", e);
+            logger.debug(marker, "exception occurred while attempting to download a view", e);
         }
-     }
+    }
+
     private void processViewLink_SimpleSpatialDSIDDataLink(SimpleSpatialDSIDDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
     private void processViewLink_SimpleLayerDatasetIdDataLink(SimpleLayerDatasetIdDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
     private void processViewLink_SimpleLayerMetadataUrlDataLink(SimpleLayerMetadataUrlDataLink link, Map<String, OGCInfoCacheItem> ogcInfoCache) throws Exception {
-        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link,ogcInfoCache.get(link.getCapabilitiesSha2()));
+        OGCRequest ogcRequest = ogcRequestGenerator.prepareToDownload(link, ogcInfoCache.get(link.getCapabilitiesSha2()));
         link.setOgcRequest(ogcRequest);
         ogcRequestResolver.resolve(ogcRequest);
     }
 
 
-    public void save()
-    {
+    public void save() {
         localDatasetMetadataRecord = localDatasetMetadataRecordRepo.save(localDatasetMetadataRecord);
     }
 
@@ -359,7 +341,7 @@ public class EventProcessor_DataDownloadDatasetDocumentEvent extends BaseEventPr
     }
 
     @Override
-    public List<Event> newEventProcessing () {
+    public List<Event> newEventProcessing() {
         List<Event> result = new ArrayList<>();
 
         String linkCheckJobId = getInitiatingEvent().getLinkCheckJobId();

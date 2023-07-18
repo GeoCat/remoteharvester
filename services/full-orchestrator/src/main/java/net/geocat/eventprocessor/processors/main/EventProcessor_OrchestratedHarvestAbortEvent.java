@@ -24,7 +24,7 @@ import java.util.List;
 @Scope("prototype")
 public class EventProcessor_OrchestratedHarvestAbortEvent extends BaseEventProcessor<OrchestratedHarvestAbortEvent> {
 
-    Logger logger = LoggerFactory.getLogger( EventProcessor_OrchestratedHarvestAbortEvent.class);
+    Logger logger = LoggerFactory.getLogger(EventProcessor_OrchestratedHarvestAbortEvent.class);
 
     @Autowired
     OrchestratedHarvestProcessRepo orchestratedHarvestProcessRepo;
@@ -54,35 +54,34 @@ public class EventProcessor_OrchestratedHarvestAbortEvent extends BaseEventProce
         logger.warn("attempting to user abort for " + processID);
 
         OrchestratedHarvestProcess job = orchestratedHarvestProcessRepo.findById(processID).get();
-        if ( (job.getState() != OrchestratedHarvestProcessState.COMPLETE)
+        if ((job.getState() != OrchestratedHarvestProcessState.COMPLETE)
                 && (job.getState() != OrchestratedHarvestProcessState.ERROR)
                 && (job.getState() != OrchestratedHarvestProcessState.USERABORT)) {
 
-            if ( (job.getHarvesterJobId() !=null) && (!job.getHarvesterJobId().trim().isEmpty()) ) {
+            if ((job.getHarvesterJobId() != null) && (!job.getHarvesterJobId().trim().isEmpty())) {
                 String response = harvesterService.abortHarvest(job.getHarvesterJobId().trim());
-                logger.info("harvester abort response: "+response);
+                logger.info("harvester abort response: " + response);
             }
 
-            if ( (job.getLinkCheckJobId() !=null) && (!job.getLinkCheckJobId().trim().isEmpty()) ) {
+            if ((job.getLinkCheckJobId() != null) && (!job.getLinkCheckJobId().trim().isEmpty())) {
                 String response = linkCheckService.abortLinkCheck(job.getLinkCheckJobId().trim());
-                logger.info("linkcheck abort response: "+response);
+                logger.info("linkcheck abort response: " + response);
 
             }
 
-            if ( (job.getInjectJobId() !=null) && (!job.getInjectJobId().trim().isEmpty()) ) {
+            if ((job.getInjectJobId() != null) && (!job.getInjectJobId().trim().isEmpty())) {
                 String response = ingesterService.abortIngest(job.getInjectJobId().trim());
-                logger.info("ingest abort response: "+response);
+                logger.info("ingest abort response: " + response);
             }
 
             orchestratedHarvestProcessService.updateLinkCheckJobStateInDB(processID, OrchestratedHarvestProcessState.USERABORT);
             logger.warn("user abort processed for " + processID);
-        }
-        else {
-            logger.warn("user abort - process is already in state: " + job.getState() );
+        } else {
+            logger.warn("user abort - process is already in state: " + job.getState());
         }
 
         return this;
-     }
+    }
 
 
     @Override

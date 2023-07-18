@@ -1,7 +1,6 @@
 package net.geocat.routes.rest;
 
 import net.geocat.service.GetAppInfoService;
-import net.geocat.service.GetStatusService;
 import org.apache.camel.BeanScope;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;

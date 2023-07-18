@@ -37,8 +37,6 @@ import com.geocat.ingester.model.linkchecker.OperatesOnLink;
 import com.geocat.ingester.model.linkchecker.ServiceDocumentLink;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -150,10 +148,10 @@ public class ServiceMetadataRecord extends MetadataRecord {
     @Column(columnDefinition = "varchar(5)")
     IndicatorStatus INDICATOR_ALL_OPERATES_ON_MATCH_CAPABILITIES;
 
-    public ServiceMetadataRecord(){
+    public ServiceMetadataRecord() {
         super();
         serviceDocumentLinks = new HashSet<>();
-        operatesOnLinks =new HashSet<>();
+        operatesOnLinks = new HashSet<>();
     }
 
     //---------------------------------------------------------------------------

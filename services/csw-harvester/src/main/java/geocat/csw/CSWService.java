@@ -95,6 +95,6 @@ public class CSWService {
 
     public String GetRecords(String url, String filter, int startRecord, int endRecord, Boolean doNotSort) throws Exception {
         boolean _doNotSort = doNotSort != null && doNotSort;
-        return cswEngine.GetRecords(url, ogcFilterService.getRecordsXML(filter, startRecord, endRecord,_doNotSort));
+        return cswEngine.GetRecords(url, ogcFilterService.getRecordsXML(filter, startRecord, endRecord, _doNotSort));
     }
 }

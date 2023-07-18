@@ -33,7 +33,7 @@
 
 package net.geocat.http;
 
- import net.geocat.database.linkchecker.entities.helper.HttpResult;
+import net.geocat.database.linkchecker.entities.helper.HttpResult;
 
 import java.io.IOException;
 

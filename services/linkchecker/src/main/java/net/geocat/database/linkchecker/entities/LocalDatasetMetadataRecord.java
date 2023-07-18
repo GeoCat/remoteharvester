@@ -36,24 +36,20 @@ package net.geocat.database.linkchecker.entities;
 import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.LinkToData;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 //represents a harvested (local) Dataset document
- @NamedEntityGraph(
-         name = "LocalDatasetMetadataRecord-lazy-graph",
-         attributeNodes = {
-                 //none - don't load sub-objects (operatesOn and documentLinks)
-         }
- )
+@NamedEntityGraph(
+        name = "LocalDatasetMetadataRecord-lazy-graph",
+        attributeNodes = {
+                //none - don't load sub-objects (operatesOn and documentLinks)
+        }
+)
 @Entity
 @DiscriminatorValue("LocalDatasetMetadataRecord")
 public class LocalDatasetMetadataRecord extends DatasetMetadataRecord {
@@ -62,7 +58,6 @@ public class LocalDatasetMetadataRecord extends DatasetMetadataRecord {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(20)")
     ServiceMetadataDocumentState state;
-
 
 
     // from the harvester - what is the harvester's record ID for this document?
@@ -75,9 +70,9 @@ public class LocalDatasetMetadataRecord extends DatasetMetadataRecord {
 
     @OneToMany(//mappedBy = "datasetMetadataRecord",
             cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    @JoinColumn(name="linktodata_id")
+    @JoinColumn(name = "linktodata_id")
     @Fetch(value = FetchMode.SUBSELECT)
-   // @BatchSize(size=500)
+    // @BatchSize(size=500)
     //@OnDelete(action = OnDeleteAction.CASCADE)
     private Set<LinkToData> dataLinks;
 

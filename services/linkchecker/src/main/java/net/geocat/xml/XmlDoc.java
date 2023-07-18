@@ -33,32 +33,26 @@
 
 package net.geocat.xml;
 
-import com.sun.org.apache.xpath.internal.CachedXPathAPI;
-import net.geocat.service.downloadhelpers.PartialDownloadPredicateFactory;
 import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -134,7 +128,7 @@ public class XmlDoc {
 
     //this is here so we can be consistent with the XML writing (otherwise the SHA2 will change)
     public static String writeXMLPretty(String xml) throws Exception {
-        Document document =  parseXML(xml);
+        Document document = parseXML(xml);
         document.normalize();
         XPath xPath = XPathFactory.newInstance().newXPath();
         NodeList nodeList = (NodeList) xPath.evaluate("//text()[normalize-space()='']",
@@ -160,25 +154,25 @@ public class XmlDoc {
     }
 
 
-    public static Node findNode(Node n, String localName, String localName2, String localName3,String localName4,String localName5) {
-        return findNode(n, Arrays.asList(new String[]{localName,localName2,localName3,localName4,localName5}));
+    public static Node findNode(Node n, String localName, String localName2, String localName3, String localName4, String localName5) {
+        return findNode(n, Arrays.asList(new String[]{localName, localName2, localName3, localName4, localName5}));
     }
 
-    public static Node findNode(Node n, String localName, String localName2, String localName3,String localName4) {
-        return findNode(n, Arrays.asList(new String[]{localName,localName2,localName3,localName4}));
+    public static Node findNode(Node n, String localName, String localName2, String localName3, String localName4) {
+        return findNode(n, Arrays.asList(new String[]{localName, localName2, localName3, localName4}));
     }
 
     public static Node findNode(Node n, String localName, String localName2, String localName3) {
-        return findNode(n, Arrays.asList(new String[]{localName,localName2,localName3}));
+        return findNode(n, Arrays.asList(new String[]{localName, localName2, localName3}));
     }
 
     public static Node findNode(Node n, String localName, String localName2) {
-        return findNode(n, Arrays.asList(new String[]{localName,localName2}));
+        return findNode(n, Arrays.asList(new String[]{localName, localName2}));
     }
 
     public static Node findNode(Node n, List<String> localNames) {
-        for(String localName : localNames) {
-            Node newNode = findNode(n,localName);
+        for (String localName : localNames) {
+            Node newNode = findNode(n, localName);
             if (newNode == null)
                 return null;
             n = newNode;
@@ -189,7 +183,7 @@ public class XmlDoc {
     // finds a node of name "localName" that is a direct child of "n"
     public static Node findNode(Node n, String localName) {
         NodeList nl = n.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
             if (name.equals(localName)) {
@@ -201,32 +195,31 @@ public class XmlDoc {
 
     // finds nodes of name "localName" that are direct children of "n"
     // it will then look for "localName" in children of the these nodes (and so on...)
-    public static List<Node> findNodes_recurse(Node n,String localName) {
+    public static List<Node> findNodes_recurse(Node n, String localName) {
         List<Node> result = new ArrayList<>();
         NodeList nl = n.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
             if (name.equals(localName)) {
                 result.add(nn);
-                result.addAll(findNodes_recurse(nn,localName)); // recurse
+                result.addAll(findNodes_recurse(nn, localName)); // recurse
             }
         }
         return result;
     }
 
-    public static Node findNode_recurse(Node n,String localName) {
+    public static Node findNode_recurse(Node n, String localName) {
         NodeList nl = n.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
             if (name.equals(localName)) {
                 return nn;
-            }
-            else {
-                 Node nnn=findNode_recurse(nn,localName);
-                 if (nnn != null)
-                     return nnn;
+            } else {
+                Node nnn = findNode_recurse(nn, localName);
+                if (nnn != null)
+                    return nnn;
             }
         }
         return null;
@@ -236,7 +229,7 @@ public class XmlDoc {
     public static List<Node> findAllNodes(Node n, String localName) {
         List<Node> result = new ArrayList<>();
         NodeList nl = n.getChildNodes();
-        for (int idx=0; idx <nl.getLength();idx++) {
+        for (int idx = 0; idx < nl.getLength(); idx++) {
             Node nn = nl.item(idx);
             String name = nn.getLocalName() == null ? nn.getNodeName() : nn.getLocalName();
             if (name.equals(localName)) {
@@ -245,8 +238,6 @@ public class XmlDoc {
         }
         return result;
     }
-
-
 
 
     public static XPath createXPath() {
@@ -332,11 +323,11 @@ public class XmlDoc {
         rootNS = n.getNamespaceURI();
     }
 
-    public Node getFirstNode() throws  Exception {
+    public Node getFirstNode() throws Exception {
         NodeList nl = parsedXml.getChildNodes();
-        for (int t=0;t<nl.getLength();t++) {
+        for (int t = 0; t < nl.getLength(); t++) {
             Node n = nl.item(t);
-            if (n.getNodeType() ==1 )//element
+            if (n.getNodeType() == 1)//element
                 return n;
         }
         return null;
@@ -396,6 +387,6 @@ public class XmlDoc {
 
     @Override
     public String toString() {
-        return "XmlDoc(rootTag="+getRootTagName()+")";
+        return "XmlDoc(rootTag=" + getRootTagName() + ")";
     }
 }

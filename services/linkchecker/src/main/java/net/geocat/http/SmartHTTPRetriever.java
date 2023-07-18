@@ -40,9 +40,7 @@ import net.geocat.service.helper.ProcessLockingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
-import org.slf4j.helpers.BasicMarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,38 +58,34 @@ public class SmartHTTPRetriever {
     HttpResultRepo httpResultRepo;
 
     @Autowired
-   // @Qualifier("cookieAttachingRetriever")
+    // @Qualifier("cookieAttachingRetriever")
     CookieAttachingRetriever retriever;
 
     @Autowired
     ProcessLockingService processLockingService;
 
 
-
-    public HttpResult retrieve(HTTPRequest request) throws Exception  {
+    public HttpResult retrieve(HTTPRequest request) throws Exception {
         Lock lock = processLockingService.getLock(request.getLocation()); // don't want to have two processes downloading at the same time...
         lock.lock();
-         boolean retrieveCached = request.isUseCache() && request.getLinkCheckJobId() != null;
+        boolean retrieveCached = request.isUseCache() && request.getLinkCheckJobId() != null;
 
         try {
             if (retrieveCached) {
-                HttpResult result =  retrieveCached(request);
-                if ( (result.getExceptionOccurred() ==null ) || (!result.getExceptionOccurred()) )
+                HttpResult result = retrieveCached(request);
+                if ((result.getExceptionOccurred() == null) || (!result.getExceptionOccurred()))
                     return result;
-                throw new HTTPCachedException("Resending previous exception - "+ result.getExceptionInfo());
-            }
-            else {
+                throw new HTTPCachedException("Resending previous exception - " + result.getExceptionInfo());
+            } else {
                 return retrieveUnCached(request);
             }
-        }
-        finally
-        {
+        } finally {
             lock.unlock();
         }
 
     }
 
-    private HttpResult retrieveUnCached(HTTPRequest request) throws Exception  {
+    private HttpResult retrieveUnCached(HTTPRequest request) throws Exception {
 //        return  retriever.retrieveXML(request.getVerb(),
 //                request.getLocation(),
 //                request.getBody(),
@@ -104,31 +98,29 @@ public class SmartHTTPRetriever {
     }
 
 
-
     HttpResult retrieveCached(HTTPRequest request) throws ExceptionWithCookies, IOException, RedirectException {
 
         HttpResult result = getCached(request);
         if (result != null) {
             Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
-            logger.debug(marker,"    * CACHED - "+request.getLocation());
+            logger.debug(marker, "    * CACHED - " + request.getLocation());
             return result;
         }
 
         try {
             result = retrieveUnCached(request);
             result.setExceptionOccurred(false);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             result = new HttpResult();
             result.setExceptionOccurred(true);
-            result.setExceptionInfo(e.getClass().getSimpleName()+" - "+e.getMessage());
+            result.setExceptionInfo(e.getClass().getSimpleName() + " - " + e.getMessage());
         }
 
         result.setURL(request.getLocation()); // in a re-direct, this can get changed -- use the finalURL()
         result.setLinkCheckJobId(request.getLinkCheckJobId());
 
         if (request.isSaveToCache())
-            result = saveResult(result,request.getLocation());
+            result = saveResult(result, request.getLocation());
 
         return result;
     }
@@ -136,7 +128,7 @@ public class SmartHTTPRetriever {
 
     //at this point, no other threads are downloading this URL (see lock, above)
     //So, we can save this now with out issue.
-    private    HttpResult  saveResult(HttpResult result,String originalLocation) {
+    private HttpResult saveResult(HttpResult result, String originalLocation) {
         synchronized (lockingObject) {
             return httpResultRepo.save(result);
         }

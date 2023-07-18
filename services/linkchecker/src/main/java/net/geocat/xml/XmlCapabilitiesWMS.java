@@ -65,17 +65,16 @@ public class XmlCapabilitiesWMS extends XmlCapabilitiesDocument {
         setup_layers();
     }
 
-    public List<Node> findbboxes(Node layer){
-        List<Node> bboxs = findNodes(layer,"BoundingBox");
+    public List<Node> findbboxes(Node layer) {
+        List<Node> bboxs = findNodes(layer, "BoundingBox");
 
-            Node parentLayer = layer.getParentNode();
-            if (parentLayer.getLocalName().equals("Layer")) {
-                bboxs.addAll(findbboxes(parentLayer));
-                return bboxs;
-            }
-            else {
-                return bboxs;
-            }
+        Node parentLayer = layer.getParentNode();
+        if (parentLayer.getLocalName().equals("Layer")) {
+            bboxs.addAll(findbboxes(parentLayer));
+            return bboxs;
+        } else {
+            return bboxs;
+        }
 
 
     }
@@ -84,11 +83,11 @@ public class XmlCapabilitiesWMS extends XmlCapabilitiesDocument {
         wmsLayers = new ArrayList<>();
         Node main = getFirstNode();
         Node cap = findNode(main, "Capability");
-        List<Node> layers = findNodes_recurse(cap,"Layer");
-        for(Node layer: layers) {
+        List<Node> layers = findNodes_recurse(cap, "Layer");
+        for (Node layer : layers) {
 
-            Node nameNode = findNode(layer,"Name");
-            if ( (nameNode == null) || (nameNode.getTextContent() ==null) || (nameNode.getTextContent().trim().isEmpty()))
+            Node nameNode = findNode(layer, "Name");
+            if ((nameNode == null) || (nameNode.getTextContent() == null) || (nameNode.getTextContent().trim().isEmpty()))
                 continue;
             String name = nameNode.getTextContent().trim();
             WMSLayer wmsLayer = new WMSLayer(name);
@@ -100,20 +99,20 @@ public class XmlCapabilitiesWMS extends XmlCapabilitiesDocument {
 //                    bboxs = findNodes(parentLayer,"BoundingBox");
 //                }
 //            }
-            List<Node> bboxs = findbboxes(layer );
-            for(Node bbox:bboxs) {
+            List<Node> bboxs = findbboxes(layer);
+            for (Node bbox : bboxs) {
                 //        <BoundingBox CRS="CRS:84" maxx="18.95663115922459" maxy="51.305916291382516" minx="12.024498725444078" miny="48.25578803534065"/>
-                String crs = attribute(bbox,"CRS") ;
+                String crs = attribute(bbox, "CRS");
                 if (crs == null)
-                    crs = attribute(bbox,"SRS") ;
-                String xmin = attribute(bbox,"minx") ;
-                String ymin = attribute(bbox,"miny") ;
-                String xmax = attribute(bbox,"maxx") ;
-                String ymax = attribute(bbox,"maxy") ;
-                WMSLayerBBox wmsLayerBBox = new WMSLayerBBox(crs, Double.valueOf(xmin),Double.valueOf(ymin),Double.valueOf(xmax),Double.valueOf(ymax));
+                    crs = attribute(bbox, "SRS");
+                String xmin = attribute(bbox, "minx");
+                String ymin = attribute(bbox, "miny");
+                String xmax = attribute(bbox, "maxx");
+                String ymax = attribute(bbox, "maxy");
+                WMSLayerBBox wmsLayerBBox = new WMSLayerBBox(crs, Double.valueOf(xmin), Double.valueOf(ymin), Double.valueOf(xmax), Double.valueOf(ymax));
                 wmsLayer.getWmsLayerBBoxList().add(wmsLayerBBox);
             }
-            int t=0;
+            int t = 0;
         }
     }
 
@@ -121,28 +120,28 @@ public class XmlCapabilitiesWMS extends XmlCapabilitiesDocument {
         supportedImageFormats = new ArrayList<>();
         Node main = getFirstNode();
         Node getMap = findNode(main, Arrays.asList(new String[]{"Capability", "Request", "GetMap"}));
-        if (getMap ==null)
+        if (getMap == null)
             return;
-        List<Node> formats = findNodes(getMap,"Format");
-        for(Node format : formats) {
+        List<Node> formats = findNodes(getMap, "Format");
+        for (Node format : formats) {
             String mime = format.getTextContent();
-            if ( (mime!=null) && (!mime.trim().isEmpty()))
+            if ((mime != null) && (!mime.trim().isEmpty()))
                 supportedImageFormats.add(mime.trim());
         }
     }
 
     private void setup_getmapEndpoint() throws Exception {
         Node main = getFirstNode();
-        Node op = findNode(main, Arrays.asList(new String[]{"Capability", "Request", "GetMap", "DCPType", "HTTP", "Get","OnlineResource"}));
+        Node op = findNode(main, Arrays.asList(new String[]{"Capability", "Request", "GetMap", "DCPType", "HTTP", "Get", "OnlineResource"}));
         if (op == null)
             return;
-        String url = attribute(op,"xlink:href");
-        this.getMapEndpoint=url;
+        String url = attribute(op, "xlink:href");
+        this.getMapEndpoint = url;
     }
 
     private void setup_getversion() throws Exception {
         Node main = getFirstNode();
-        versionNumber = attribute(main,"version");
+        versionNumber = attribute(main, "version");
     }
 
     private void setup_XmlCapabilitiesWMS() throws Exception {
@@ -151,14 +150,14 @@ public class XmlCapabilitiesWMS extends XmlCapabilitiesDocument {
 
     //===
 
-    public boolean supportsFormat(String format){
+    public boolean supportsFormat(String format) {
         return supportedImageFormats.stream()
-                .anyMatch(x->x.equalsIgnoreCase(format));
+                .anyMatch(x -> x.equalsIgnoreCase(format));
     }
 
     public WMSLayer findWMSLayer(String layername) {
         Optional<WMSLayer> result = wmsLayers.stream()
-                .filter(x->x.getName().equals(layername))
+                .filter(x -> x.getName().equals(layername))
                 .findFirst();
         if (result.isPresent())
             return result.get();
@@ -193,8 +192,8 @@ public class XmlCapabilitiesWMS extends XmlCapabilitiesDocument {
 
     @Override
     public String toString() {
-        String result =  "XmlCapabilitiesWMS(has service reference URL="+( (getMetadataUrlRaw() !=null) && (!getMetadataUrlRaw().isEmpty())) ;
-        result += ", number of Dataset links = "+getDatasetLinksList().size();
+        String result = "XmlCapabilitiesWMS(has service reference URL=" + ((getMetadataUrlRaw() != null) && (!getMetadataUrlRaw().isEmpty()));
+        result += ", number of Dataset links = " + getDatasetLinksList().size();
         result += ")";
         return result;
     }

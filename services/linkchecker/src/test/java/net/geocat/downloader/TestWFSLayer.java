@@ -54,7 +54,7 @@ public class TestWFSLayer {
         WFSLayerDownloader downloader = new WFSLayerDownloader();
         XmlCapabilitiesWFS wfsGetCap = read("wfs_inspire_and_layer_multi.xml");
         assertEquals("http://localhost:8080/geoserver/wfs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&TYPENAMES=ws%3Alayer2&count=1",
-                downloader.createURL(wfsGetCap,"ws:layer2"));
+                downloader.createURL(wfsGetCap, "ws:layer2"));
     }
 
     //---
@@ -69,26 +69,26 @@ public class TestWFSLayer {
 
     @Test
     public void testFixUrl() throws Exception {
-        WFSLayerDownloader downloader= new WFSLayerDownloader();
+        WFSLayerDownloader downloader = new WFSLayerDownloader();
 
         assertEquals("http://localhost/wfs?",
-                fixBaseURL("http://localhost/wfs") );
+                fixBaseURL("http://localhost/wfs"));
 
         assertEquals("http://localhost/wfs?",
-                fixBaseURL("http://localhost/wfs ") );
+                fixBaseURL("http://localhost/wfs "));
 
         assertEquals("http://localhost/wfs?service=wfs",
-                fixBaseURL("http://localhost/wfs?service=wfs&") );
+                fixBaseURL("http://localhost/wfs?service=wfs&"));
     }
 
     @Test
     public void testSetURLParam() throws Exception {
         assertEquals("http://localhost/wfs?REQUEST=GetFeature",
-                 setParameter("http://localhost/wfs?","REQUEST","GetFeature")
+                setParameter("http://localhost/wfs?", "REQUEST", "GetFeature")
         );
 
         assertEquals("http://localhost/wfs?request=GetFeature",
-                setParameter("http://localhost/wfs?request=xyz","REQUEST","GetFeature")
+                setParameter("http://localhost/wfs?request=xyz", "REQUEST", "GetFeature")
         );
     }
 
@@ -106,7 +106,7 @@ public class TestWFSLayer {
                 WFSLayerDownloader.addBasicItemsToUrl("http://localhost/wfs?", "1.1")
         );
     }
-        //---
+    //---
 
     XmlDocumentFactory xmlDocumentFactory;
     WFSLayerDownloader wfsLayerDownloader;
@@ -114,12 +114,12 @@ public class TestWFSLayer {
     public XmlCapabilitiesWFS read(String fname) throws Exception {
         String text = new Scanner(TestWMSCapabilitiesDatasetLinkExtractor.class.getClassLoader().getResourceAsStream(fname), "UTF-8")
                 .useDelimiter("\\A").next();
-        return (XmlCapabilitiesWFS)xmlDocumentFactory.create(text);
+        return (XmlCapabilitiesWFS) xmlDocumentFactory.create(text);
     }
 
 
     @Before
-    public void setup(){
+    public void setup() {
         xmlDocumentFactory = new XmlDocumentFactory();
         xmlDocumentFactory.capabilityDeterminer = new CapabilityDeterminer();
         wfsLayerDownloader = new WFSLayerDownloader();

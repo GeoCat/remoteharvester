@@ -34,8 +34,7 @@ public class CSWGetRecordsHandler {
         try {
             String nextRecordString = XMLTools.xpath_attribute(getRecordsResponseXML, "/GetRecordsResponse/SearchResults", "nextRecord");
             return Integer.parseInt(nextRecordString);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return null; // this can happen if there's no "nextRecord" in the response...
         }
     }

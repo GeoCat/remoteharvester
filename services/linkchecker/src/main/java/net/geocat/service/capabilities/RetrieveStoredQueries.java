@@ -36,11 +36,9 @@ package net.geocat.service.capabilities;
 
 import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
 import net.geocat.database.linkchecker.entities.HttpResult;
-import net.geocat.database.linkchecker.entities.ServiceDocumentLink;
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
 import net.geocat.http.HTTPRequest;
 import net.geocat.http.HttpRequestFactory;
-import net.geocat.http.IHTTPRetriever;
 import net.geocat.http.SmartHTTPRetriever;
 import net.geocat.xml.XmlCapabilitiesWFS;
 import net.geocat.xml.XmlDoc;
@@ -48,7 +46,6 @@ import net.geocat.xml.XmlDocumentFactory;
 import net.geocat.xml.XmlStringTools;
 import net.geocat.xml.helpers.CapabilitiesType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
@@ -74,23 +71,23 @@ public class RetrieveStoredQueries {
 
     public String fixURL(String link) throws Exception {
         link = link.trim();
-        link = link.replace(" ","%20");
-        link = link.replace("&amp;","&"); // this seems to happen a lot
-        link = link.replace("{","%7B");
-        link = link.replace("}","%7D");
+        link = link.replace(" ", "%20");
+        link = link.replace("&amp;", "&"); // this seems to happen a lot
+        link = link.replace("{", "%7B");
+        link = link.replace("}", "%7D");
 
         if (link.endsWith("?"))
             link += "request=ListStoredQueries";
 
-        String request = findQueryParmName(link,"request");
+        String request = findQueryParmName(link, "request");
         if (request == null)
             link += "&request=ListStoredQueries";
 
-        String version = findQueryParmName(link,"version");
+        String version = findQueryParmName(link, "version");
         if (version == null)
             link += "&version=2.0.0";
 
-        String service = findQueryParmName(link,"service");
+        String service = findQueryParmName(link, "service");
         if (service == null)
             link += "&service=WFS";
 
@@ -115,10 +112,10 @@ public class RetrieveStoredQueries {
             url = fixURL(url);
 
 
-            HTTPRequest request = httpRequestFactory.createGET(url,link.getLinkCheckJobId());
+            HTTPRequest request = httpRequestFactory.createGET(url, link.getLinkCheckJobId());
             HttpResult httpResult = smartHTTPRetriever.retrieve(request);
 
-             if (!httpResult.isFullyRead())
+            if (!httpResult.isFullyRead())
                 return null;
 
             XmlDoc xmlStoreQueries = new XmlDoc(XmlStringTools.bytea2String(httpResult.getData()));
@@ -126,7 +123,7 @@ public class RetrieveStoredQueries {
             query = xmlStoreQueries.xpath_node("//wfs:StoredQuery[@id='http://inspire.ec.europa.eu/operation/download/GetSpatialDataSet']");
             if (query != null)
                 return "http://inspire.ec.europa.eu/operation/download/GetSpatialDataSet";
-            query= xmlStoreQueries.xpath_node("//wfs:StoredQuery[@id='GetSpatialDataSet']");
+            query = xmlStoreQueries.xpath_node("//wfs:StoredQuery[@id='GetSpatialDataSet']");
             if (query != null)
                 return "GetSpatialDataSet";
             return null;

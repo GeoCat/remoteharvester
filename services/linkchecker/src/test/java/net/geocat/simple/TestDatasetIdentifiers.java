@@ -34,7 +34,6 @@
 package net.geocat.simple;
 
 import net.geocat.database.linkchecker.entities.helper.DatasetIdentifierNodeType;
-import net.geocat.xml.XmlCapabilitiesWFS;
 import net.geocat.xml.XmlDatasetMetadataDocument;
 import net.geocat.xml.XmlDocumentFactory;
 import net.geocat.xml.helpers.CapabilityDeterminer;
@@ -94,8 +93,8 @@ public class TestDatasetIdentifiers {
         assertEquals(1, datasetRecord.getDatasetIdentifiers().size());
 
         assertEquals("md_code1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertNull(  datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertNull(datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
 
     }
 
@@ -105,12 +104,12 @@ public class TestDatasetIdentifiers {
         assertEquals(2, datasetRecord.getDatasetIdentifiers().size());
 
         assertEquals("md_code1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertNull(  datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertNull(datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
 
         assertEquals("md_code2", datasetRecord.getDatasetIdentifiers().get(1).getCode());
-        assertNull(  datasetRecord.getDatasetIdentifiers().get(1).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(1).getIdentifierNodeType());
+        assertNull(datasetRecord.getDatasetIdentifiers().get(1).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(1).getIdentifierNodeType());
 
     }
 
@@ -120,18 +119,19 @@ public class TestDatasetIdentifiers {
         assertEquals(1, datasetRecord.getDatasetIdentifiers().size());
 
         assertEquals("code1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertNull(  datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertNull(datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
 
     }
+
     @Test
     public void test_simpleRS2() throws Exception {
         XmlDatasetMetadataDocument datasetRecord = read("identifier/identifier_rs_code_codespace.xml");
         assertEquals(1, datasetRecord.getDatasetIdentifiers().size());
 
         assertEquals("code1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertEquals( "codespace1", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertEquals("codespace1", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
     }
 
     @Test
@@ -140,12 +140,12 @@ public class TestDatasetIdentifiers {
         assertEquals(2, datasetRecord.getDatasetIdentifiers().size());
 
         assertEquals("code1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertEquals( "codespace1", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertEquals("codespace1", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
 
         assertEquals("code2", datasetRecord.getDatasetIdentifiers().get(1).getCode());
-        assertEquals( "codespace2", datasetRecord.getDatasetIdentifiers().get(1).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(1).getIdentifierNodeType());
+        assertEquals("codespace2", datasetRecord.getDatasetIdentifiers().get(1).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(1).getIdentifierNodeType());
     }
 
     @Test
@@ -154,8 +154,8 @@ public class TestDatasetIdentifiers {
         assertEquals(1, datasetRecord.getDatasetIdentifiers().size());
 
         assertEquals("code1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertEquals( "codespace1", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertEquals("codespace1", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
     }
 
     @Test
@@ -176,8 +176,8 @@ public class TestDatasetIdentifiers {
 //        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(2).getIdentifierNodeType());
 
         assertEquals("xrefcode1", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertEquals( "xrefcode2", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertEquals("xrefcode2", datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.RS_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
     }
 
 
@@ -191,8 +191,8 @@ public class TestDatasetIdentifiers {
 //        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
 
         assertEquals("xrefuri", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertNull(  datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertNull(datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
     }
 
     @Test
@@ -205,8 +205,8 @@ public class TestDatasetIdentifiers {
 //        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
 
         assertEquals("xrefuri", datasetRecord.getDatasetIdentifiers().get(0).getCode());
-        assertNull(  datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
-        assertEquals( DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
+        assertNull(datasetRecord.getDatasetIdentifiers().get(0).getCodeSpace());
+        assertEquals(DatasetIdentifierNodeType.MD_Identifier, datasetRecord.getDatasetIdentifiers().get(0).getIdentifierNodeType());
     }
 
 }

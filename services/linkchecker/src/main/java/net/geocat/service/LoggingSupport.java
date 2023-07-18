@@ -35,7 +35,6 @@ package net.geocat.service;
 
 import org.slf4j.Marker;
 import org.slf4j.helpers.BasicMarkerFactory;
-import org.springframework.stereotype.Component;
 
 public class LoggingSupport {
 
@@ -43,10 +42,10 @@ public class LoggingSupport {
 
     static Object lockObj = new Object();
 
-    public static Marker getMarker(String linkCheckJobId){
-        if ( (linkCheckJobId == null) || linkCheckJobId.isEmpty())
+    public static Marker getMarker(String linkCheckJobId) {
+        if ((linkCheckJobId == null) || linkCheckJobId.isEmpty())
             return null;
-        synchronized (lockObj){
+        synchronized (lockObj) {
             Marker m = markerFactory.getMarker(linkCheckJobId);
             return m;
         }

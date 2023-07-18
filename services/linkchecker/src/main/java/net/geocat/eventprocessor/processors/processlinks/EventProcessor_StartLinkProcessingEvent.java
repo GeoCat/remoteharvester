@@ -33,9 +33,8 @@
 
 package net.geocat.eventprocessor.processors.processlinks;
 
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
-import net.geocat.database.linkchecker.repos.*;
+import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
+import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
 import net.geocat.eventprocessor.BaseEventProcessor;
 import net.geocat.events.Event;
 import net.geocat.events.EventFactory;
@@ -65,7 +64,6 @@ public class EventProcessor_StartLinkProcessingEvent extends BaseEventProcessor<
     LocalDatasetMetadataRecordRepo localDatasetMetadataRecordRepo;
 
 
-
     @Override
     public EventProcessor_StartLinkProcessingEvent externalProcessing() throws Exception {
         return this;
@@ -85,15 +83,15 @@ public class EventProcessor_StartLinkProcessingEvent extends BaseEventProcessor<
         List<Event> result = new ArrayList<>();
 
 
-        List<Long> serviceIds =  localServiceMetadataRecordRepo.searchAllServiceIds(linkCheckJobId);
-        for(Long id : serviceIds){
-            Event e = eventFactory.createProcessServiceDocLinksEvent(id,linkCheckJobId);
+        List<Long> serviceIds = localServiceMetadataRecordRepo.searchAllServiceIds(linkCheckJobId);
+        for (Long id : serviceIds) {
+            Event e = eventFactory.createProcessServiceDocLinksEvent(id, linkCheckJobId);
             result.add(e);
         }
 
-        List<Long> datasetIds =  localDatasetMetadataRecordRepo.searchAllDatasetIds(linkCheckJobId);
-        for(Long id : datasetIds){
-            Event e = eventFactory.createProcessDatasetDocLinksEvent(id,linkCheckJobId);
+        List<Long> datasetIds = localDatasetMetadataRecordRepo.searchAllDatasetIds(linkCheckJobId);
+        for (Long id : datasetIds) {
+            Event e = eventFactory.createProcessDatasetDocLinksEvent(id, linkCheckJobId);
             result.add(e);
         }
 

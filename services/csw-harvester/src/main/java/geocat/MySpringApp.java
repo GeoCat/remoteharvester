@@ -21,18 +21,17 @@
  * ===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * ===	Rome - Italy. email: geonetwork@osgeo.org
  * ===
- * ===  Development of this program was financed by the European Union within 
- * ===  Service Contract NUMBER – 941143 – IPR – 2021 with subject matter 
- * ===  "Facilitating a sustainable evolution and maintenance of the INSPIRE  
+ * ===  Development of this program was financed by the European Union within
+ * ===  Service Contract NUMBER – 941143 – IPR – 2021 with subject matter
+ * ===  "Facilitating a sustainable evolution and maintenance of the INSPIRE
  * ===  Geoportal", performed in the period 2021-2023.
- * === 
- * ===  Contact: JRC Unit B.6 Digital Economy, Via Enrico Fermi 2749, 
+ * ===
+ * ===  Contact: JRC Unit B.6 Digital Economy, Via Enrico Fermi 2749,
  * ===  21027 Ispra, Italy. email: JRC-INSPIRE-SUPPORT@ec.europa.eu
  * ==============================================================================
  */
 package geocat;
 
-import org.apache.camel.spring.SpringCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

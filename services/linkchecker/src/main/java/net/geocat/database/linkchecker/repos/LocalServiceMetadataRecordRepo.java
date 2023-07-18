@@ -33,7 +33,6 @@
 
 package net.geocat.database.linkchecker.repos;
 
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.entities.helper.StatusQueryItem;
@@ -45,7 +44,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Component
@@ -54,12 +52,12 @@ public interface LocalServiceMetadataRecordRepo extends CrudRepository<LocalServ
 
     @Transactional
     @Modifying
-    @Query(value="UPDATE LocalServiceMetadataRecord lsmr SET lsmr.state = :newState WHERE lsmr.serviceMetadataDocumentId = :id ")
+    @Query(value = "UPDATE LocalServiceMetadataRecord lsmr SET lsmr.state = :newState WHERE lsmr.serviceMetadataDocumentId = :id ")
     void updateState(long id, ServiceMetadataDocumentState newState);
 
     @Transactional
     @Modifying
-    @Query(value="UPDATE LocalServiceMetadataRecord lsmr SET lsmr.state = :newState WHERE lsmr.serviceMetadataDocumentId = :id and (lsmr.state <> 'NOT_APPLICABLE')")
+    @Query(value = "UPDATE LocalServiceMetadataRecord lsmr SET lsmr.state = :newState WHERE lsmr.serviceMetadataDocumentId = :id and (lsmr.state <> 'NOT_APPLICABLE')")
     void updateStateNotApplicable(long id, ServiceMetadataDocumentState newState);
 
 
@@ -67,9 +65,9 @@ public interface LocalServiceMetadataRecordRepo extends CrudRepository<LocalServ
 
     List<LocalServiceMetadataRecord> findByLinkCheckJobId(String linkCheckJobId);
 
-    LocalServiceMetadataRecord findFirstByFileIdentifierAndLinkCheckJobId(String fileID,String linkCheckJobId);
+    LocalServiceMetadataRecord findFirstByFileIdentifierAndLinkCheckJobId(String fileID, String linkCheckJobId);
 
-    List<LocalServiceMetadataRecord> findByFileIdentifierAndLinkCheckJobId(String fileID,String linkCheckJobId);
+    List<LocalServiceMetadataRecord> findByFileIdentifierAndLinkCheckJobId(String fileID, String linkCheckJobId);
 
     LocalServiceMetadataRecord findFirstByFileIdentifier(String fileID);
 

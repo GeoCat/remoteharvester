@@ -34,21 +34,20 @@
 package net.geocat.database.linkchecker.repos;
 
 import net.geocat.database.linkchecker.entities.HttpResult;
-import net.geocat.database.linkchecker.entities.LinkCheckBlobStorage;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface HttpResultRepo extends CrudRepository<HttpResult, Long>  {
+public interface HttpResultRepo extends CrudRepository<HttpResult, Long> {
 
     HttpResult findByLinkCheckJobIdAndURL(String linkCheckJobId, String URL);
 
     boolean existsByLinkCheckJobIdAndURL(String linkCheckJobId, String URL);
 
-    HttpResult findFirstByURL( String URL);
+    HttpResult findFirstByURL(String URL);
 
-    boolean existsByURL( String URL);
+    boolean existsByURL(String URL);
 
     Long deleteByLinkCheckJobId(String linkCheckJobId);
 

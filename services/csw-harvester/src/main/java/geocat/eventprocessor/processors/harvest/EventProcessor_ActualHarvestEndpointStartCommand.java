@@ -1,6 +1,5 @@
 package geocat.eventprocessor.processors.harvest;
 
-import geocat.MySpringApp;
 import geocat.database.entities.RecordSet;
 import geocat.database.repos.RecordSetRepo;
 import geocat.database.service.RecordSetService;
@@ -53,7 +52,7 @@ public class EventProcessor_ActualHarvestEndpointStartCommand extends BaseEventP
 
         List<RecordSet> records = new ArrayList<>();
 
-        logger.debug("Adding RecordSets to Database... (approx "+ cmd.getExpectedNumberOfRecords()/cmd.getnRecordPerRequest()+" record sets)");
+        logger.debug("Adding RecordSets to Database... (approx " + cmd.getExpectedNumberOfRecords() / cmd.getnRecordPerRequest() + " record sets)");
         //for example, for getting 10 records;
         //  first one - 1 to 10 (start at 1, get 10)
         //  2nd       - 11 to 20 (start at 11, get 10)
@@ -77,25 +76,25 @@ public class EventProcessor_ActualHarvestEndpointStartCommand extends BaseEventP
     //
     // so, if the final one is a request for 1 or 2 record, we will "jiggle" the previous request so its a few records fewer
     private void jiggle(List<RecordSet> records) {
-        if (records.size() <=1 )
+        if (records.size() <= 1)
             return; //nothing to do
 
         ActualHarvestEndpointStartCommand cmd = getInitiatingEvent();
 
-        if (cmd.getnRecordPerRequest() <=3)
+        if (cmd.getnRecordPerRequest() <= 3)
             return; //too few to jiggle
 
-        RecordSet last = records.get( records.size()-1);
-        RecordSet secondToLast = records.get( records.size()-2);
+        RecordSet last = records.get(records.size() - 1);
+        RecordSet secondToLast = records.get(records.size() - 2);
 
-        if (last.getExpectedNumberRecords() >2)
+        if (last.getExpectedNumberRecords() > 2)
             return; //nothing to do
 
-        secondToLast.setEndRecordNumber( secondToLast.getEndRecordNumber() -2 );
-        secondToLast.setExpectedNumberRecords(secondToLast.getExpectedNumberRecords() -2 );
+        secondToLast.setEndRecordNumber(secondToLast.getEndRecordNumber() - 2);
+        secondToLast.setExpectedNumberRecords(secondToLast.getExpectedNumberRecords() - 2);
 
-        last.setStartRecordNumber(last.getStartRecordNumber() -2 );
-        last.setExpectedNumberRecords(last.getExpectedNumberRecords() + 2 );
+        last.setStartRecordNumber(last.getStartRecordNumber() - 2);
+        last.setExpectedNumberRecords(last.getExpectedNumberRecords() + 2);
 
         recordSetRepo.save(last);
         recordSetRepo.save(secondToLast);
@@ -107,7 +106,7 @@ public class EventProcessor_ActualHarvestEndpointStartCommand extends BaseEventP
         List<Event> result = new ArrayList<>();
         long endpointId = getInitiatingEvent().getEndPointId();
         List<RecordSet> records = recordSetService.getAll(endpointId);
-        logger.debug("Creating GetRecordsCommand events... ("+records.size()+" commands)");
+        logger.debug("Creating GetRecordsCommand events... (" + records.size() + " commands)");
 
         for (RecordSet record : records) {
             GetRecordsCommand command = eventFactory.create_GetRecordsCommand(getInitiatingEvent(),

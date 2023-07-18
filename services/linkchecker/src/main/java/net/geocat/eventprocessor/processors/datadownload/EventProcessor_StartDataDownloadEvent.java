@@ -37,11 +37,9 @@ package net.geocat.eventprocessor.processors.datadownload;
 import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
 import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
 import net.geocat.eventprocessor.BaseEventProcessor;
-
 import net.geocat.events.Event;
 import net.geocat.events.EventFactory;
 import net.geocat.events.datadownload.StartDataDownloadEvent;
-import net.geocat.events.postprocess.StartPostProcessEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +66,6 @@ public class EventProcessor_StartDataDownloadEvent extends BaseEventProcessor<St
     LocalDatasetMetadataRecordRepo localDatasetMetadataRecordRepo;
 
 
-
     @Override
     public EventProcessor_StartDataDownloadEvent externalProcessing() throws Exception {
         return this;
@@ -93,9 +90,9 @@ public class EventProcessor_StartDataDownloadEvent extends BaseEventProcessor<St
 //            result.add(e);
 //        }
 
-        List<Long> datasetIds =  localDatasetMetadataRecordRepo.searchAllDatasetIds(linkCheckJobId);
-        for(Long id : datasetIds){
-            Event e = eventFactory.createDataDownloadDatasetDocumentEvent(id,linkCheckJobId);
+        List<Long> datasetIds = localDatasetMetadataRecordRepo.searchAllDatasetIds(linkCheckJobId);
+        for (Long id : datasetIds) {
+            Event e = eventFactory.createDataDownloadDatasetDocumentEvent(id, linkCheckJobId);
             result.add(e);
         }
 

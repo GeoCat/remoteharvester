@@ -42,7 +42,7 @@ public class StartDataDownloadEvent extends Event {
     public StartDataDownloadEvent() {
     }
 
-    public StartDataDownloadEvent(  String linkCheckJobId) {
+    public StartDataDownloadEvent(String linkCheckJobId) {
         this.linkCheckJobId = linkCheckJobId;
     }
 

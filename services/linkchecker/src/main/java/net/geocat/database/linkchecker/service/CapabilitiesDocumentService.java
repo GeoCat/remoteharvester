@@ -74,12 +74,11 @@ public class CapabilitiesDocumentService {
         String xmlStr = XmlStringTools.bytea2String(link.getFullData());
 
         XmlDoc _doc = xmlDocumentFactory.create(xmlStr);
-        if (_doc !=null)
+        if (_doc != null)
             link.setXmlDocInfo(_doc.toString());
 
 
-
-        XmlCapabilitiesDocument xml = (XmlCapabilitiesDocument)_doc;
+        XmlCapabilitiesDocument xml = (XmlCapabilitiesDocument) _doc;
 
 
         xmlStr = XmlDoc.writeXML(xml.getParsedXml());
@@ -94,10 +93,10 @@ public class CapabilitiesDocumentService {
 
         doc.setCapabilitiesDocumentType(xml.getCapabilitiesType());
 
-        if ((xml.getInspireDatasetLinks() !=null) && (!xml.getInspireDatasetLinks().isEmpty()) ) {
+        if ((xml.getInspireDatasetLinks() != null) && (!xml.getInspireDatasetLinks().isEmpty())) {
             doc.setInspireSpatialDatasetIdentifiers(xml.getInspireDatasetLinks());
             doc.getInspireSpatialDatasetIdentifiers().stream()
-                    .forEach(x->x.setCapabilitiesDocument(doc));
+                    .forEach(x -> x.setCapabilitiesDocument(doc));
         }
 
         List<CapabilitiesDatasetMetadataLink> dslinks = capabilitiesDatasetMetadataLinkService.createCapabilitiesDatasetMetadataLinks(doc, xml);
@@ -120,7 +119,6 @@ public class CapabilitiesDocumentService {
 
         RemoteServiceMetadataRecordLink remoteServiceMetadataRecordLink = remoteServiceMetadataRecordService.create(doc, metadataUrl);
         doc.setRemoteServiceMetadataRecordLink(remoteServiceMetadataRecordLink);
-
 
 
         return doc;

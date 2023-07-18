@@ -34,20 +34,9 @@
 package net.geocat.database.linkchecker.entities;
 
 import net.geocat.database.linkchecker.entities.helper.HTTPRequestCheckerType;
-import net.geocat.database.linkchecker.entities.helper.LinkToData;
-import net.geocat.database.linkchecker.entities.helper.OGCLinkToData;
 import net.geocat.database.linkchecker.entities.helper.RetrievableSimpleLink;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static net.geocat.database.linkchecker.entities.helper.PartialDownloadHint.ALWAYS_PARTIAL;
 
@@ -59,7 +48,7 @@ import static net.geocat.database.linkchecker.entities.helper.PartialDownloadHin
                         columnList = "linkcheckjobid",
                         unique = false
                 )})
-public class OGCRequest extends RetrievableSimpleLink  {
+public class OGCRequest extends RetrievableSimpleLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -78,14 +67,14 @@ public class OGCRequest extends RetrievableSimpleLink  {
     HTTPRequestCheckerType httpRequestCheckerType;
 
     @Column(columnDefinition = "text")
-    String  unSuccessfulOGCRequestReason;
+    String unSuccessfulOGCRequestReason;
 
     public OGCRequest() {
         super();
         setPartialDownloadHint(ALWAYS_PARTIAL);
     }
 
-    public OGCRequest(String url,HTTPRequestCheckerType httpRequestCheckerType) {
+    public OGCRequest(String url, HTTPRequestCheckerType httpRequestCheckerType) {
         this();
         setRawURL(url);
         setFixedURL(url);
@@ -142,7 +131,7 @@ public class OGCRequest extends RetrievableSimpleLink  {
 
     @Override
     public String toString() {
-        return "OGCRequest{\n      summary:" + summary +"\n " +
+        return "OGCRequest{\n      summary:" + summary + "\n " +
                 "    successfulOGCRequest=" + successfulOGCRequest +
                 "\n      unSuccessfulOGCRequestReason='" + unSuccessfulOGCRequestReason + '\'' + '\n'
                 + super.toString() +

@@ -1,8 +1,6 @@
 package com.geocat.ingester.geonetwork.client;
 
 import com.geocat.ingester.exception.GeoNetworkClientException;
-import com.geocat.ingester.service.IngesterService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -18,14 +16,9 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.*;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,13 +81,13 @@ public class GNLogin {
         final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         UsernamePasswordCredentials credentials =
-            new UsernamePasswordCredentials(username, password);
+                new UsernamePasswordCredentials(username, password);
 
         final URI uri = httpost.getURI();
         HttpHost hh = new HttpHost(
-            uri.getHost(),
-            uri.getPort(),
-            uri.getScheme());
+                uri.getHost(),
+                uri.getPort(),
+                uri.getScheme());
         credentialsProvider.setCredentials(new AuthScope(hh), credentials);
 
         // Create AuthCache instance
@@ -115,7 +108,7 @@ public class GNLogin {
         try {
             response = closeableHttpClient.execute(httpost, clientContext);
 
-            for(Cookie cookie : clientContext.getCookieStore().getCookies()) {
+            for (Cookie cookie : clientContext.getCookieStore().getCookies()) {
                 if (cookie.getName().equalsIgnoreCase("XSRF-TOKEN")) {
                     csrfTokenCookie = clientContext.getCookieStore().getCookies().get(0);
                     break;
@@ -143,13 +136,13 @@ public class GNLogin {
 
         String gnLoginUrl = getLoginService();
 
-        if(!gnLoginUrl.isEmpty()) {
+        if (!gnLoginUrl.isEmpty()) {
             CookieStore cookieStore = new BasicCookieStore();
 
             HttpClientContext clientContext = HttpClientContext.create();
             clientContext.setCookieStore(cookieStore);
 
-            if(closeableHttpClient == null) {
+            if (closeableHttpClient == null) {
                 closeableHttpClient = HttpClients.createDefault();
             }
 
@@ -167,13 +160,13 @@ public class GNLogin {
                 e.printStackTrace();
             }
 
-            if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 httpost.releaseConnection();
 
                 jsessionidCookie = clientContext.getCookieStore().getCookies().get(0);
                 log.debug("Authentication session cookie: " + jsessionidCookie.getName()
                         + " = " + jsessionidCookie.getValue()); // should print JSESSIONID =
-            } else if(response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+            } else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
                 httpost.releaseConnection();
 
                 jsessionidCookie = clientContext.getCookieStore().getCookies().get(0);
@@ -184,7 +177,8 @@ public class GNLogin {
                 log.warn("User " + username + " not able to login to Geonetwork");
                 log.warn("response code from login url is " + response.getStatusLine().getStatusCode());
             }
-        } else {}
+        } else {
+        }
 
         if (jsessionidCookie != null) {
             connection.setJsessionidCookie(jsessionidCookie);

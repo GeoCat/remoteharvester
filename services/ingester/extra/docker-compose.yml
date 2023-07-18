@@ -55,7 +55,7 @@ services:
       GEONETWORK_DB_USERNAME: postgres
       GEONETWORK_DB_PASSWORD: postgres
     ports:
-    - "9090:8080"
+      - "9090:8080"
     volumes:
       - gn_data:/catalogue-data
     depends_on:

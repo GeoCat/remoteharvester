@@ -33,7 +33,6 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 activemq.url=tcp://localhost:61616?jms.prefetchPolicy.queuePrefetch\=1
 ```
 
-
 - Application host / port
 
 ```

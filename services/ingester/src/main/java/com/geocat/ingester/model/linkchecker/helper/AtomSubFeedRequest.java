@@ -33,16 +33,7 @@
 
 package com.geocat.ingester.model.linkchecker.helper;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static com.geocat.ingester.model.linkchecker.helper.PartialDownloadHint.CAPABILITIES_ONLY;
 
@@ -55,7 +46,7 @@ import static com.geocat.ingester.model.linkchecker.helper.PartialDownloadHint.C
                         unique = false
                 )
         })
-public class AtomSubFeedRequest extends RetrievableSimpleLink  {
+public class AtomSubFeedRequest extends RetrievableSimpleLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -75,7 +66,7 @@ public class AtomSubFeedRequest extends RetrievableSimpleLink  {
         setPartialDownloadHint(CAPABILITIES_ONLY);
     }
 
-    public AtomSubFeedRequest(String url ) {
+    public AtomSubFeedRequest(String url) {
         this();
         setRawURL(url);
         setFixedURL(url);

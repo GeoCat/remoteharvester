@@ -33,17 +33,14 @@
 
 package net.geocat.eventprocessor.processors.postprocess;
 
-import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
-import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
 import net.geocat.database.linkchecker.repos.LocalServiceMetadataRecordRepo;
 import net.geocat.eventprocessor.BaseEventProcessor;
 import net.geocat.eventprocessor.processors.processlinks.EventProcessor_ProcessServiceDocLinksEvent;
 import net.geocat.events.Event;
 import net.geocat.events.EventFactory;
 import net.geocat.events.postprocess.PostProcessServiceDocumentEvent;
-import net.geocat.events.processlinks.StartLinkProcessingEvent;
 import net.geocat.service.MetadataService;
 import net.geocat.service.helper.ShouldTransitionOutOfPostProcessing;
 import org.slf4j.Logger;
@@ -54,8 +51,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static net.geocat.database.linkchecker.service.DatabaseUpdateService.convertToString;
 
 @Component
 @Scope("prototype")
@@ -108,7 +103,7 @@ public class EventProcessor_PostProcessServiceDocumentEvent extends BaseEventPro
     public List<Event> newEventProcessing() {
         List<Event> result = new ArrayList<>();
 
-        logger.debug("finished post-processing SERVICE id="+getInitiatingEvent().getServiceMetadataId());
+        logger.debug("finished post-processing SERVICE id=" + getInitiatingEvent().getServiceMetadataId());
 
         String linkCheckJobId = getInitiatingEvent().getLinkCheckJobId();
 //        if (metadataService.linkPostProcessingComplete(linkCheckJobId))
@@ -117,8 +112,7 @@ public class EventProcessor_PostProcessServiceDocumentEvent extends BaseEventPro
 //            Event e = eventFactory.createAllPostProcessingCompleteEvent(linkCheckJobId);
 //            result.add(e);
 //        }
-        if (shouldTransitionOutOfPostProcessing.shouldSendMessage(linkCheckJobId,getInitiatingEvent().getServiceMetadataId()))
-        {
+        if (shouldTransitionOutOfPostProcessing.shouldSendMessage(linkCheckJobId, getInitiatingEvent().getServiceMetadataId())) {
             //done
             Event e = eventFactory.createAllPostProcessingCompleteEvent(linkCheckJobId);
             result.add(e);

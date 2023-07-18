@@ -1,7 +1,7 @@
 <configuration>
     <!-- read in properties from spring configuration -->
-<!--     <property resource="application.properties" />-->
-<!--    <include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <!--     <property resource="application.properties" />-->
+    <!--    <include resource="org/springframework/boot/logging/logback/base.xml"/>-->
 
     <springProperty scope="context" name="spring.datasource.url" source="ingester.jdbc.url"/>
     <springProperty scope="context" name="spring.datasource.username" source="ingester.jdbc.user"/>

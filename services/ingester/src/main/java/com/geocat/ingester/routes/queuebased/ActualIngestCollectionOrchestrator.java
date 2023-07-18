@@ -25,7 +25,7 @@ public class ActualIngestCollectionOrchestrator extends SpringRouteBuilder {
         mainLoopRouteCreator.createEventProcessingLoop(this,
                 "activemq:" + myJMSQueueName,
                 new Class[]{ActualIngestStartCommand.class},
-                Arrays.asList(new RedirectEvent(ActualIngestCompleted.class, "activemq:"+IngestMainOrchestrator.myJMSQueueName))
+                Arrays.asList(new RedirectEvent(ActualIngestCompleted.class, "activemq:" + IngestMainOrchestrator.myJMSQueueName))
         );
 
     }

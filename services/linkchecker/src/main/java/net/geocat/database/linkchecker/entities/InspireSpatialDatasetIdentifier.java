@@ -33,19 +33,7 @@
 
 package net.geocat.database.linkchecker.entities;
 
-import net.geocat.database.linkchecker.entities.helper.ServiceMetadataRecord;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(
@@ -77,12 +65,12 @@ public class InspireSpatialDatasetIdentifier {
     @Column(columnDefinition = "text")
     private String namespace;
 
-//    //which capabilities record does this link belong to?
+    //    //which capabilities record does this link belong to?
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(
             {
-                    @JoinColumn(name="cap_sha2",referencedColumnName = "sha2"),
-                    @JoinColumn(name="cap_jobId",referencedColumnName = "linkcheckjobid")
+                    @JoinColumn(name = "cap_sha2", referencedColumnName = "sha2"),
+                    @JoinColumn(name = "cap_jobId", referencedColumnName = "linkcheckjobid")
             }
     )
     private CapabilitiesDocument capabilitiesDocument;

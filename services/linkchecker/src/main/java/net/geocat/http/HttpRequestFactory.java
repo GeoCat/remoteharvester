@@ -33,16 +33,12 @@
 
 package net.geocat.http;
 
-import net.geocat.database.linkchecker.entities.HttpResult;
 import net.geocat.database.linkchecker.entities.LinkCheckJob;
 import net.geocat.database.linkchecker.service.LinkCheckJobService;
-import net.geocat.events.EventService;
- import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.Link;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import static net.geocat.model.LinkCheckRunConfig.maxAtomSectionLinksToFollow_default;
 import static net.geocat.model.LinkCheckRunConfig.useOtherJobsHTTPCache_default;
 
 @Component
@@ -53,29 +49,28 @@ public class HttpRequestFactory {
     LinkCheckJobService linkCheckJobService;
 
 
-    public LinkCheckJob getJob(String linkCheckJobId){
+    public LinkCheckJob getJob(String linkCheckJobId) {
         try {
-            LinkCheckJob job = linkCheckJobService.getJobInfo(linkCheckJobId,false);
+            LinkCheckJob job = linkCheckJobService.getJobInfo(linkCheckJobId, false);
             return job;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public   HTTPRequest createGET(String location, String linkCheckJobId){
+    public HTTPRequest createGET(String location, String linkCheckJobId) {
         LinkCheckJob job = getJob(linkCheckJobId);
         HTTPRequest result = new HTTPRequest();
         result.setLinkCheckJobId(linkCheckJobId);
         result.setLocation(location);
 
-        boolean useOtherCaches = job == null ? useOtherJobsHTTPCache_default: job.isUseOtherJobsHTTPCache();
+        boolean useOtherCaches = job == null ? useOtherJobsHTTPCache_default : job.isUseOtherJobsHTTPCache();
         result.setCacheUseOtherJobs(useOtherCaches);
 
         return result;
     }
 
-    public   HTTPRequest createPOST(String location,String body, String linkCheckJobId){
+    public HTTPRequest createPOST(String location, String body, String linkCheckJobId) {
         LinkCheckJob job = getJob(linkCheckJobId);
 
         HTTPRequest result = new HTTPRequest();
@@ -83,7 +78,7 @@ public class HttpRequestFactory {
         result.setVerb("POST");
         result.setBody(body);
 
-        boolean useOtherCaches = job == null ? useOtherJobsHTTPCache_default: job.isUseOtherJobsHTTPCache();
+        boolean useOtherCaches = job == null ? useOtherJobsHTTPCache_default : job.isUseOtherJobsHTTPCache();
         result.setCacheUseOtherJobs(useOtherCaches);
 
         return result;

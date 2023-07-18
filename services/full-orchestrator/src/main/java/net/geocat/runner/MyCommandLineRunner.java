@@ -34,7 +34,6 @@
 package net.geocat.runner;
 
 import net.geocat.http.IHTTPRetriever;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +47,9 @@ public class MyCommandLineRunner implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(MyCommandLineRunner.class);
 
 
-
-
-
     @Autowired
     @Qualifier("cookieAttachingRetriever")
     IHTTPRetriever retriever;
-
 
 
     @Override
@@ -63,9 +58,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
         try {
             run1(args);
 
-        }
-        catch(Exception e){
-            int t=0;
+        } catch (Exception e) {
+            int t = 0;
         }
         logger.debug("DONE!");
     }

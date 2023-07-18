@@ -36,13 +36,7 @@ package net.geocat.service.downloadhelpers;
 import net.geocat.http.IContinueReadingPredicate;
 import net.geocat.xml.XmlStringTools;
 
-import static net.geocat.service.downloadhelpers.CapabilitiesContinueReadingPredicate.*;
-import static net.geocat.xml.XmlStringTools.getNS;
-import static net.geocat.xml.XmlStringTools.getPrefix;
-import static net.geocat.xml.XmlStringTools.getRootTag;
-import static net.geocat.xml.XmlStringTools.getTagName;
-import static net.geocat.xml.XmlStringTools.removeDocType;
-import static net.geocat.xml.XmlStringTools.replaceXMLDecl;
+import static net.geocat.xml.XmlStringTools.*;
 
 public class MetadataContinueReadingPredicate implements IContinueReadingPredicate {
     @Override

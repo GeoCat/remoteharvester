@@ -34,8 +34,8 @@ public class IngestJobService {
         return ingestJobRepo.save(newJob);
     }
 
-    public IngestJob updateIngestJobStateInDBToError(String guid ) {
-       return updateIngestJobStateInDB(guid, IngestJobState.ERROR);
+    public IngestJob updateIngestJobStateInDBToError(String guid) {
+        return updateIngestJobStateInDB(guid, IngestJobState.ERROR);
     }
 
     public IngestJob updateIngestJobStateInDB(String guid, IngestJobState state) {
@@ -58,21 +58,21 @@ public class IngestJobService {
 
     public IngestJob updateIngestJobStateInDBIngestedRecords(String guid, long totalIngestedRecords) {
         IngestJob job = ingestJobRepo.findById(guid).get();
-       // job.setState(IngestJobState.INGESTING_RECORDS);
+        // job.setState(IngestJobState.INGESTING_RECORDS);
         job.setTotalIngestedRecords(totalIngestedRecords);
         return ingestJobRepo.save(job);
     }
 
     public IngestJob updateIngestJobStateInDBIndexedRecords(String guid, long totalIngestedRecords) {
         IngestJob job = ingestJobRepo.findById(guid).get();
-       // job.setState(IngestJobState.INDEXING_RECORDS);
+        // job.setState(IngestJobState.INDEXING_RECORDS);
         job.setTotalIndexedRecords(totalIngestedRecords);
         return ingestJobRepo.save(job);
     }
 
     public IngestJob updateIngestJobStateInDBDeletedRecords(String guid, long totalDeletedRecords) {
         IngestJob job = ingestJobRepo.findById(guid).get();
-      //  job.setState(IngestJobState.DELETING_RECORDS);
+        //  job.setState(IngestJobState.DELETING_RECORDS);
         job.setTotalDeletedRecords(totalDeletedRecords);
         return ingestJobRepo.save(job);
     }

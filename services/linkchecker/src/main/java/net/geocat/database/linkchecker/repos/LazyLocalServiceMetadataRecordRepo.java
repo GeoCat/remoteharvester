@@ -43,9 +43,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -63,16 +61,15 @@ public class LazyLocalServiceMetadataRecordRepo {
     PlatformTransactionManager transactionManager;
 
 
-
     // replaces List<LocalServiceMetadataRecord> findAllByFileIdentifierAndLinkCheckJobId
     // Only return the first instance (code was always using .get(0) )
     // Only return the most basic version of the LocalServiceMetadataRecord (no operatesOn and no documentLinks).
     // DO NOT SAVE THESE OBJECTS
     // DO NOT ACCESS operateOn or documentLinks  (hibernate session is closed)
-    public synchronized   Optional<LocalServiceMetadataRecord>  searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId){
+    public synchronized Optional<LocalServiceMetadataRecord> searchFirstByFileIdentifierAndLinkCheckJobId(String fileIdentifier, String linkCheckJobId) {
 
 
-        EntityManager  entityManager =  localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
+        EntityManager entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
         try {
 
             EntityGraph entityGraph = entityManager.getEntityGraph("LocalServiceMetadataRecord-lazy-graph");
@@ -90,15 +87,15 @@ public class LazyLocalServiceMetadataRecordRepo {
                 result = Optional.of((LocalServiceMetadataRecord) results.get(0));
 
             return result;
-        }
-        finally {
+        } finally {
             entityManager.close();
         }
     }
-    public synchronized   List<LocalServiceMetadataRecord>  searchByLinkCheckJobId(String linkCheckJobId){
+
+    public synchronized List<LocalServiceMetadataRecord> searchByLinkCheckJobId(String linkCheckJobId) {
 
 
-        EntityManager  entityManager =  localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
+        EntityManager entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
         try {
 
             EntityGraph entityGraph = entityManager.getEntityGraph("LocalServiceMetadataRecord-lazy-graph");
@@ -106,14 +103,12 @@ public class LazyLocalServiceMetadataRecordRepo {
 
             Query query = entityManager.createQuery("SELECT lsmr FROM LocalServiceMetadataRecord lsmr WHERE lsmr.linkCheckJobId = :linkCheckJobId  ")
                     .setHint("javax.persistence.fetchgraph", entityGraph)
-                    .setParameter("linkCheckJobId", linkCheckJobId)
-;
-                   // .setMaxResults(1);
+                    .setParameter("linkCheckJobId", linkCheckJobId);
+            // .setMaxResults(1);
             List<LocalServiceMetadataRecord> results = query.getResultList();
 
             return results;
-        }
-        finally {
+        } finally {
             entityManager.close();
         }
     }

@@ -35,8 +35,6 @@ package net.geocat.database.harvester.entities;
 
 
 import javax.persistence.*;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Entity
@@ -56,7 +54,7 @@ import java.util.Objects;
 )
 public class MetadataRecord {
 
-//    @Column(columnDefinition = "timestamp with time zone", name = "create_time_utc")
+    //    @Column(columnDefinition = "timestamp with time zone", name = "create_time_utc")
 //    ZonedDateTime createTimeUTC;
     @Id
     @Column(name = "metadata_record_id")

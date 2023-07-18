@@ -2,7 +2,6 @@ package geocat.routes.queuebased;
 
 import geocat.database.service.DatabaseUpdateService;
 import geocat.eventprocessor.EventProcessorRouteCreator;
-import geocat.eventprocessor.MainLoopRouteCreator;
 import geocat.events.actualRecordCollection.GetRecordsCommand;
 import geocat.service.QueueChooserService;
 import geocat.service.QueueInfo;
@@ -36,14 +35,14 @@ public class MultiGetRecordQueues extends SpringRouteBuilder {
                 .redeliveryDelay(1000));
 
         this.onException().onExceptionOccurred(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Exception ex = exchange.getException();
-                exchange.getMessage().setHeader("exception", ex);
-                logger.error("exception occurred", ex);
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                        logger.error("exception occurred", ex);
 
-            }
-        })
+                    }
+                })
                 .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(1)
         ;
 

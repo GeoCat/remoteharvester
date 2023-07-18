@@ -3,17 +3,7 @@ package com.geocat.ingester.model.metadata;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "HarvesterSettings")
@@ -21,12 +11,12 @@ public class HarvesterSetting {
     private static final String ID_SEQ_NAME = "harvester_setting_id_seq";
 
     @Id
-    @SequenceGenerator(name=ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name = ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     private int id;
     @OneToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "parentid")
-    @OnDelete(action= OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private HarvesterSetting parent;
     private String name;
     private String value;

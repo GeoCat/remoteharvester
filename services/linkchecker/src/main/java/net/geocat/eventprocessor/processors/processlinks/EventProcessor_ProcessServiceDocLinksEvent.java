@@ -34,12 +34,11 @@
 package net.geocat.eventprocessor.processors.processlinks;
 
 
-import net.geocat.database.linkchecker.entities.*;
-import net.geocat.database.linkchecker.entities.helper.LinkState;
+import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
+import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.SHA2JobIdCompositeKey;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.repos.*;
-
 import net.geocat.eventprocessor.BaseEventProcessor;
 import net.geocat.eventprocessor.processors.processlinks.postprocessing.*;
 import net.geocat.events.Event;
@@ -67,66 +66,66 @@ public class EventProcessor_ProcessServiceDocLinksEvent extends BaseEventProcess
 
     Logger logger = LoggerFactory.getLogger(EventProcessor_ProcessServiceDocLinksEvent.class);
 
-   @Autowired
-   LocalServiceMetadataRecordRepo localServiceMetadataRecordRepo;
+    @Autowired
+    LocalServiceMetadataRecordRepo localServiceMetadataRecordRepo;
 
-   @Autowired
-   ServiceDocumentLinkRepo serviceDocumentLinkRepo;
+    @Autowired
+    ServiceDocumentLinkRepo serviceDocumentLinkRepo;
 
-   @Autowired
-   RetrieveServiceDocumentLink retrieveServiceDocumentLink;
+    @Autowired
+    RetrieveServiceDocumentLink retrieveServiceDocumentLink;
 
-   @Autowired
-   RemoteServiceMetadataRecordLinkRetriever remoteServiceMetadataRecordLinkRetriever;
+    @Autowired
+    RemoteServiceMetadataRecordLinkRetriever remoteServiceMetadataRecordLinkRetriever;
 
-   @Autowired
-   RemoteServiceMetadataRecordLinkRepo remoteServiceMetadataRecordLinkRepo;
+    @Autowired
+    RemoteServiceMetadataRecordLinkRepo remoteServiceMetadataRecordLinkRepo;
 
-   @Autowired
-   CapabilitiesDatasetMetadataLinkRepo capabilitiesDatasetMetadataLinkRepo;
+    @Autowired
+    CapabilitiesDatasetMetadataLinkRepo capabilitiesDatasetMetadataLinkRepo;
 
-   @Autowired
-   RetrieveCapabilitiesDatasetMetadataLink retrieveCapabilitiesDatasetMetadataLink;
+    @Autowired
+    RetrieveCapabilitiesDatasetMetadataLink retrieveCapabilitiesDatasetMetadataLink;
 
-   @Autowired
-   RetrieveOperatesOnLink retrieveOperatesOnLink;
+    @Autowired
+    RetrieveOperatesOnLink retrieveOperatesOnLink;
 
-   @Autowired
-   OperatesOnLinkRepo operatesOnLinkRepo;
+    @Autowired
+    OperatesOnLinkRepo operatesOnLinkRepo;
 
-   @Autowired
-   CapabilitiesDocumentRepo capabilitiesDocumentRepo;
+    @Autowired
+    CapabilitiesDocumentRepo capabilitiesDocumentRepo;
 
 //   @Autowired
 //    RemoteServiceMetadataRecordRepo remoteServiceMetadataRecordRepo;
 
-   @Autowired
-   HumanReadableServiceMetadata humanReadableServiceMetadata;
+    @Autowired
+    HumanReadableServiceMetadata humanReadableServiceMetadata;
 
 
-   @Autowired
+    @Autowired
     ServiceDocOperatesOnProcessor serviceDocOperatesOnProcessor;
 
-   @Autowired
-   EventFactory eventFactory;
+    @Autowired
+    EventFactory eventFactory;
 
-   @Autowired
-   MetadataService metadataService;
+    @Autowired
+    MetadataService metadataService;
 
-   @Autowired
-   CapabilitiesResolvesIndicators capabilitiesResolvesIndicators;
+    @Autowired
+    CapabilitiesResolvesIndicators capabilitiesResolvesIndicators;
 
-   @Autowired
-   CapabilitiesServiceLinkIndicators capabilitiesServiceLinkIndicators;
+    @Autowired
+    CapabilitiesServiceLinkIndicators capabilitiesServiceLinkIndicators;
 
-   @Autowired
-   CapabilitiesServiceMatchesLocalServiceIndicators capabilitiesServiceMatchesLocalServiceIndicators;
+    @Autowired
+    CapabilitiesServiceMatchesLocalServiceIndicators capabilitiesServiceMatchesLocalServiceIndicators;
 
-   @Autowired
-   CapabilitiesDatasetLinksResolveIndicators capabilitiesDatasetLinksResolveIndicators;
+    @Autowired
+    CapabilitiesDatasetLinksResolveIndicators capabilitiesDatasetLinksResolveIndicators;
 
-   @Autowired
-   ServiceOperatesOnIndicators serviceOperatesOnIndicators;
+    @Autowired
+    ServiceOperatesOnIndicators serviceOperatesOnIndicators;
 
     @Autowired
     CapabilitiesDownloadingService capabilitiesDownloadingService;
@@ -153,30 +152,29 @@ public class EventProcessor_ProcessServiceDocLinksEvent extends BaseEventProcess
             return this; //nothing to do
 
 
-     //   localServiceMetadataRecord = localServiceMetadataRecordRepo.fullId(getInitiatingEvent().getServiceMetadataId());// make sure we re-load
+        //   localServiceMetadataRecord = localServiceMetadataRecordRepo.fullId(getInitiatingEvent().getServiceMetadataId());// make sure we re-load
 
-       // prune(); // remove any previous work (if this is being re-run)
+        // prune(); // remove any previous work (if this is being re-run)
 
         try {
             int nlinksCap = localServiceMetadataRecord.getServiceDocumentLinks().size();
             int nlinksOperates = localServiceMetadataRecord.getOperatesOnLinks().size();
-            logger.debug("processing links SERVICE documentid="+getInitiatingEvent().getServiceMetadataId()+", with fileID="+ localServiceMetadataRecord.getFileIdentifier() +" that has "+nlinksCap+" document links, and "+nlinksOperates+" operates on links");
+            logger.debug("processing links SERVICE documentid=" + getInitiatingEvent().getServiceMetadataId() + ", with fileID=" + localServiceMetadataRecord.getFileIdentifier() + " that has " + nlinksCap + " document links, and " + nlinksOperates + " operates on links");
 
-             documentLinkToCapabilitiesProcessor.processDocumentLinks(localServiceMetadataRecord);
+            documentLinkToCapabilitiesProcessor.processDocumentLinks(localServiceMetadataRecord);
 
 
             processOperatesOnLinks(localServiceMetadataRecord);
 
-          //  localServiceMetadataRecord.setState(ServiceMetadataDocumentState.LINKS_PROCESSED);
+            //  localServiceMetadataRecord.setState(ServiceMetadataDocumentState.LINKS_PROCESSED);
 
             save();
-            logger.trace("finished  processing links for documentid="+getInitiatingEvent().getServiceMetadataId()  );
+            logger.trace("finished  processing links for documentid=" + getInitiatingEvent().getServiceMetadataId());
 
-        }
-        catch(Exception e){
-            logger.error("exception for serviceMetadataRecordId="+getInitiatingEvent().getServiceMetadataId(),e);
+        } catch (Exception e) {
+            logger.error("exception for serviceMetadataRecordId=" + getInitiatingEvent().getServiceMetadataId(), e);
             localServiceMetadataRecord.setState(ServiceMetadataDocumentState.ERROR);
-            localServiceMetadataRecord.setErrorMessage(  convertToString(e) );
+            localServiceMetadataRecord.setErrorMessage(convertToString(e));
             save();
         }
 
@@ -185,17 +183,14 @@ public class EventProcessor_ProcessServiceDocLinksEvent extends BaseEventProcess
     }
 
 
-    public void save( ){
+    public void save() {
         localServiceMetadataRecord = localServiceMetadataRecordRepo.save(localServiceMetadataRecord);
 
     }
 
-    private void processOperatesOnLinks(LocalServiceMetadataRecord localServiceMetadataRecord) throws  Exception {
+    private void processOperatesOnLinks(LocalServiceMetadataRecord localServiceMetadataRecord) throws Exception {
         serviceDocOperatesOnProcessor.process(localServiceMetadataRecord);
     }
-
-
-
 
 
 //    private void processDocumentLinks() throws Exception {
@@ -240,14 +235,14 @@ public class EventProcessor_ProcessServiceDocLinksEvent extends BaseEventProcess
 
     //optimize - don't keep loading it
     List<CapabilitiesDocument> getCapabilities(LocalServiceMetadataRecord record) {
-        List<String>  cap_sha2s =     record.getServiceDocumentLinks().stream()
-                .filter(x->x.getSha2() != null)
-                .map(x->x.getSha2())
+        List<String> cap_sha2s = record.getServiceDocumentLinks().stream()
+                .filter(x -> x.getSha2() != null)
+                .map(x -> x.getSha2())
                 .distinct()
                 .collect(Collectors.toList());
 
         List<CapabilitiesDocument> capdocs = cap_sha2s.stream()
-                .map(x-> capabilitiesDocumentRepo.findById(new SHA2JobIdCompositeKey(x ,record.getLinkCheckJobId())).get())
+                .map(x -> capabilitiesDocumentRepo.findById(new SHA2JobIdCompositeKey(x, record.getLinkCheckJobId())).get())
                 .collect(Collectors.toList());
 
         return capdocs;
@@ -266,23 +261,22 @@ public class EventProcessor_ProcessServiceDocLinksEvent extends BaseEventProcess
 
             List<CapabilitiesDocument> capDocs = getCapabilities(localServiceMetadataRecord);
 
-            capabilitiesResolvesIndicators.process(localServiceMetadataRecord,capDocs); // simple record->cap indicators
-            capabilitiesServiceLinkIndicators.process(localServiceMetadataRecord,capDocs); // see if a cap links back to original service records
+            capabilitiesResolvesIndicators.process(localServiceMetadataRecord, capDocs); // simple record->cap indicators
+            capabilitiesServiceLinkIndicators.process(localServiceMetadataRecord, capDocs); // see if a cap links back to original service records
 
-      //    capabilitiesServiceMatchesLocalServiceIndicators.process(localServiceMetadataRecord); // see if cap links back to original service records
-             capabilitiesDatasetLinksResolveIndicators.process(localServiceMetadataRecord,capDocs); // looks at the cap's DS layers
-             serviceOperatesOnIndicators.process(localServiceMetadataRecord,capDocs); // check the operates on links
+            //    capabilitiesServiceMatchesLocalServiceIndicators.process(localServiceMetadataRecord); // see if cap links back to original service records
+            capabilitiesDatasetLinksResolveIndicators.process(localServiceMetadataRecord, capDocs); // looks at the cap's DS layers
+            serviceOperatesOnIndicators.process(localServiceMetadataRecord, capDocs); // check the operates on links
 
-           localServiceMetadataRecord.setState(ServiceMetadataDocumentState.LINKS_PROCESSED);
-           localServiceMetadataRecord.setHumanReadable(humanReadableServiceMetadata.getHumanReadable(localServiceMetadataRecord));
-           save( );
-           logger.debug("finished initial post processing  documentid="+getInitiatingEvent().getServiceMetadataId()  );
-        }
-        catch(Exception e){
-            logger.error("post processing exception for serviceMetadataRecordId="+getInitiatingEvent().getServiceMetadataId(),e);
+            localServiceMetadataRecord.setState(ServiceMetadataDocumentState.LINKS_PROCESSED);
+            localServiceMetadataRecord.setHumanReadable(humanReadableServiceMetadata.getHumanReadable(localServiceMetadataRecord));
+            save();
+            logger.debug("finished initial post processing  documentid=" + getInitiatingEvent().getServiceMetadataId());
+        } catch (Exception e) {
+            logger.error("post processing exception for serviceMetadataRecordId=" + getInitiatingEvent().getServiceMetadataId(), e);
             localServiceMetadataRecord.setState(ServiceMetadataDocumentState.ERROR);
-            localServiceMetadataRecord.setErrorMessage(  convertToString(e) );
-            save( );
+            localServiceMetadataRecord.setErrorMessage(convertToString(e));
+            save();
         }
 
         return this;
@@ -300,13 +294,12 @@ public class EventProcessor_ProcessServiceDocLinksEvent extends BaseEventProcess
 //            Event e = eventFactory.createAllLinksCheckedEvent(linkCheckJobId);
 //            result.add(e);
 //        }
-        if (shouldTransitionOutOfLinkProcessing.shouldSendMessage(linkCheckJobId,getInitiatingEvent().getServiceMetadataId()))
-        {
+        if (shouldTransitionOutOfLinkProcessing.shouldSendMessage(linkCheckJobId, getInitiatingEvent().getServiceMetadataId())) {
             //done
             Event e = eventFactory.createAllLinksCheckedEvent(linkCheckJobId);
             result.add(e);
         }
-         return result;
+        return result;
     }
 
 

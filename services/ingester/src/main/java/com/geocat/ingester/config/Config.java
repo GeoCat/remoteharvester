@@ -19,7 +19,7 @@ import org.springframework.jms.connection.JmsTransactionManager;
 @Configuration
 public class Config {
     //String brokerUrl = "tcp://localhost:61616?jms.prefetchPolicy.queuePrefetch=1";
-    @Value( "${activemq.url}" )
+    @Value("${activemq.url}")
     String brokerUrl;
 
     @Autowired
@@ -58,7 +58,7 @@ public class Config {
         PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory(connectionFactory);
         pooledConnectionFactory.setMaxConnections(50);
 
-         JmsTransactionManager jmsTransactionManager = new JmsTransactionManager();
+        JmsTransactionManager jmsTransactionManager = new JmsTransactionManager();
         jmsTransactionManager.setConnectionFactory(pooledConnectionFactory);
 
         ActiveMQComponent activeMQComponent = new ActiveMQComponent();
@@ -70,7 +70,7 @@ public class Config {
         //  activeMQComponent.setLazyCreateTransactionManager (false);
 
         activeMQComponent.setCacheLevelName("CACHE_NONE");
-         activeMQComponent.setAcknowledgementModeName("SESSION_TRANSACTED");
+        activeMQComponent.setAcknowledgementModeName("SESSION_TRANSACTED");
 
 
         return activeMQComponent;

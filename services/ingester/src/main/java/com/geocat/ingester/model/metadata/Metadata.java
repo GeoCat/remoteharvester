@@ -25,21 +25,9 @@ package com.geocat.ingester.model.metadata;
 
 import lombok.Data;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -50,7 +38,7 @@ public class Metadata implements Serializable {
     private static final String ID_SEQ_NAME = "metadata_id_seq";
 
     @Id
-    @SequenceGenerator(name=ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name = ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     private int id;
     @Column(nullable = false, unique = true)
@@ -68,11 +56,11 @@ public class Metadata implements Serializable {
     private int owner;
     private int groupOwner;
 
-    @OneToMany(mappedBy="id.metadataId",  fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.metadataId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OperationAllowed> privileges = new HashSet<OperationAllowed>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="metadata_id", nullable=false)
+    @JoinColumn(name = "metadata_id", nullable = false)
     private Set<MetadataIndicator> indicators = new HashSet<MetadataIndicator>();
 
     public Metadata() {

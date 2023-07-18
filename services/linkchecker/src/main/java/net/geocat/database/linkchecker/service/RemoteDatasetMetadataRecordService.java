@@ -33,10 +33,9 @@
 
 package net.geocat.database.linkchecker.service;
 
-import net.geocat.database.linkchecker.entities.*;
+import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.xml.XmlDatasetMetadataDocument;
-import net.geocat.xml.XmlServiceRecordDoc;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -81,7 +80,7 @@ public class RemoteDatasetMetadataRecordService {
 //    }
 
     public LocalDatasetMetadataRecord createLocalServiceMetadataRecord(XmlDatasetMetadataDocument doc, Long underlyingHarvestMetadataRecordId, String linkCheckJobId, String sha2) {
-        LocalDatasetMetadataRecord result = createLocalDatasetMetadataRecord(doc,underlyingHarvestMetadataRecordId,linkCheckJobId,sha2);
+        LocalDatasetMetadataRecord result = createLocalDatasetMetadataRecord(doc, underlyingHarvestMetadataRecordId, linkCheckJobId, sha2);
         result.setHarvesterMetadataRecordId(underlyingHarvestMetadataRecordId);
         result.setLinkCheckJobId(linkCheckJobId);
         result.setSha2(sha2);

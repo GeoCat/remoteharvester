@@ -33,7 +33,6 @@
 
 package net.geocat.routes.rest;
 
-import net.geocat.service.GetStatusService;
 import net.geocat.service.OrchestratedHarvestService;
 import org.apache.camel.BeanScope;
 import org.apache.camel.builder.RouteBuilder;
@@ -42,7 +41,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class GetOutstandingProcesses extends RouteBuilder  {
+public class GetOutstandingProcesses extends RouteBuilder {
 
     @Value("${geocat.jettyHost}")
     public String jettyHost;

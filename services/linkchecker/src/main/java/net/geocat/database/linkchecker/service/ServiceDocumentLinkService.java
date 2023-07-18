@@ -38,7 +38,6 @@ import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.ServiceDocumentLink;
 import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.LinkState;
-import net.geocat.database.linkchecker.entities.helper.ServiceMetadataRecord;
 import net.geocat.xml.helpers.OnlineResource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

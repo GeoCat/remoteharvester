@@ -33,9 +33,7 @@
 
 package net.geocat.simple;
 
-import net.geocat.service.capabilities.WMTSCapabilitiesDatasetLinkExtractor;
 import net.geocat.xml.XmlCapabilitiesWFS;
-import net.geocat.xml.XmlCapabilitiesWMS;
 import net.geocat.xml.XmlDocumentFactory;
 import net.geocat.xml.helpers.CapabilityDeterminer;
 import org.junit.Before;
@@ -44,7 +42,6 @@ import org.junit.Test;
 import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TestWFSCapabilities {
@@ -54,7 +51,7 @@ public class TestWFSCapabilities {
     public XmlCapabilitiesWFS read(String fname) throws Exception {
         String text = new Scanner(TestWMSCapabilitiesDatasetLinkExtractor.class.getClassLoader().getResourceAsStream(fname), "UTF-8")
                 .useDelimiter("\\A").next();
-        return (XmlCapabilitiesWFS)xmlDocumentFactory.create(text);
+        return (XmlCapabilitiesWFS) xmlDocumentFactory.create(text);
     }
 
 
@@ -63,58 +60,58 @@ public class TestWFSCapabilities {
         XmlCapabilitiesWFS wfs = read("wfs_inspire_single.xml");
 
 
-        assertEquals(1,wfs.getInspireDatasetLinks().size());
+        assertEquals(1, wfs.getInspireDatasetLinks().size());
 
-        assertEquals("ds_metadataurl1", wfs.getInspireDatasetLinks().get(0).getMetadataURL() );
-        assertEquals("dsnamespace1", wfs.getInspireDatasetLinks().get(0).getNamespace() );
-        assertEquals("dscode1", wfs.getInspireDatasetLinks().get(0).getCode() );
+        assertEquals("ds_metadataurl1", wfs.getInspireDatasetLinks().get(0).getMetadataURL());
+        assertEquals("dsnamespace1", wfs.getInspireDatasetLinks().get(0).getNamespace());
+        assertEquals("dscode1", wfs.getInspireDatasetLinks().get(0).getCode());
 
 
         assertTrue(wfs.getDatasetLinksList().isEmpty()); //not double counting
-        int t=0;
+        int t = 0;
     }
 
     @Test
     public void test_inspire_and_layer() throws Exception {
         XmlCapabilitiesWFS wfs = read("wfs_inspire_and_layer.xml");
 
-        assertEquals(2,wfs.getInspireDatasetLinks().size());
+        assertEquals(2, wfs.getInspireDatasetLinks().size());
 
         assertEquals(1, wfs.getDatasetLinksList().size()); //not double counting
 
         assertEquals("LANG", wfs.getDefaultLang());
-        assertEquals(2,wfs.getSRSs().size());
+        assertEquals(2, wfs.getSRSs().size());
         assertEquals("http://www.opengis.net/def/crs/EPSG/0/4258", wfs.getSRSs().get(0));
         assertEquals("http://www.opengis.net/def/crs/EPSG/0/4326", wfs.getSRSs().get(1));
 
-        assertEquals(2,wfs.getInspireDatasetLinks().size());
-        assertEquals("dscode1",wfs.getInspireDatasetLinks().get(0).getCode());
-        assertEquals("dsnamespace1",wfs.getInspireDatasetLinks().get(0).getNamespace());
-        assertEquals("ds_metadataurl1",wfs.getInspireDatasetLinks().get(0).getMetadataURL());
+        assertEquals(2, wfs.getInspireDatasetLinks().size());
+        assertEquals("dscode1", wfs.getInspireDatasetLinks().get(0).getCode());
+        assertEquals("dsnamespace1", wfs.getInspireDatasetLinks().get(0).getNamespace());
+        assertEquals("ds_metadataurl1", wfs.getInspireDatasetLinks().get(0).getMetadataURL());
 
-        assertEquals("ft1URL", wfs.getDatasetLinksList().get(0).getRawUrl() );
-        assertEquals("ws:layer1", wfs.getDatasetLinksList().get(0).getOgcLayerName() );
+        assertEquals("ft1URL", wfs.getDatasetLinksList().get(0).getRawUrl());
+        assertEquals("ws:layer1", wfs.getDatasetLinksList().get(0).getOgcLayerName());
 
-        int t=0;
+        int t = 0;
     }
 
     @Test
     public void test_inspire_and_layer_multi() throws Exception {
         XmlCapabilitiesWFS wfs = read("wfs_inspire_and_layer_multi.xml");
 
-        assertEquals(2,wfs.getInspireDatasetLinks().size());
+        assertEquals(2, wfs.getInspireDatasetLinks().size());
 
         assertEquals(3, wfs.getDatasetLinksList().size()); //not double counting
 
-        assertEquals("ft1URL", wfs.getDatasetLinksList().get(0).getRawUrl() );
-        assertEquals("ft2URL", wfs.getDatasetLinksList().get(1).getRawUrl() );
-        assertEquals("ft3URL", wfs.getDatasetLinksList().get(2).getRawUrl() );
+        assertEquals("ft1URL", wfs.getDatasetLinksList().get(0).getRawUrl());
+        assertEquals("ft2URL", wfs.getDatasetLinksList().get(1).getRawUrl());
+        assertEquals("ft3URL", wfs.getDatasetLinksList().get(2).getRawUrl());
 
-        assertEquals("ws:layer1", wfs.getDatasetLinksList().get(0).getOgcLayerName() );
-        assertEquals("ws:layer2", wfs.getDatasetLinksList().get(1).getOgcLayerName() );
-        assertEquals("ws:layer2", wfs.getDatasetLinksList().get(2).getOgcLayerName() );
+        assertEquals("ws:layer1", wfs.getDatasetLinksList().get(0).getOgcLayerName());
+        assertEquals("ws:layer2", wfs.getDatasetLinksList().get(1).getOgcLayerName());
+        assertEquals("ws:layer2", wfs.getDatasetLinksList().get(2).getOgcLayerName());
 
-        int t=0;
+        int t = 0;
     }
 
     @Test
@@ -122,16 +119,16 @@ public class TestWFSCapabilities {
         XmlCapabilitiesWFS wfs = read("wfs_inspire_multi.xml");
 
 
-        assertEquals(2,wfs.getInspireDatasetLinks().size());
+        assertEquals(2, wfs.getInspireDatasetLinks().size());
 
-        assertEquals("ds_metadataurl1", wfs.getInspireDatasetLinks().get(0).getMetadataURL() );
-        assertEquals("dsnamespace1", wfs.getInspireDatasetLinks().get(0).getNamespace() );
-        assertEquals("dscode1", wfs.getInspireDatasetLinks().get(0).getCode() );
+        assertEquals("ds_metadataurl1", wfs.getInspireDatasetLinks().get(0).getMetadataURL());
+        assertEquals("dsnamespace1", wfs.getInspireDatasetLinks().get(0).getNamespace());
+        assertEquals("dscode1", wfs.getInspireDatasetLinks().get(0).getCode());
 
 
-        assertEquals("ds_metadataurl2", wfs.getInspireDatasetLinks().get(1).getMetadataURL() );
-        assertEquals("dsnamespace2", wfs.getInspireDatasetLinks().get(1).getNamespace() );
-        assertEquals("dscode2", wfs.getInspireDatasetLinks().get(1).getCode() );
+        assertEquals("ds_metadataurl2", wfs.getInspireDatasetLinks().get(1).getMetadataURL());
+        assertEquals("dsnamespace2", wfs.getInspireDatasetLinks().get(1).getNamespace());
+        assertEquals("dscode2", wfs.getInspireDatasetLinks().get(1).getCode());
 
         assertTrue(wfs.getDatasetLinksList().isEmpty()); //not double counting
 
@@ -140,7 +137,7 @@ public class TestWFSCapabilities {
 
 
     @Before
-    public void setup(){
+    public void setup() {
         xmlDocumentFactory = new XmlDocumentFactory();
         xmlDocumentFactory.capabilityDeterminer = new CapabilityDeterminer();
 

@@ -34,7 +34,6 @@
 package net.geocat.database.linkchecker.repos;
 
 import net.geocat.database.linkchecker.entities.helper.DatasetIdentifier;
-import net.geocat.database.linkchecker.entities.helper.DatasetMetadataRecord;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;

@@ -33,28 +33,21 @@
 
 package net.geocat.eventprocessor.processors.datadownload.downloaders;
 
-import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
 import net.geocat.database.linkchecker.entities.OGCRequest;
 import net.geocat.database.linkchecker.entities.helper.HTTPRequestCheckerType;
-import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
 import net.geocat.http.AlwaysAbortContinueReadingPredicate;
-import net.geocat.http.IHTTPRetriever;
 import net.geocat.http.SmartHTTPRetriever;
 import net.geocat.service.downloadhelpers.PartialDownloadPredicateFactory;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
 import net.geocat.xml.XmlCapabilitiesWFS;
-import net.geocat.xml.XmlStringTools;
-import net.geocat.xml.helpers.XmlTagInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.fixBaseURL;
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.setParameter;
-import static net.geocat.xml.XmlStringTools.determineRootTagInfo;
 
 @Component
 @Scope("prototype")
@@ -77,7 +70,7 @@ public class WFSLayerDownloader {
     RetrievableSimpleLinkDownloader retrievableSimpleLinkDownloader;
 
 
-    public static String addBasicItemsToUrl(String baseUrl,String wfsVersion) throws Exception {
+    public static String addBasicItemsToUrl(String baseUrl, String wfsVersion) throws Exception {
         String url = baseUrl;
         url = setParameter(url, "REQUEST", "GetFeature");
         url = setParameter(url, "SERVICE", "WFS");
@@ -86,13 +79,12 @@ public class WFSLayerDownloader {
     }
 
 
-
     public String determineTypeNameParam(XmlCapabilitiesWFS wfsCap) {
-        if ( (wfsCap.getVersionNumber() == null) || (wfsCap.getVersionNumber().isEmpty()))
+        if ((wfsCap.getVersionNumber() == null) || (wfsCap.getVersionNumber().isEmpty()))
             return "TYPENAMES";
         if (wfsCap.getVersionNumber().startsWith("2"))
             return "TYPENAMES";
-        return  "TYPENAME";
+        return "TYPENAME";
     }
 
     public String createURL(XmlCapabilitiesWFS wfsCap, String layerName) throws Exception {
@@ -110,13 +102,12 @@ public class WFSLayerDownloader {
     }
 
     public OGCRequest setupRequest(XmlCapabilitiesWFS wfsCap, String layerName) throws Exception {
-        String url = createURL(wfsCap,layerName);
+        String url = createURL(wfsCap, layerName);
 
         OGCRequest ogcRequest = new OGCRequest(url, HTTPRequestCheckerType.FEATURE_COLLECTION_ONLY);
-        ogcRequest.setSummary(getClass().getSimpleName()+", layer="+layerName);
+        ogcRequest.setSummary(getClass().getSimpleName() + ", layer=" + layerName);
         return ogcRequest;
     }
-
 
 
 }

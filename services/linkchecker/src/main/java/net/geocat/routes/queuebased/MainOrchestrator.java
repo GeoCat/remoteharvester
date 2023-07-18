@@ -46,7 +46,6 @@ import net.geocat.events.findlinks.StartProcessDocumentsEvent;
 import net.geocat.events.postprocess.AllPostProcessingCompleteEvent;
 import net.geocat.events.postprocess.StartPostProcessEvent;
 import net.geocat.events.processlinks.AllLinksCheckedEvent;
-import net.geocat.events.processlinks.ProcessServiceDocLinksEvent;
 import net.geocat.events.processlinks.StartLinkProcessingEvent;
 import org.apache.camel.BeanScope;
 import org.apache.camel.Exchange;
@@ -89,13 +88,13 @@ public class MainOrchestrator extends SpringRouteBuilder {
         from("activemq:ActiveMQ.DLQ")
                 .routeId("MainOrchestrator.DLQ")
                 .onException(Exception.class).onExceptionOccurred(new Processor() {
-            @Override
-            public void process(Exchange exchange) throws Exception {
-                Exception ex = exchange.getException();
-                exchange.getMessage().setHeader("exception", ex);
-                exchange.getMessage().setHeader("exceptionTxt", DatabaseUpdateService.convertToString(ex));
-            }
-        })
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        Exception ex = exchange.getException();
+                        exchange.getMessage().setHeader("exception", ex);
+                        exchange.getMessage().setHeader("exceptionTxt", DatabaseUpdateService.convertToString(ex));
+                    }
+                })
                 .handled(true)
                 .to("activemq:ActiveMQ.DLQ_DLQ")
                 .end()

@@ -100,10 +100,10 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
                                  long eventId,
                                  short causedByIndex) throws SQLException {
 
-        short index=0;
+        short index = 0;
         StringBuilder buf = new StringBuilder();
         ThrowableProxyUtil.subjoinFirstLine(buf, tp);
-        updateExceptionStatement(insertExceptionStatement, buf.toString(),causedByIndex, index++, eventId);
+        updateExceptionStatement(insertExceptionStatement, buf.toString(), causedByIndex, index++, eventId);
 
         int commonFrames = tp.getCommonFrames();
         StackTraceElementProxy[] stepArray = tp.getStackTraceElementProxyArray();
@@ -111,13 +111,13 @@ public class CustomDBAppender extends ch.qos.logback.classic.db.DBAppender {
             StringBuilder sb = new StringBuilder();
             sb.append(CoreConstants.TAB);
             ThrowableProxyUtil.subjoinSTEP(sb, stepArray[i]);
-            updateExceptionStatement(insertExceptionStatement, sb.toString(),causedByIndex, index++, eventId);
+            updateExceptionStatement(insertExceptionStatement, sb.toString(), causedByIndex, index++, eventId);
         }
 
         if (commonFrames > 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(CoreConstants.TAB).append("... ").append(commonFrames).append(" common frames omitted");
-            updateExceptionStatement(insertExceptionStatement, sb.toString(),causedByIndex, index++, eventId);
+            updateExceptionStatement(insertExceptionStatement, sb.toString(), causedByIndex, index++, eventId);
         }
 
 

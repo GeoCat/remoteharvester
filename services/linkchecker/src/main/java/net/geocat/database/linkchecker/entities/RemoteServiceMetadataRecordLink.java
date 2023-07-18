@@ -113,7 +113,7 @@ public class RemoteServiceMetadataRecordLink extends RetrievableSimpleLink {
         result += "      remoteServiceMetadataRecordLinkId: " + remoteServiceMetadataRecordLinkId + "\n";
 
         result += "\n";
-        result += "      file identifier: "+fileIdentifier;
+        result += "      file identifier: " + fileIdentifier;
 
         result += "\n";
         result += super.toString();

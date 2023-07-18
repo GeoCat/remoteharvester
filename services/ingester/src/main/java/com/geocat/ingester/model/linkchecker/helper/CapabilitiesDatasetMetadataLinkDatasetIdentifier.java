@@ -36,30 +36,29 @@ package com.geocat.ingester.model.linkchecker.helper;
 
 import com.geocat.ingester.model.linkchecker.CapabilitiesDatasetMetadataLink;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 
 @Entity
 @DiscriminatorValue("CapDSMDLinkDatasetIdentifier")
 public class CapabilitiesDatasetMetadataLinkDatasetIdentifier extends DatasetIdentifier {
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     CapabilitiesDatasetMetadataLink capDatasetMetadataLink;
 
-    public CapabilitiesDatasetMetadataLinkDatasetIdentifier() {super();}
+    public CapabilitiesDatasetMetadataLinkDatasetIdentifier() {
+        super();
+    }
 
     public CapabilitiesDatasetMetadataLinkDatasetIdentifier(DatasetIdentifierNodeType identifierNodeType, String code, String codeSpace) {
-        super(identifierNodeType,code,codeSpace);
+        super(identifierNodeType, code, codeSpace);
     }
 
     public CapabilitiesDatasetMetadataLinkDatasetIdentifier(DatasetIdentifier id) {
-        super(id.getIdentifierNodeType(),id.getCode(),id.getCodeSpace());
+        super(id.getIdentifierNodeType(), id.getCode(), id.getCodeSpace());
     }
-    public CapabilitiesDatasetMetadataLinkDatasetIdentifier(DatasetIdentifier id,CapabilitiesDatasetMetadataLink r ) {
+
+    public CapabilitiesDatasetMetadataLinkDatasetIdentifier(DatasetIdentifier id, CapabilitiesDatasetMetadataLink r) {
         this(id);
         this.capDatasetMetadataLink = r;
     }

@@ -33,14 +33,11 @@
 
 package net.geocat.eventprocessor.processors.processlinks;
 
-import net.geocat.database.linkchecker.entities.*;
-import net.geocat.database.linkchecker.entities.helper.LinkState;
+import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.repos.CapabilitiesDocumentRepo;
 import net.geocat.database.linkchecker.repos.LocalDatasetMetadataRecordRepo;
-
 import net.geocat.eventprocessor.BaseEventProcessor;
-import net.geocat.eventprocessor.processors.processlinks.postprocessing.CapabilitiesResolvesIndicators;
 import net.geocat.eventprocessor.processors.processlinks.postprocessing.DatasetToLayerIndicators;
 import net.geocat.events.Event;
 import net.geocat.events.EventFactory;
@@ -100,8 +97,6 @@ public class EventProcessor_ProcessDatasetDocLinksEvent extends BaseEventProcess
     LocalDatasetMetadataRecord localDatasetMetadataRecord;
 
 
-
-
     @Override
     public EventProcessor_ProcessDatasetDocLinksEvent internalProcessing() throws Exception {
 
@@ -111,19 +106,18 @@ public class EventProcessor_ProcessDatasetDocLinksEvent extends BaseEventProcess
 
         try {
             int nlinksCap = localDatasetMetadataRecord.getDocumentLinks().size();
-            logger.debug("processing links DATASET documentid="+getInitiatingEvent().getDatasetDocumentId()+", with fileID="+ localDatasetMetadataRecord.getFileIdentifier() +" that has "+nlinksCap+" document links");
+            logger.debug("processing links DATASET documentid=" + getInitiatingEvent().getDatasetDocumentId() + ", with fileID=" + localDatasetMetadataRecord.getFileIdentifier() + " that has " + nlinksCap + " document links");
 
             documentLinkToCapabilitiesProcessor.processDocumentLinks(localDatasetMetadataRecord);
             localDatasetMetadataRecord.setState(ServiceMetadataDocumentState.LINKS_PROCESSED);
 
             save();
-            logger.trace("finished  processing links for dataset documentid="+getInitiatingEvent().getDatasetDocumentId()  );
+            logger.trace("finished  processing links for dataset documentid=" + getInitiatingEvent().getDatasetDocumentId());
 
-        }
-        catch(Exception e){
-            logger.error("exception for datasetMetadataRecordId="+getInitiatingEvent().getDatasetDocumentId(),e);
+        } catch (Exception e) {
+            logger.error("exception for datasetMetadataRecordId=" + getInitiatingEvent().getDatasetDocumentId(), e);
             localDatasetMetadataRecord.setState(ServiceMetadataDocumentState.ERROR);
-            localDatasetMetadataRecord.setErrorMessage(  convertToString(e) );
+            localDatasetMetadataRecord.setErrorMessage(convertToString(e));
             save();
         }
 
@@ -132,16 +126,15 @@ public class EventProcessor_ProcessDatasetDocLinksEvent extends BaseEventProcess
     }
 
 
-    public void save( ){
+    public void save() {
         localDatasetMetadataRecord = localDatasetMetadataRecordRepo.save(localDatasetMetadataRecord);
     }
 
 
     @Override
-    public EventProcessor_ProcessDatasetDocLinksEvent externalProcessing () throws Exception {
+    public EventProcessor_ProcessDatasetDocLinksEvent externalProcessing() throws Exception {
         return this;
     }
-
 
 
     @Override
@@ -149,8 +142,7 @@ public class EventProcessor_ProcessDatasetDocLinksEvent extends BaseEventProcess
         List<Event> result = new ArrayList<>();
         String linkCheckJobId = getInitiatingEvent().getLinkCheckJobId();
 
-        if (shouldTransitionOutOfLinkProcessing.shouldSendMessage(linkCheckJobId,getInitiatingEvent().getDatasetDocumentId()))
-        {
+        if (shouldTransitionOutOfLinkProcessing.shouldSendMessage(linkCheckJobId, getInitiatingEvent().getDatasetDocumentId())) {
             //done
             Event e = eventFactory.createAllLinksCheckedEvent(linkCheckJobId);
             result.add(e);

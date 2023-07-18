@@ -37,9 +37,7 @@ package net.geocat.eventprocessor.processors.processlinks.postprocessing;
 import net.geocat.database.harvester.entities.BlobStorage;
 import net.geocat.database.harvester.repos.BlobStorageRepo;
 import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
-import net.geocat.database.linkchecker.entities.LinkCheckBlobStorage;
 import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
-
 import net.geocat.database.linkchecker.entities.RemoteServiceMetadataRecordLink;
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
 import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
@@ -70,13 +68,13 @@ public class CapabilitiesServiceLinkIndicators {
     @Autowired
     BlobStorageRepo harvestBlogStorageRepo;
 
-    public LocalServiceMetadataRecord process(LocalServiceMetadataRecord record,List<CapabilitiesDocument> capDocs) {
+    public LocalServiceMetadataRecord process(LocalServiceMetadataRecord record, List<CapabilitiesDocument> capDocs) {
         List<DocumentLink> links = new ArrayList<DocumentLink>(record.getServiceDocumentLinks());
 
         List<RemoteServiceMetadataRecordLink> rsmrls = capDocs.stream()
-                .filter(x->x.getRemoteServiceMetadataRecordLink() !=null)
-                .map(x->x.getRemoteServiceMetadataRecordLink())
-                .filter(x-> x.getSha2() != null)
+                .filter(x -> x.getRemoteServiceMetadataRecordLink() != null)
+                .map(x -> x.getRemoteServiceMetadataRecordLink())
+                .filter(x -> x.getSha2() != null)
                 .collect(Collectors.toList());
 
 
@@ -90,7 +88,7 @@ public class CapabilitiesServiceLinkIndicators {
         record.setINDICATOR_CAPABILITIES_RESOLVES_TO_SERVICE(IndicatorStatus.PASS);
 
         boolean match = rsmrls.stream()
-                .anyMatch(x-> x.getFileIdentifier().equals(record.getFileIdentifier()));
+                .anyMatch(x -> x.getFileIdentifier().equals(record.getFileIdentifier()));
 
         if (match)
             record.setINDICATOR_CAPABILITIES_SERVICE_FILE_ID_MATCHES(IndicatorStatus.PASS);
@@ -131,7 +129,7 @@ public class CapabilitiesServiceLinkIndicators {
 //
 //        remoteServiceMetadataRecord.setIndicator_CompareServiceMetadataLink_Full(IndicatorStatus.FAIL);
 //        String fullDiff = diffs.toString();
-   //     remoteServiceMetadataRecord.setMetadataRecordDifferences(fullDiff.substring(0, Math.min(2000, fullDiff.length())));
+    //     remoteServiceMetadataRecord.setMetadataRecordDifferences(fullDiff.substring(0, Math.min(2000, fullDiff.length())));
 //    }
 
     private List<Difference> areSame(String xml_original, String xml_remote) {
@@ -161,7 +159,7 @@ public class CapabilitiesServiceLinkIndicators {
 
 
     public boolean compareFileIds(String id1, String id2) {
-        if ( (id1 == null) || (id2 == null))
+        if ((id1 == null) || (id2 == null))
             return false;
         return id1.equals(id2);
     }

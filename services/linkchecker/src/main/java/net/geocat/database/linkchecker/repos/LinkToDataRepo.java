@@ -46,6 +46,7 @@ import java.util.List;
 public interface LinkToDataRepo extends CrudRepository<LinkToData, Long> {
 
     List<LinkToData> findByLinkCheckJobIdAndCapabilitiesSha2(String linkCheckJobId, String sha2);
+
     List<LinkToData> findByLinkCheckJobId(String linkCheckJobId);
 
 }

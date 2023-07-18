@@ -12,11 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,21 +35,19 @@ public class DeleteJobService {
         try {
             entityManager = localContainerEntityManagerFactoryBean.createNativeEntityManager(null);
             entityManager.getTransaction().begin();
-            for (String sql: sqls ) {
+            for (String sql : sqls) {
                 Query q = entityManager.createNativeQuery(sql);
-                q.setParameter(1,jobId);
+                q.setParameter(1, jobId);
                 int n = q.executeUpdate();
-                logger.trace(jobId +" - "+n+" - "+sql);
+                logger.trace(jobId + " - " + n + " - " + sql);
             }
             entityManager.getTransaction().commit();
-        }
-        finally {
+        } finally {
             if (entityManager != null) {
                 if (entityManager.getTransaction() != null) {
                     try {
                         entityManager.getTransaction().rollback();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         // do nothing
                     }
                 }
@@ -62,7 +56,7 @@ public class DeleteJobService {
         }
     }
 
-    static List<String> deleteSQLS = Arrays.asList( new String[]{
+    static List<String> deleteSQLS = Arrays.asList(new String[]{
             "DELETE FROM metadata_record WHERE endpoint_job_id IN (SELECT endpoint_job_id FROM endpoint_job WHERE harvest_job_id = ?)",
             "DELETE FROM record_set WHERE endpoint_job_id IN (SELECT endpoint_job_id FROM endpoint_job WHERE harvest_job_id = ?)",
 
@@ -72,7 +66,7 @@ public class DeleteJobService {
 
             "DELETE FROM endpoint_job WHERE harvest_job_id = ?",
             "DELETE FROM harvest_job WHERE  job_id = ?",
-});
+    });
 
     public String deleteById(String jobId) throws Exception {
         if (jobId == null)
@@ -80,14 +74,14 @@ public class DeleteJobService {
         jobId = jobId.trim();
         Optional<HarvestJob> _job = harvestJobRepo.findById(jobId);
         if (!_job.isPresent())
-            throw new Exception("couldnt find that job id = "+jobId);
+            throw new Exception("couldnt find that job id = " + jobId);
         HarvestJob job = _job.get();
 
         jobId = job.getJobId(); // this prevents sql injection
         if (jobId.contains("'") || jobId.contains("\\"))
             throw new Exception("bad   job"); // this shouldn't be possible
 
-        executeSql(deleteSQLS,jobId);
+        executeSql(deleteSQLS, jobId);
 
         return "DELETED";
     }
@@ -105,11 +99,11 @@ public class DeleteJobService {
         List<HarvestJob> jobs = harvestJobRepo.findByLongTermTag(longTermTag);
         // don't delete the one being created...
         jobs = jobs.stream()
-                .filter(x->!x.getJobId().equals(jobIdDoNotDelete))
+                .filter(x -> !x.getJobId().equals(jobIdDoNotDelete))
                 .collect(Collectors.toList());
 
         if (jobs.size() <= maxAllowed)
-            return "Nothing to do - job count="+jobs.size();
+            return "Nothing to do - job count=" + jobs.size();
 
         Collections.sort(jobs,
                 Comparator.comparing(HarvestJob::getCreateTimeUTC));
@@ -117,7 +111,7 @@ public class DeleteJobService {
 
         //preferentially remove ERROR and USERABORT jobs (they aren't worth keeping)
         List<HarvestJob> jobsToDelete = jobs.stream()
-                .filter(x->x.getState() == HarvestJobState.USERABORT || x.getState() == HarvestJobState.ERROR)
+                .filter(x -> x.getState() == HarvestJobState.USERABORT || x.getState() == HarvestJobState.ERROR)
                 .collect(Collectors.toList());
 
         jobs.removeAll(jobsToDelete);
@@ -125,11 +119,11 @@ public class DeleteJobService {
         if (jobs.size() > maxAllowed)
             jobsToDelete.addAll(jobs.subList(maxAllowed, jobs.size()));
 
-        String  result  = jobsToDelete.size() +" jobs were deleted.";
+        String result = jobsToDelete.size() + " jobs were deleted.";
         for (HarvestJob job : jobsToDelete) {
-            logger.debug("ensureAtMost: deleting jobid="+job.getJobId());
+            logger.debug("ensureAtMost: deleting jobid=" + job.getJobId());
             deleteById(job.getJobId());
-            result+= job.getJobId()+",";
+            result += job.getJobId() + ",";
         }
         return result;
 

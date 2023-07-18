@@ -17,15 +17,13 @@ import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.jms.ConnectionFactory;
-
 
 @Configuration
 public class Config {
 
 
     //String brokerUrl = "tcp://localhost:61616?jms.prefetchPolicy.queuePrefetch=1";
-    @Value( "${activemq.url}" )
+    @Value("${activemq.url}")
     String brokerUrl;
 
     int maxConnections = 11;
@@ -68,7 +66,6 @@ public class Config {
     }
 
 
-
     @Bean
     //@Primary
     public ActiveMQComponent activemq(ActiveMQConnectionFactory connectionFactory) {
@@ -76,7 +73,7 @@ public class Config {
         PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory(connectionFactory);
         pooledConnectionFactory.setMaxConnections(100);
 
-         JmsTransactionManager jmsTransactionManager = new JmsTransactionManager();
+        JmsTransactionManager jmsTransactionManager = new JmsTransactionManager();
         jmsTransactionManager.setConnectionFactory(pooledConnectionFactory);
         jmsTransactionManager.setFailEarlyOnGlobalRollbackOnly(true);
 
@@ -89,7 +86,7 @@ public class Config {
         //  activeMQComponent.setLazyCreateTransactionManager (false);
 
         activeMQComponent.setCacheLevelName("CACHE_NONE");
-         activeMQComponent.setAcknowledgementModeName("SESSION_TRANSACTED");
+        activeMQComponent.setAcknowledgementModeName("SESSION_TRANSACTED");
 
 
         return activeMQComponent;

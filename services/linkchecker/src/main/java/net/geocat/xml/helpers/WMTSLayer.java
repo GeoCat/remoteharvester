@@ -43,17 +43,17 @@ public class WMTSLayer {
 
     List<WMTSTileMatrixSetLink> tileMatrixSetLinks;
 
-    public WMTSLayer(String identifier,String title) {
+    public WMTSLayer(String identifier, String title) {
         this.identifier = identifier;
         this.title = title;
         this.formats = new ArrayList<>();
-        this.tileMatrixSetLinks=new ArrayList<>();
+        this.tileMatrixSetLinks = new ArrayList<>();
     }
 
 
-    public boolean supportsFormat(String format){
+    public boolean supportsFormat(String format) {
         return formats.stream()
-                .anyMatch(x->x.equalsIgnoreCase(format));
+                .anyMatch(x -> x.equalsIgnoreCase(format));
     }
 
 

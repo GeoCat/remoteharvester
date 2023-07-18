@@ -57,7 +57,7 @@ import static net.geocat.xml.XmlStringTools.determineRootTagInfo;
 @Scope("prototype")
 public class AtomLayerDownloader {
 
-    private static final Logger logger = LoggerFactory.getLogger( AtomLayerDownloader.class);
+    private static final Logger logger = LoggerFactory.getLogger(AtomLayerDownloader.class);
 
     @Autowired
     PartialDownloadPredicateFactory partialDownloadPredicateFactory;
@@ -79,7 +79,7 @@ public class AtomLayerDownloader {
     public AtomSubFeedRequest createSubFeedRequest(XmlCapabilitiesAtom atomCap, String layerId, String linkCheckJobId) throws Exception {
         AtomEntry entry = atomCap.findEntry(layerId);
         if (entry == null)
-            throw new Exception("no atom entry for id="+layerId);
+            throw new Exception("no atom entry for id=" + layerId);
         AtomLink link = entry.findLink("alternate");
 //        if (link == null)
 //            link = entry.findLink("");
@@ -87,23 +87,23 @@ public class AtomLayerDownloader {
         if (link == null)
             throw new Exception("couldn't find a link to atom sub-feed!");
 
-        if ( (link.getHref()==null) || (link.getHref().isEmpty()) )
+        if ((link.getHref() == null) || (link.getHref().isEmpty()))
             throw new Exception("link to atom sub-feed is null");
 
 
         AtomSubFeedRequest request = new AtomSubFeedRequest(link.getHref());
         request.setLinkCheckJobId(linkCheckJobId);
-        return  request;
+        return request;
     }
 
     public AtomSubFeedRequest resolve(AtomSubFeedRequest atomSubFeedRequest) {
-        retrievableSimpleLinkDownloader.process(atomSubFeedRequest, 4096,ACCEPTS_HEADER_XML);
+        retrievableSimpleLinkDownloader.process(atomSubFeedRequest, 4096, ACCEPTS_HEADER_XML);
         return atomSubFeedRequest;
     }
 
     public void validate(AtomSubFeedRequest atomSubFeedRequest) {
         if (!atomSubFeedRequest.getUrlFullyRead()) {
-            String xml  = XmlStringTools.bytea2String(atomSubFeedRequest.getLinkContentHead());
+            String xml = XmlStringTools.bytea2String(atomSubFeedRequest.getLinkContentHead());
             XmlStringTools.isXML(xml);
             atomSubFeedRequest.setUnSuccessfulAtomRequestReason("http result was not downloaded(not an xml document)");
             atomSubFeedRequest.setSuccessfulAtomRequest(false);

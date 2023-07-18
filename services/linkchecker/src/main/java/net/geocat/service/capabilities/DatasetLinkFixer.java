@@ -34,7 +34,7 @@
 package net.geocat.service.capabilities;
 
 import net.geocat.service.ILinkFixer;
- import org.apache.http.NameValuePair;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Component;
 
@@ -59,16 +59,16 @@ public class DatasetLinkFixer implements ILinkFixer {
             if (link == null)
                 return link;
 
-            link = link.replace("&amp;","&"); // this seems to happen a lot
-            link = link.replace("{","%7B");
-            link = link.replace("}","%7D");
+            link = link.replace("&amp;", "&"); // this seems to happen a lot
+            link = link.replace("{", "%7B");
+            link = link.replace("}", "%7D");
 
             String requestParam = CapabilitiesLinkFixer.findQueryParmName(link, "request");
             if (requestParam == null)
                 return link;
 
             String request = getQueryParam(link, requestParam);
-            if ( (request == null) || (!request.equalsIgnoreCase("GetRecordById")) )
+            if ((request == null) || (!request.equalsIgnoreCase("GetRecordById")))
                 return link; //only process GetRecordById requests
 
             String outputSchemaParam = CapabilitiesLinkFixer.findQueryParmName(link, "outputSchema");
@@ -81,8 +81,7 @@ public class DatasetLinkFixer implements ILinkFixer {
             if (elementSetNameParam == null)
                 uriBuilder.setParameter("elementSetName", "full");
             return uriBuilder.build().toString();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return link;
         }
     }

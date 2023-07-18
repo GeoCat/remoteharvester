@@ -33,28 +33,21 @@
 
 package net.geocat.eventprocessor.processors.datadownload.downloaders;
 
-import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
 import net.geocat.database.linkchecker.entities.OGCRequest;
 import net.geocat.database.linkchecker.entities.helper.HTTPRequestCheckerType;
-import net.geocat.database.linkchecker.entities.helper.IndicatorStatus;
 import net.geocat.http.AlwaysAbortContinueReadingPredicate;
-import net.geocat.http.IHTTPRetriever;
 import net.geocat.http.SmartHTTPRetriever;
 import net.geocat.service.downloadhelpers.PartialDownloadPredicateFactory;
 import net.geocat.service.downloadhelpers.RetrievableSimpleLinkDownloader;
 import net.geocat.xml.XmlCapabilitiesWFS;
-import net.geocat.xml.XmlStringTools;
-import net.geocat.xml.helpers.XmlTagInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.fixBaseURL;
 import static net.geocat.eventprocessor.processors.datadownload.downloaders.DownloaderHelper.setParameter;
-import static net.geocat.xml.XmlStringTools.determineRootTagInfo;
 
 
 @Component
@@ -78,7 +71,7 @@ public class WFSStoredQueryDownloader {
     RetrievableSimpleLinkDownloader retrievableSimpleLinkDownloader;
 
 
-    public static String addBasicItemsToUrl(String baseUrl,String wfsVersion) throws Exception {
+    public static String addBasicItemsToUrl(String baseUrl, String wfsVersion) throws Exception {
         String url = baseUrl;
         url = setParameter(url, "REQUEST", "GetFeature");
         url = setParameter(url, "SERVICE", "WFS");
@@ -87,26 +80,22 @@ public class WFSStoredQueryDownloader {
     }
 
 
-
-
-
     public String createURL(XmlCapabilitiesWFS wfsCap, String code, String codespace, String storedProcName) throws Exception {
         String url = fixBaseURL(wfsCap.getGetFeatureEndpoint());
         url = addBasicItemsToUrl(url, wfsCap.getVersionNumber());
 
-        url = setParameter(url,"DataSetIdCode",code);
+        url = setParameter(url, "DataSetIdCode", code);
         if (codespace != null)
-            url = setParameter(url,"DataSetIdNamespace",codespace);
+            url = setParameter(url, "DataSetIdNamespace", codespace);
         else
-            url = setParameter(url,"DataSetIdNamespace",""); // some require this
+            url = setParameter(url, "DataSetIdNamespace", ""); // some require this
 
-        url = setParameter(url,"STOREDQUERY_ID",storedProcName);
-        url = setParameter(url,"Language",wfsCap.getDefaultLang());
+        url = setParameter(url, "STOREDQUERY_ID", storedProcName);
+        url = setParameter(url, "Language", wfsCap.getDefaultLang());
 
         if (!wfsCap.getSRSs().isEmpty()) {
             url = setParameter(url, "CRS", wfsCap.getSRSs().get(0));
-        }
-        else {
+        } else {
             url = setParameter(url, "CRS", "EPSG:4326");
         }
         url = setParameter(url, "count", "1");
@@ -115,16 +104,15 @@ public class WFSStoredQueryDownloader {
     }
 
     public OGCRequest setupRequest(XmlCapabilitiesWFS wfsCap, String storedProcName, String code, String codespace) throws Exception {
-        String url = createURL(wfsCap,code,codespace,   storedProcName);
+        String url = createURL(wfsCap, code, codespace, storedProcName);
 
         OGCRequest ogcRequest = new OGCRequest(url, HTTPRequestCheckerType.FEATURE_COLLECTION_ONLY);
         if (codespace != null)
-            ogcRequest.setSummary(getClass().getSimpleName()+ "code="+code+", codespace="+codespace);
+            ogcRequest.setSummary(getClass().getSimpleName() + "code=" + code + ", codespace=" + codespace);
         else
-            ogcRequest.setSummary(getClass().getSimpleName()+ "code="+code);
+            ogcRequest.setSummary(getClass().getSimpleName() + "code=" + code);
         return ogcRequest;
     }
-
 
 
 }

@@ -56,16 +56,15 @@ public class LogbackLoggingEventException {
     @Id
     private long eventId;
 
-    @Column(name="i", columnDefinition = "smallint")
+    @Column(name = "i", columnDefinition = "smallint")
     @Id
     private short i;
 
     @Column(name = "trace_line", columnDefinition = "text")
     private String traceLine;
 
-    @Column(name = "caused_by_depth",columnDefinition = "smallint")
+    @Column(name = "caused_by_depth", columnDefinition = "smallint")
     private short causedByDepth;
-
 
 
     //----------------------

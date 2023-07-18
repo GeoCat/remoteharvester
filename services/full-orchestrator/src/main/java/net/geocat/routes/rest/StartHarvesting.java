@@ -34,7 +34,6 @@
 package net.geocat.routes.rest;
 
 import net.geocat.events.EventService;
-import net.geocat.model.HarvesterConfig;
 import net.geocat.model.OrchestratorJobConfig;
 import net.geocat.routes.queuebased.MainOrchestrator;
 import org.apache.camel.BeanScope;

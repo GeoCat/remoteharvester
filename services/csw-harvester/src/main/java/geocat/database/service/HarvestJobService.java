@@ -11,7 +11,6 @@ import geocat.events.determinework.WorkedDeterminedFinished;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +60,8 @@ public class HarvestJobService {
     }
 
     static Object lockobject = new Object();
-    public   WorkedDeterminedFinished determineIfWorkCompleted(String harvestId) {
+
+    public WorkedDeterminedFinished determineIfWorkCompleted(String harvestId) {
         synchronized (lockobject) {
             HarvestJob harvestJob = harvestJobRepo.findById(harvestId).get();
             if (!(harvestJob.getState() == HarvestJobState.DETERMINING_WORK))

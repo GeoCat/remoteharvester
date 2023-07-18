@@ -33,7 +33,7 @@
 
 package net.geocat.service;
 
-import net.geocat.model.*;
+import net.geocat.model.AppInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

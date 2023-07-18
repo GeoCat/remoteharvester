@@ -36,7 +36,7 @@ package net.geocat.model;
 public class StatusType {
 
     String statusType;
-    Long   nDocuments;
+    Long nDocuments;
 
     public StatusType(String statusType, Long nDocuments) {
         this.statusType = statusType;

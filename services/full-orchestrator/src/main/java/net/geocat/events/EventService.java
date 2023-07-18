@@ -33,16 +33,13 @@
 
 package net.geocat.events;
 
-import net.geocat.database.orchestrator.entities.OrchestratedHarvestProcess;
 import net.geocat.database.orchestrator.repos.OrchestratedHarvestProcessRepo;
-import net.geocat.model.HarvesterConfig;
 import net.geocat.model.OrchestratorJobConfig;
 import org.apache.camel.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Component

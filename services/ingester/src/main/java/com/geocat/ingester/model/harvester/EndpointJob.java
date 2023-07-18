@@ -1,30 +1,20 @@
 package com.geocat.ingester.model.harvester;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 
 //create table endpoint_job ( endpoint_job_id varchar(40), harvest_job_id varchar(40), state varchar(40), url varchar(255), url_get_records varchar(255), expected_number_of_records int, filter text,look_for_nested_discovery_service bool);
 @Entity
-@Table(name="endpoint_job",
-    indexes= {
-        @Index(
-                name="harvestJobId_idx",
-                columnList="harvest_job_id",
-                unique=false
-        )
-    })
+@Table(name = "endpoint_job",
+        indexes = {
+                @Index(
+                        name = "harvestJobId_idx",
+                        columnList = "harvest_job_id",
+                        unique = false
+                )
+        })
 
 public class EndpointJob {
     @Column(columnDefinition = "timestamp with time zone", name = "create_time_utc")

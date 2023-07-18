@@ -66,25 +66,25 @@ public class RedirectAwareHTTPRetriever implements IHTTPRetriever {
 //            throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
 //    public HttpResult retrieve(HTTPRequest request) throws  Exception
 //        return _retrieve(verb, location, body, cookie, MAXREDIRECTS, predicate,timeoutSeconds,acceptsHeader);
-  //  }
+    //  }
 
 
 //    protected HttpResult _retrieve(String verb, String location, String body, String cookie, int nRedirectsRemaining, IContinueReadingPredicate predicate,int timeoutSeconds,String acceptsHeader)
 //            throws IOException, SecurityException, ExceptionWithCookies, RedirectException {
-        public HttpResult retrieve(HTTPRequest request) throws  Exception {
+    public HttpResult retrieve(HTTPRequest request) throws Exception {
 
         try {
             return retriever.retrieve(request);
         } catch (RedirectException re) {
-            request.setnRedirectsRemaining(request.getnRedirectsRemaining() -1);
+            request.setnRedirectsRemaining(request.getnRedirectsRemaining() - 1);
             if (request.getnRedirectsRemaining() <= 0)
                 throw new IOException("too many redirects!");
             Marker marker = LoggingSupport.getMarker(request.getLinkCheckJobId());
 
-            logger.debug(marker,"     REDIRECTED TO location=" + re.getNewLocation());
+            logger.debug(marker, "     REDIRECTED TO location=" + re.getNewLocation());
             request = request.clone();
             request.setLocation(re.getNewLocation());
-            return  retrieve(request);
+            return retrieve(request);
         }
     }
 }

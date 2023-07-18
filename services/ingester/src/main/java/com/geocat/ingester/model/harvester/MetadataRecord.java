@@ -1,24 +1,17 @@
 package com.geocat.ingester.model.harvester;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name="metadata_record",
-        indexes= {
+@Table(name = "metadata_record",
+        indexes = {
                 @Index(
-                        name="metadata_record_endpointJobId_idx",
-                        columnList="endpoint_job_id",
-                        unique=false
+                        name = "metadata_record_endpointJobId_idx",
+                        columnList = "endpoint_job_id",
+                        unique = false
                 )
         })
 public class MetadataRecord {

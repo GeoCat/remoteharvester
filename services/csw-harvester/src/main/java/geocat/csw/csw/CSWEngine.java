@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 @Component
@@ -35,7 +34,7 @@ public class CSWEngine {
     private final static Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
 
-    public static String trim(String s){
+    public static String trim(String s) {
         String result = s.trim();
 
         if (result.startsWith(UTF8_BOM)) {
@@ -49,7 +48,7 @@ public class CSWEngine {
         try {
             if (!doc.startsWith("<?xml")) {
                 // sometimes it doesn't start with the xml declaration
-                doc =  trim(doc);
+                doc = trim(doc);
                 if (!doc.startsWith("<"))
                     return false; //not xml
                 if (doc.length() < 4)
@@ -67,7 +66,7 @@ public class CSWEngine {
     //----
     public String GetCapabilities(String url) throws Exception {
         try {
-            String result =  GetCapabilitiesPOST(url);
+            String result = GetCapabilitiesPOST(url);
             if (!isXML(result)) {
                 throw new Exception("URL did not return XML!");
             }
@@ -83,7 +82,7 @@ public class CSWEngine {
     }
 
     protected String GetCapabilitiesPOST(String url) throws Exception {
-        HttpResult result = retriever.retrieveXML("POST", url, GETCAP_XML, null,null);
+        HttpResult result = retriever.retrieveXML("POST", url, GETCAP_XML, null, null);
         if (result.getHttpCode() == 500)
             throw new Exception("attempting to get Cap with POST gives 500");
         return new String(result.getData());
@@ -98,15 +97,15 @@ public class CSWEngine {
         //    url += "&" + GETCAP_KVP;
 
         //otherwise, likely already has the request=GetCapabilities in it!
-        HttpResult result = retriever.retrieveXML("GET", url, null, null,null);
+        HttpResult result = retriever.retrieveXML("GET", url, null, null, null);
         return new String(result.getData());
     }
     //--
 
     public String GetRecords(String url, String requestXML) throws Exception {
-        HttpResult result = retriever.retrieveXML("POST", url, requestXML, null,null);
+        HttpResult result = retriever.retrieveXML("POST", url, requestXML, null, null);
         return new String(result.getData());
-     }
+    }
 
 
 }

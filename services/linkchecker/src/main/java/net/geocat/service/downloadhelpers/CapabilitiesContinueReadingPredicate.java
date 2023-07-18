@@ -39,15 +39,7 @@ import net.geocat.xml.helpers.CapabilitiesType;
 import net.geocat.xml.helpers.CapabilityDeterminer;
 import org.springframework.stereotype.Component;
 
-
-
-import static net.geocat.xml.XmlStringTools.getNS;
-import static net.geocat.xml.XmlStringTools.getPrefix;
-import static net.geocat.xml.XmlStringTools.getRootTag;
-import static net.geocat.xml.XmlStringTools.getTagName;
-import static net.geocat.xml.XmlStringTools.removeDocType;
-import static net.geocat.xml.XmlStringTools.replaceXMLDecl;
-import static net.geocat.xml.XmlStringTools.removeComment;
+import static net.geocat.xml.XmlStringTools.*;
 
 @Component
 public class CapabilitiesContinueReadingPredicate implements IContinueReadingPredicate {
@@ -94,11 +86,11 @@ public class CapabilitiesContinueReadingPredicate implements IContinueReadingPre
         return tag;
     }
 
-    public String getTag(byte[] head){
+    public String getTag(byte[] head) {
         String original = null; // for debug
 
         try {
-            String doc = XmlStringTools.bytea2String(head) ;
+            String doc = XmlStringTools.bytea2String(head);
             original = doc;
             doc = removeComment(doc);
             doc = removeDocType(doc);
@@ -130,7 +122,7 @@ public class CapabilitiesContinueReadingPredicate implements IContinueReadingPre
         String original = null; // for debug
 
         try {
-            String doc = XmlStringTools.bytea2String(head) ;
+            String doc = XmlStringTools.bytea2String(head);
             original = doc;
             doc = removeComment(doc);
             doc = removeDocType(doc);
@@ -141,7 +133,7 @@ public class CapabilitiesContinueReadingPredicate implements IContinueReadingPre
             doc = removeComment(doc);
             doc = removeDocType(doc);
             if (doc.startsWith("<!DOCTYPE"))
-               return ContinueReading.DOWNLOAD_MORE;
+                return ContinueReading.DOWNLOAD_MORE;
 
             doc = getRootTag(doc).trim();
 

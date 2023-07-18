@@ -72,12 +72,12 @@ public class HtmlSummaryService {
     XmlDocumentFactory xmlDocumentFactory;
 
 
-    public String lastLinkCheckJob(){
+    public String lastLinkCheckJob() {
         LinkCheckJob lastJob = null;
-        for(LinkCheckJob job : linkCheckJobRepo.findAll()){
+        for (LinkCheckJob job : linkCheckJobRepo.findAll()) {
             if (lastJob == null)
                 lastJob = job;
-            if (lastJob.getCreateTimeUTC().compareTo(job.getCreateTimeUTC()) <1)
+            if (lastJob.getCreateTimeUTC().compareTo(job.getCreateTimeUTC()) < 1)
                 lastJob = job;
         }
         return lastJob.getJobId();
@@ -89,32 +89,30 @@ public class HtmlSummaryService {
 
         String result = "<head><meta charset=\"UTF-8\"></head>\n";
 
-          result += "<h1>Summary - "+linkCheckJobId+"</h1>\n";
-
+        result += "<h1>Summary - " + linkCheckJobId + "</h1>\n";
 
 
         List<LocalDatasetMetadataRecord> datasets = localDatasetMetadataRecordRepo.findByLinkCheckJobId(linkCheckJobId);
-        result += "<h2> Datasets - " + datasets.size()+"  </h2>\n";
+        result += "<h2> Datasets - " + datasets.size() + "  </h2>\n";
         for (LocalDatasetMetadataRecord datasetRecord : datasets) {
-            result += "<a href='/api/html/dataset/" +linkCheckJobId+"/"+datasetRecord.getFileIdentifier()+"'> "+datasetRecord.getFileIdentifier() +" - " +datasetRecord.getTitle() + "</a><br>\n";
+            result += "<a href='/api/html/dataset/" + linkCheckJobId + "/" + datasetRecord.getFileIdentifier() + "'> " + datasetRecord.getFileIdentifier() + " - " + datasetRecord.getTitle() + "</a><br>\n";
         }
 
 
-
         List<LocalServiceMetadataRecord> services = localServiceMetadataRecordRepo.findByLinkCheckJobId(linkCheckJobId);
-        result += "<h2> Services  - " + services.size()+"  </h2>\n";
+        result += "<h2> Services  - " + services.size() + "  </h2>\n";
         for (LocalServiceMetadataRecord serviceRecord : services) {
-            result += "<a href='/api/html/service/" +linkCheckJobId+"/"+serviceRecord.getFileIdentifier()+"'> "+serviceRecord.getFileIdentifier() + " - "+serviceRecord.getTitle() + "</a><br>\n";
+            result += "<a href='/api/html/service/" + linkCheckJobId + "/" + serviceRecord.getFileIdentifier() + "'> " + serviceRecord.getFileIdentifier() + " - " + serviceRecord.getTitle() + "</a><br>\n";
         }
 
 
         List<CapabilitiesDocument> capabilitiesDocuments = capabilitiesDocumentRepo.findByLinkCheckJobId(linkCheckJobId);
-        result += "<h2> Capabilities   - " + capabilitiesDocuments.size()+"</h2>\n";
-       // Collections.sort(capabilitiesDocuments, Comparator.comparing(CapabilitiesDocument::getCapabilitiesDocumentType).thenComparing(CapabilitiesDocument::getNumberOfDatasetLinks));
-        Collections.sort(capabilitiesDocuments,Comparator.comparing(CapabilitiesDocument::getNumberOfDatasetLinks));
+        result += "<h2> Capabilities   - " + capabilitiesDocuments.size() + "</h2>\n";
+        // Collections.sort(capabilitiesDocuments, Comparator.comparing(CapabilitiesDocument::getCapabilitiesDocumentType).thenComparing(CapabilitiesDocument::getNumberOfDatasetLinks));
+        Collections.sort(capabilitiesDocuments, Comparator.comparing(CapabilitiesDocument::getNumberOfDatasetLinks));
         Collections.reverse(capabilitiesDocuments);
         for (CapabilitiesDocument capabilitiesDocument : capabilitiesDocuments) {
-            result += "<a href='/api/html/capabilities/" +linkCheckJobId+"/"+capabilitiesDocument.getSha2()+"'> "+capabilitiesDocument.getCapabilitiesDocumentType() + " - nlinks="+capabilitiesDocument.getNumberOfDatasetLinks() +  "</a><br>\n";
+            result += "<a href='/api/html/capabilities/" + linkCheckJobId + "/" + capabilitiesDocument.getSha2() + "'> " + capabilitiesDocument.getCapabilitiesDocumentType() + " - nlinks=" + capabilitiesDocument.getNumberOfDatasetLinks() + "</a><br>\n";
         }
         return result;
     }

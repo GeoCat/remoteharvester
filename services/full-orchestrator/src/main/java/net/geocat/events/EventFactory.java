@@ -54,10 +54,10 @@ public class EventFactory {
         return result;
     }
 
-    public OrchestratedHarvestAbortEvent createLinkCheckAbortEvent(String processID  ) throws Exception {
+    public OrchestratedHarvestAbortEvent createLinkCheckAbortEvent(String processID) throws Exception {
         Optional<OrchestratedHarvestProcess> job = orchestratedHarvestProcessRepo.findById(processID);
         if (!job.isPresent())
-            throw new Exception("could not find processID="+processID);
+            throw new Exception("could not find processID=" + processID);
         OrchestratedHarvestAbortEvent result = new OrchestratedHarvestAbortEvent();
         result.setProcessID(processID);
         return result;

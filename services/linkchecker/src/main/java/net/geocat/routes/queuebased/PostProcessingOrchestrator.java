@@ -35,9 +35,6 @@ package net.geocat.routes.queuebased;
 
 import net.geocat.eventprocessor.MainLoopRouteCreator;
 import net.geocat.eventprocessor.RedirectEvent;
-import net.geocat.events.findlinks.LinksFoundInAllDocuments;
-import net.geocat.events.findlinks.ProcessLocalMetadataDocumentEvent;
-import net.geocat.events.findlinks.StartProcessDocumentsEvent;
 import net.geocat.events.postprocess.AllPostProcessingCompleteEvent;
 import net.geocat.events.postprocess.PostProcessDatasetDocumentEvent;
 import net.geocat.events.postprocess.PostProcessServiceDocumentEvent;
@@ -47,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-
 
 
 @Component

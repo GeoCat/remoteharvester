@@ -36,7 +36,6 @@ package net.geocat.xml;
 import net.geocat.xml.helpers.XmlTagInfo;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
 
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
@@ -49,18 +48,18 @@ public class XmlStringTools {
     public final static String UTF8_BOM = "\uFEFF";
     private final static Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
-//    static Pattern tagWithNS = Pattern.compile("^<([^ :<>]+):([^ >]+)[^>]+>");
+    //    static Pattern tagWithNS = Pattern.compile("^<([^ :<>]+):([^ >]+)[^>]+>");
 //    static Pattern tagWithoutNS = Pattern.compile("^<([^ >]+)[^>]+>");
     static Pattern tagWithNS = Pattern.compile("^<([^ :<>]+):([^ >]+)[^>]*>");
     static Pattern tagWithoutNS = Pattern.compile("^<([^ >]+)[^>]*>");
 
     public static String getNodeTextValue(org.w3c.dom.Node n) {
-        if ( (n == null) || (n.getTextContent() == null) || (n.getTextContent().trim().isEmpty()) )
+        if ((n == null) || (n.getTextContent() == null) || (n.getTextContent().trim().isEmpty()))
             return null;
         return n.getTextContent().trim();
     }
 
-    public static XmlTagInfo determineRootTagInfo(String doc){
+    public static XmlTagInfo determineRootTagInfo(String doc) {
         if (!isXML(doc))
             return null; //not XML
 
@@ -73,7 +72,7 @@ public class XmlStringTools {
         String tag = getTagName(doc);
         String ns = getNS(prefix, doc);
 
-        return new XmlTagInfo(tag,prefix,ns);
+        return new XmlTagInfo(tag, prefix, ns);
     }
 
     public static String replaceXMLDecl(String doc) {
@@ -116,10 +115,10 @@ public class XmlStringTools {
     }
 
     public static String removeDocType(String doc) {
-        doc = doc.replaceAll("<!ELEMENT [^>]+>","").trim();
-        doc = doc.replaceAll("<!ATTLIST [^>]+>","").trim();
+        doc = doc.replaceAll("<!ELEMENT [^>]+>", "").trim();
+        doc = doc.replaceAll("<!ATTLIST [^>]+>", "").trim();
 
-        return doc.replaceAll("<!DOCTYPE[^>]+>","").trim();
+        return doc.replaceAll("<!DOCTYPE[^>]+>", "").trim();
     }
 
     public static String getNS(String prefix, String tag) {
@@ -135,12 +134,11 @@ public class XmlStringTools {
     }
 
     public static String removeComment(String doc) {
-        return doc.replaceAll("<!--[\\s\\S]*?-->","").trim();
+        return doc.replaceAll("<!--[\\s\\S]*?-->", "").trim();
     }
 
 
-
-    public static String trim(String s){
+    public static String trim(String s) {
         String result = s.trim();
 
         if (result.startsWith(UTF8_BOM)) {
@@ -161,7 +159,7 @@ public class XmlStringTools {
             doc = removeComment(doc);
             if (!doc.startsWith("<?xml")) {
                 // sometimes it doesn't start with the xml declaration
-                doc =  trim(doc);
+                doc = trim(doc);
                 if (!doc.startsWith("<"))
                     return false; //not xml
                 if (doc.length() < 4)

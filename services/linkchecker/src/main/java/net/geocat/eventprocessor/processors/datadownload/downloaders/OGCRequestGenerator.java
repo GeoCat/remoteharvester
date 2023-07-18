@@ -33,21 +33,12 @@
 
 package net.geocat.eventprocessor.processors.datadownload.downloaders;
 
-import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
-import net.geocat.database.linkchecker.entities.OGCRequest;
-import net.geocat.database.linkchecker.entities.SimpleLayerDatasetIdDataLink;
-import net.geocat.database.linkchecker.entities.SimpleLayerMetadataUrlDataLink;
-import net.geocat.database.linkchecker.entities.SimpleSpatialDSIDDataLink;
-import net.geocat.database.linkchecker.entities.SimpleStoredQueryDataLink;
+import net.geocat.database.linkchecker.entities.*;
 import net.geocat.database.linkchecker.entities.helper.LinkToData;
 import net.geocat.database.linkchecker.entities.helper.SHA2JobIdCompositeKey;
 import net.geocat.database.linkchecker.repos.CapabilitiesDocumentRepo;
 import net.geocat.database.linkchecker.repos.LinkCheckBlobStorageRepo;
-import net.geocat.xml.XmlCapabilitiesDocument;
-import net.geocat.xml.XmlCapabilitiesWFS;
-import net.geocat.xml.XmlCapabilitiesWMS;
-import net.geocat.xml.XmlCapabilitiesWMTS;
-import net.geocat.xml.XmlDocumentFactory;
+import net.geocat.xml.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -79,39 +70,39 @@ public class OGCRequestGenerator {
 
     public OGCInfoCacheItem prep(String linkCheckJobId, String cap_sha2) throws Exception {
         CapabilitiesDocument capabilitiesDocument = capabilitiesDocumentRepo.findById(
-                new SHA2JobIdCompositeKey(cap_sha2,linkCheckJobId)
+                new SHA2JobIdCompositeKey(cap_sha2, linkCheckJobId)
         ).get();
         String xml = linkCheckBlobStorageRepo.findById(capabilitiesDocument.getSha2()).get().getTextValue();
         XmlCapabilitiesDocument doc = (XmlCapabilitiesDocument) xmlDocumentFactory.create(xml);
-        return new OGCInfoCacheItem(capabilitiesDocument,doc);
+        return new OGCInfoCacheItem(capabilitiesDocument, doc);
     }
 
     //returns a (to be resolved) resolvable OGCRequest
-    public OGCRequest prepareToDownload(LinkToData link,OGCInfoCacheItem ogcInfoCacheItem) throws Exception {
+    public OGCRequest prepareToDownload(LinkToData link, OGCInfoCacheItem ogcInfoCacheItem) throws Exception {
         CapabilitiesDocument capabilitiesDocument = ogcInfoCacheItem.getCapabilitiesDocument();
         XmlCapabilitiesDocument doc = ogcInfoCacheItem.getXmlCapabilitiesDocument();
 
         if (link instanceof SimpleLayerMetadataUrlDataLink) {
             SimpleLayerMetadataUrlDataLink _link = (SimpleLayerMetadataUrlDataLink) link;
-            OGCRequest result =  downloadLayer(_link,capabilitiesDocument,doc);
+            OGCRequest result = downloadLayer(_link, capabilitiesDocument, doc);
             result.setLinkCheckJobId(link.getLinkCheckJobId());
             return result;
         }
         if (link instanceof SimpleStoredQueryDataLink) {
             SimpleStoredQueryDataLink _link = (SimpleStoredQueryDataLink) link;
-            OGCRequest result =  downloadStoredQuery( _link, capabilitiesDocument, (XmlCapabilitiesWFS)doc);
+            OGCRequest result = downloadStoredQuery(_link, capabilitiesDocument, (XmlCapabilitiesWFS) doc);
             result.setLinkCheckJobId(link.getLinkCheckJobId());
             return result;
         }
         if (link instanceof SimpleLayerDatasetIdDataLink) {
             SimpleLayerDatasetIdDataLink _link = (SimpleLayerDatasetIdDataLink) link;
-            OGCRequest result =  downloadLayer(_link,capabilitiesDocument,doc);
+            OGCRequest result = downloadLayer(_link, capabilitiesDocument, doc);
             result.setLinkCheckJobId(link.getLinkCheckJobId());
             return result;
         }
         if (link instanceof SimpleSpatialDSIDDataLink) {
             SimpleSpatialDSIDDataLink _link = (SimpleSpatialDSIDDataLink) link;
-            OGCRequest result =  downloadLayer(_link,capabilitiesDocument,doc);
+            OGCRequest result = downloadLayer(_link, capabilitiesDocument, doc);
             result.setLinkCheckJobId(link.getLinkCheckJobId());
             return result;
         }
@@ -119,15 +110,13 @@ public class OGCRequestGenerator {
     }
 
     private OGCRequest downloadLayer(SimpleSpatialDSIDDataLink link, CapabilitiesDocument capabilitiesDocument, XmlCapabilitiesDocument xmlCapabilitiesDocument) throws Exception {
-        if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWFS){
-            return wfsLayerDownloader.setupRequest( (XmlCapabilitiesWFS) xmlCapabilitiesDocument, link.getOgcLayerName());
-        }
-        else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMS){
-            return wmsLayerDownloader.setupRequest( (XmlCapabilitiesWMS) xmlCapabilitiesDocument, link.getOgcLayerName());
+        if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWFS) {
+            return wfsLayerDownloader.setupRequest((XmlCapabilitiesWFS) xmlCapabilitiesDocument, link.getOgcLayerName());
+        } else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMS) {
+            return wmsLayerDownloader.setupRequest((XmlCapabilitiesWMS) xmlCapabilitiesDocument, link.getOgcLayerName());
 
-        }
-        else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMTS){
-            return wmtsLayerDownloader.setupRequest( (XmlCapabilitiesWMTS) xmlCapabilitiesDocument,
+        } else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMTS) {
+            return wmtsLayerDownloader.setupRequest((XmlCapabilitiesWMTS) xmlCapabilitiesDocument,
                     link.getOgcLayerName());
 
         }
@@ -137,15 +126,13 @@ public class OGCRequestGenerator {
     public OGCRequest downloadLayer(SimpleLayerDatasetIdDataLink link,
                                     CapabilitiesDocument capabilitiesDocument,
                                     XmlCapabilitiesDocument xmlCapabilitiesDocument) throws Exception {
-        if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWFS){
-            return wfsLayerDownloader.setupRequest( (XmlCapabilitiesWFS) xmlCapabilitiesDocument, link.getOgcLayerName());
-        }
-        else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMS){
-            return wmsLayerDownloader.setupRequest( (XmlCapabilitiesWMS) xmlCapabilitiesDocument, link.getOgcLayerName());
+        if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWFS) {
+            return wfsLayerDownloader.setupRequest((XmlCapabilitiesWFS) xmlCapabilitiesDocument, link.getOgcLayerName());
+        } else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMS) {
+            return wmsLayerDownloader.setupRequest((XmlCapabilitiesWMS) xmlCapabilitiesDocument, link.getOgcLayerName());
 
-        }
-        else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMTS){
-            return wmtsLayerDownloader.setupRequest( (XmlCapabilitiesWMTS) xmlCapabilitiesDocument,
+        } else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMTS) {
+            return wmtsLayerDownloader.setupRequest((XmlCapabilitiesWMTS) xmlCapabilitiesDocument,
                     link.getOgcLayerName());
 
         }
@@ -156,15 +143,13 @@ public class OGCRequestGenerator {
     public OGCRequest downloadLayer(SimpleLayerMetadataUrlDataLink link,
                                     CapabilitiesDocument capabilitiesDocument,
                                     XmlCapabilitiesDocument xmlCapabilitiesDocument) throws Exception {
-        if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWFS){
-            return wfsLayerDownloader.setupRequest( (XmlCapabilitiesWFS) xmlCapabilitiesDocument, link.getOgcLayerName());
-        }
-        else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMS){
-            return wmsLayerDownloader.setupRequest( (XmlCapabilitiesWMS) xmlCapabilitiesDocument, link.getOgcLayerName());
+        if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWFS) {
+            return wfsLayerDownloader.setupRequest((XmlCapabilitiesWFS) xmlCapabilitiesDocument, link.getOgcLayerName());
+        } else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMS) {
+            return wmsLayerDownloader.setupRequest((XmlCapabilitiesWMS) xmlCapabilitiesDocument, link.getOgcLayerName());
 
-        }
-        else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMTS){
-            return wmtsLayerDownloader.setupRequest( (XmlCapabilitiesWMTS) xmlCapabilitiesDocument,
+        } else if (xmlCapabilitiesDocument instanceof XmlCapabilitiesWMTS) {
+            return wmtsLayerDownloader.setupRequest((XmlCapabilitiesWMTS) xmlCapabilitiesDocument,
                     link.getOgcLayerName());
 
         }

@@ -34,11 +34,9 @@
 package net.geocat.database.linkchecker.repos;
 
 import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
-import net.geocat.database.linkchecker.entities.LocalServiceMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.entities.helper.StatusQueryItem;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -46,7 +44,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Component
@@ -55,19 +52,19 @@ public interface LocalDatasetMetadataRecordRepo extends CrudRepository<LocalData
 
     @Transactional
     @Modifying
-    @Query(value="UPDATE LocalDatasetMetadataRecord ldmr SET ldmr.state = :newState WHERE ldmr.datasetMetadataDocumentId = :id ")
+    @Query(value = "UPDATE LocalDatasetMetadataRecord ldmr SET ldmr.state = :newState WHERE ldmr.datasetMetadataDocumentId = :id ")
     void updateState(long id, ServiceMetadataDocumentState newState);
 
     @Transactional
     @Modifying
-    @Query(value="UPDATE LocalDatasetMetadataRecord ldmr SET ldmr.state = :newState WHERE ldmr.datasetMetadataDocumentId = :id and (ldmr.state <> 'NOT_APPLICABLE')")
+    @Query(value = "UPDATE LocalDatasetMetadataRecord ldmr SET ldmr.state = :newState WHERE ldmr.datasetMetadataDocumentId = :id and (ldmr.state <> 'NOT_APPLICABLE')")
     void updateStateNotNotApplicatable(long id, ServiceMetadataDocumentState newState);
 
-    LocalDatasetMetadataRecord findFirstByFileIdentifierAndLinkCheckJobId(String fileID,String linkCheckJobId);
+    LocalDatasetMetadataRecord findFirstByFileIdentifierAndLinkCheckJobId(String fileID, String linkCheckJobId);
 
     LocalDatasetMetadataRecord findFirstByFileIdentifier(String fileID);
 
-    List<LocalDatasetMetadataRecord> findByFileIdentifierAndLinkCheckJobId(String fileID,String linkCheckJobId);
+    List<LocalDatasetMetadataRecord> findByFileIdentifierAndLinkCheckJobId(String fileID, String linkCheckJobId);
 
     List<LocalDatasetMetadataRecord> findByFileIdentifier(String fileID);
 
@@ -97,7 +94,6 @@ public interface LocalDatasetMetadataRecordRepo extends CrudRepository<LocalData
     @Query(value = "select state as state,count(*) as numberOfRecords from datasetmetadatarecord where linkcheckjobid = ?1 and dataset_record_type = 'LocalDatasetMetadataRecord'   group by state",
             nativeQuery = true)
     List<StatusQueryItem> getStatus(String LinkCheckJobId);
-
 
 
 }

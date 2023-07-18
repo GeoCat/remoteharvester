@@ -37,7 +37,6 @@ import com.geocat.ingester.model.linkchecker.CapabilitiesDocument;
 import com.geocat.ingester.model.linkchecker.helper.CapabilitiesType;
 import com.geocat.ingester.model.linkchecker.helper.SHA2JobIdCompositeKey;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 

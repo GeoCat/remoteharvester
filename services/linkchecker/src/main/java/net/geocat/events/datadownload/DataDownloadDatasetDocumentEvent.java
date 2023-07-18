@@ -35,7 +35,7 @@ package net.geocat.events.datadownload;
 
 import net.geocat.events.Event;
 
-public class DataDownloadDatasetDocumentEvent  extends Event {
+public class DataDownloadDatasetDocumentEvent extends Event {
 
     private long datasetDocumentId;
     private String linkCheckJobId;

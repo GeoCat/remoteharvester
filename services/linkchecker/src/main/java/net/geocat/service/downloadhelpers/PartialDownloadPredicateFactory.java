@@ -61,7 +61,7 @@ public class PartialDownloadPredicateFactory {
             case CAPABILITIES_ONLY:
                 return new CapabilitiesContinueReadingPredicate(new CapabilityDeterminer());
             case ALWAYS_PARTIAL:
-                return new AlwaysAbortContinueReadingPredicate( );
+                return new AlwaysAbortContinueReadingPredicate();
 
         }
         throw new Exception("PartialDownloadPredicateFactory - unknown option - " + hint);

@@ -100,7 +100,7 @@ public class DatasetLink {
         DatasetLink that = (DatasetLink) o;
         return Objects.equals(identifier, that.identifier)
                 && Objects.equals(rawUrl, that.rawUrl)
-                && Objects.equals(authority, that.authority) ;
+                && Objects.equals(authority, that.authority);
     }
 
     public String getAuthorityName() {
@@ -120,11 +120,11 @@ public class DatasetLink {
 
     @Override
     public String toString() {
-        String result= "DatasetLink {" +
+        String result = "DatasetLink {" +
                 "identifier='" + identifier + '\'' +
-                ", rawUrl='" + rawUrl + '\''  ;
+                ", rawUrl='" + rawUrl + '\'';
         if (authority != null)
-            result +=", authority="+authority;
+            result += ", authority=" + authority;
         result += "}";
         return result;
     }

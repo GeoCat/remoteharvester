@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Scope("singleton")
 public class ProcessLockingService {
 
-    public static HashMap<String,Lock> lockMap = new HashMap<>();
+    public static HashMap<String, Lock> lockMap = new HashMap<>();
 
     // callers responsibility to lock and unlock the lock....
     // also, make sure you commit transactions before you return the lock so other threads will see the DB changes.

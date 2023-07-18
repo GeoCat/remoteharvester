@@ -127,10 +127,7 @@ public class RetrievableSimpleLink extends UpdateCreateDateTimeEntity {
     String xmlDocInfo;
 
 
-
     //---------------------------------------------------------------------------
-
-
 
 
     public String getLinkCheckJobId() {
@@ -319,7 +316,7 @@ public class RetrievableSimpleLink extends UpdateCreateDateTimeEntity {
 
         if (urlFullyRead != null)
             result += "     +  fully downloaded: " + urlFullyRead + "\n";
-        if (sha2 !=null)
+        if (sha2 != null)
             result += "     +  sha2: " + sha2 + "\n";
 
 
@@ -340,8 +337,8 @@ public class RetrievableSimpleLink extends UpdateCreateDateTimeEntity {
         if (getLinkContentHead() != null) {
             //  result += "     +  Initial Data from request: " + Arrays.copyOf(getLinkContentHead(), 10) + "\n";
             try {
-                String info = "     +  Initial Data from request (text): " + new String(Arrays.copyOf(getLinkContentHead(), Math.min(450, getLinkContentHead().length)),"UTF-8") + "\n";
-                info = info.replaceAll("\u0000",""); // bad UTF-8 chars
+                String info = "     +  Initial Data from request (text): " + new String(Arrays.copyOf(getLinkContentHead(), Math.min(450, getLinkContentHead().length)), "UTF-8") + "\n";
+                info = info.replaceAll("\u0000", ""); // bad UTF-8 chars
                 result += info;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

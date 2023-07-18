@@ -33,7 +33,6 @@
 
 package net.geocat.routes.rest;
 
-import net.geocat.dblogging.service.GetLogService;
 import net.geocat.service.GetStatusService;
 import org.apache.camel.BeanScope;
 import org.apache.camel.builder.RouteBuilder;
@@ -42,7 +41,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class GetStatus extends RouteBuilder  {
+public class GetStatus extends RouteBuilder {
 
     @Value("${geocat.jettyHost}")
     public String jettyHost;

@@ -34,15 +34,7 @@
 package net.geocat.routes.rest;
 
 
-import net.geocat.service.html.HtmlCapabilitiesService;
-import net.geocat.service.html.HtmlDatasetService;
-import net.geocat.service.html.HtmlDiscoverService;
-import net.geocat.service.html.HtmlIdentifierService;
-import net.geocat.service.html.HtmlLinkToDataService;
-import net.geocat.service.html.HtmlScrapeService;
-import net.geocat.service.html.HtmlServiceService;
-import net.geocat.service.html.HtmlStatsService;
-import net.geocat.service.html.HtmlSummaryService;
+import net.geocat.service.html.*;
 import org.apache.camel.BeanScope;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +69,7 @@ public class Html extends RouteBuilder {
                 .route()
                 .routeId("rest.rest.html.capabilities")
                 .bean(HtmlCapabilitiesService.class, "getHtml( ${header.processID}, ${header.fileId} )", BeanScope.Request)
-                .setHeader("content-type", constant("text/html")) ;
+                .setHeader("content-type", constant("text/html"));
 
         rest("/api/html/dataset/")
                 .get("/{processID}/{fileId}")
@@ -178,7 +170,7 @@ public class Html extends RouteBuilder {
 //        ;
 
         rest("/api/html/identifier")
-                .get("?code={code}&linkcheckjobid={linkcheckjobid}" )
+                .get("?code={code}&linkcheckjobid={linkcheckjobid}")
                 .route()
                 .routeId("rest.rest.html.identifier")
                 .bean(HtmlIdentifierService.class, "getHtml( ${header.code},null,null  )", BeanScope.Request)

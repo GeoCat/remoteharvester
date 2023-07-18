@@ -33,9 +33,9 @@
 
 package net.geocat.database.linkchecker.entities;
 
-import net.geocat.database.linkchecker.entities.helper.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import net.geocat.database.linkchecker.entities.helper.DocumentLink;
+import net.geocat.database.linkchecker.entities.helper.PartialDownloadHint;
+import net.geocat.database.linkchecker.entities.helper.ServiceMetadataRecord;
 
 import javax.persistence.*;
 
@@ -53,7 +53,7 @@ import javax.persistence.*;
 public class ServiceDocumentLink extends DocumentLink {
 
     //which service document did this link come from?
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     ServiceMetadataRecord serviceMetadataRecord;
 
     //summary info (for display/debugging)
@@ -74,7 +74,6 @@ public class ServiceDocumentLink extends DocumentLink {
 
 
     //---------------------------------------------------------------------------
-
 
 
     public ServiceMetadataRecord getServiceMetadataRecord() {
@@ -120,7 +119,7 @@ public class ServiceDocumentLink extends DocumentLink {
     public String toString() {
         String result = "ServiceDocumentLink {\n";
         result += "      serviceMetadataLinkId: " + serviceMetadataLinkId + "\n";
-        result += "      serviceMetadataRecord Id: "+ serviceMetadataRecord.getServiceMetadataDocumentId()+"\n";
+        result += "      serviceMetadataRecord Id: " + serviceMetadataRecord.getServiceMetadataDocumentId() + "\n";
 
         result += "\n";
         result += super.toString();

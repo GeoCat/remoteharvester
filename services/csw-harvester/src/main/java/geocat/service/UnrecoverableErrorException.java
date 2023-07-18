@@ -1,2 +1,4 @@
-package geocat.service;public class UnrecoverableErrorException {
+package geocat.service;
+
+public class UnrecoverableErrorException {
 }

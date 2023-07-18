@@ -40,7 +40,6 @@ import net.geocat.database.orchestrator.entities.OrchestratedHarvestProcessState
 import net.geocat.database.orchestrator.repos.LogbackLoggingEventExceptionRepo;
 import net.geocat.database.orchestrator.repos.LogbackLoggingEventRepo;
 import net.geocat.database.orchestrator.repos.OrchestratedHarvestProcessRepo;
-import net.geocat.eventprocessor.processors.main.EventProcessor_OrchestratedHarvestAbortEvent;
 import net.geocat.model.HarvestStatus;
 import net.geocat.model.IngestStatus;
 import net.geocat.model.LinkCheckStatus;
@@ -67,8 +66,7 @@ public class GetStatusService {
 
     public static Boolean DEFAULT_QUICK = Boolean.FALSE;
 
-    Logger logger = LoggerFactory.getLogger( GetStatusService.class);
-
+    Logger logger = LoggerFactory.getLogger(GetStatusService.class);
 
 
     @Autowired
@@ -89,9 +87,9 @@ public class GetStatusService {
     @Autowired
     IngesterService ingesterService;
 
-    public OrchestratedHarvestProcessStatus getStatus(String processID, Boolean quick)  throws Exception {
+    public OrchestratedHarvestProcessStatus getStatus(String processID, Boolean quick) throws Exception {
 
-        logger.debug("getstatus called for "+processID+", with quick="+quick);
+        logger.debug("getstatus called for " + processID + ", with quick=" + quick);
 
         if (quick == null) {
             quick = DEFAULT_QUICK;
@@ -136,7 +134,7 @@ public class GetStatusService {
     private void setupErrorMessages(OrchestratedHarvestProcessStatus result) {
         List<LogbackLoggingEvent> exceptionLogMessages = logbackLoggingEventRepo.findExceptions(result.getProcessID());
 
-        for(LogbackLoggingEvent exceptionLogMessage: exceptionLogMessages) {
+        for (LogbackLoggingEvent exceptionLogMessage : exceptionLogMessages) {
 
             List<LogbackLoggingEventException> exceptionlines = logbackLoggingEventExceptionRepo.findByEventIdOrderByI(exceptionLogMessage.eventId);
 
@@ -161,17 +159,17 @@ public class GetStatusService {
                     .map(x -> makeString(x.getValue()))
                     .collect(Collectors.toList());
 
-            result.stackTraces.add (single_stacktrace  );
+            result.stackTraces.add(single_stacktrace);
         }
     }
 
 
     public String makeString(List<LogbackLoggingEventException> items) {
         List<String> strs = items.stream()
-                .sorted(Comparator.comparingInt(x->x.getI()))
-                .map(x->x.getTraceLine())
+                .sorted(Comparator.comparingInt(x -> x.getI()))
+                .map(x -> x.getTraceLine())
                 .collect(Collectors.toList());
-        return String.join("\n   ",strs);
+        return String.join("\n   ", strs);
     }
 
 }

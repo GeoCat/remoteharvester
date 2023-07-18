@@ -36,11 +36,7 @@ package com.geocat.ingester.model.linkchecker;
 import com.geocat.ingester.model.linkchecker.helper.DatasetMetadataRecord;
 import com.geocat.ingester.model.linkchecker.helper.LinkToData;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("SimpleStoredQueryDataLink")
@@ -64,7 +60,7 @@ public class SimpleStoredQueryDataLink extends LinkToData {
     }
 
     public SimpleStoredQueryDataLink(String linkcheckjobid, String sha2, String capabilitiesdocumenttype, DatasetMetadataRecord datasetMetadataRecord) {
-        super(linkcheckjobid,sha2,capabilitiesdocumenttype,datasetMetadataRecord);
+        super(linkcheckjobid, sha2, capabilitiesdocumenttype, datasetMetadataRecord);
     }
 
     //----
@@ -106,7 +102,7 @@ public class SimpleStoredQueryDataLink extends LinkToData {
 
     @Override
     public String toString() {
-        return "SimpleStoredQueryDataLink{" + "\n"+
+        return "SimpleStoredQueryDataLink{" + "\n" +
                 "     storedProcName: " + storedProcName + "\n" +
                 "     code: " + code + "\n" +
                 "     codeSpace: " + codeSpace + "\n" +
@@ -116,6 +112,6 @@ public class SimpleStoredQueryDataLink extends LinkToData {
 
     @Override
     public String key() {
-        return super.key() +"::storedquery::"+storedProcName;
+        return super.key() + "::storedquery::" + storedProcName;
     }
 }

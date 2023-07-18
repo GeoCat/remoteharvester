@@ -9,8 +9,6 @@ import com.geocat.ingester.model.harvester.HarvestJobState;
 import com.geocat.ingester.model.ingester.IngestJob;
 import com.geocat.ingester.model.metadata.HarvesterConfiguration;
 import com.geocat.ingester.service.CatalogueService;
-import com.geocat.ingester.service.IngesterService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +39,7 @@ public class IngestEventService {
     public AbortCommand createAbortEvent(String processID) throws Exception {
         Optional<IngestJob> job = ingestJobRepo.findById(processID);
         if (!job.isPresent())
-            throw new Exception("could not find processID="+processID);
+            throw new Exception("could not find processID=" + processID);
         AbortCommand result = new AbortCommand(processID);
 
         return result;
@@ -62,18 +60,18 @@ public class IngestEventService {
             Optional<HarvesterConfiguration> harvesterConfigurationOptional = catalogueService.retrieveHarvesterConfiguration(harvesterUuidOrName);
 
             if (!harvesterConfigurationOptional.isPresent()) {
-                log.info("Harvester with name/uuid " +  harvesterUuidOrName + " not found.");
-                throw new Exception(String.format("Harvester with name/uuid %s not found." , harvesterUuidOrName));
+                log.info("Harvester with name/uuid " + harvesterUuidOrName + " not found.");
+                throw new Exception(String.format("Harvester with name/uuid %s not found.", harvesterUuidOrName));
             }
 
             // Filter most recent
             harvestJob = harvestJobRepo.findMostRecentHarvestJobByLongTermTag(harvesterUuidOrName);
             if (!harvestJob.isPresent()) {
-                log.info("No harvester job related found for the harvester with name/uuid " +  harvesterUuidOrName + ".");
-                throw new Exception(String.format("No harvester job related found for the harvester with name/uuid %s." , harvesterUuidOrName));
+                log.info("No harvester job related found for the harvester with name/uuid " + harvesterUuidOrName + ".");
+                throw new Exception(String.format("No harvester job related found for the harvester with name/uuid %s.", harvesterUuidOrName));
             }
         } else {
-           harvestJob = harvestJobRepo.findById(harvestJobId);
+            harvestJob = harvestJobRepo.findById(harvestJobId);
             if (!harvestJob.isPresent()) {
                 throw new Exception("Cannot find previous harvest run harvestJobId: " + harvestJobId);
             }

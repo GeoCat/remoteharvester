@@ -34,7 +34,6 @@
 package com.geocat.ingester.model.linkchecker.helper;
 
 
-
 import javax.persistence.*;
 
 //Base class for information in a metadata record (i.e. <MD_Metadata>....)
@@ -82,8 +81,7 @@ public class MetadataRecord extends UpdateCreateDateTimeEntity {
     CapabilitiesType INDICATOR_CAPABILITIES_TYPE;
 
 
-    public MetadataRecord()
-    {
+    public MetadataRecord() {
         super();
     }
 

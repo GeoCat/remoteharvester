@@ -34,17 +34,15 @@
 package net.geocat.service.capabilities;
 
 import net.geocat.database.linkchecker.entities.helper.DocumentLink;
-import net.geocat.service.ILinkFixer;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Component;
 
-import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.List;
 
 @Component
-public class CapabilitiesLinkFixer   {
+public class CapabilitiesLinkFixer {
 
 
     public static String findQueryParmName(String link, String name) throws Exception {
@@ -57,12 +55,12 @@ public class CapabilitiesLinkFixer   {
         return null;
     }
 
-    public static String canonicalize(String link) throws  Exception {
-        if ( (link == null) || (link.isEmpty()) )
+    public static String canonicalize(String link) throws Exception {
+        if ((link == null) || (link.isEmpty()))
             return null;
 
         link = link.trim();
-        link = link.replace(" ","%20");
+        link = link.replace(" ", "%20");
 
         //these are for AT - it doesn't like outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd
         //and needs them un-url encoded!
@@ -71,10 +69,10 @@ public class CapabilitiesLinkFixer   {
         link = link.replace("%26", "&");
 
         URIBuilder uriBuilder = new URIBuilder(link);
-        List<NameValuePair> params =  uriBuilder.getQueryParams();
-        params.sort( Comparator.comparing(x->x.getName()));
+        List<NameValuePair> params = uriBuilder.getQueryParams();
+        params.sort(Comparator.comparing(x -> x.getName()));
         uriBuilder.setParameters(params);
-        link =  uriBuilder.build().toString();
+        link = uriBuilder.build().toString();
         //these are for AT - it doesn't like outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd
         //and needs them un-url encoded!
         link = link.replace("%3A", ":");
@@ -85,7 +83,7 @@ public class CapabilitiesLinkFixer   {
     }
 
     public boolean isAtom(String link, DocumentLink documentLink) {
-        if ((documentLink == null) || (documentLink.getProtocol() == null) || (documentLink.getProtocol().isEmpty()) )
+        if ((documentLink == null) || (documentLink.getProtocol() == null) || (documentLink.getProtocol().isEmpty()))
             return false;
         String protocol = documentLink.getProtocol().toLowerCase();
         if (protocol.endsWith("-rss"))
@@ -102,11 +100,11 @@ public class CapabilitiesLinkFixer   {
             if (link == null)
                 return link;
 
-            link = link.replace("&amp;","&"); // this seems to happen a lot
-            link = link.replace("{","%7B");
-            link = link.replace("}","%7D");
+            link = link.replace("&amp;", "&"); // this seems to happen a lot
+            link = link.replace("{", "%7B");
+            link = link.replace("}", "%7D");
 
-            if (isAtom(link,documentLink))
+            if (isAtom(link, documentLink))
                 return link; // do NOT add service info to it!
 
             if (link.endsWith("?"))
@@ -116,14 +114,14 @@ public class CapabilitiesLinkFixer   {
                 return canonicalize(link);
 
             String requestParam = findQueryParmName(link, "request");
-            if (requestParam ==null)
-                requestParam ="request";
+            if (requestParam == null)
+                requestParam = "request";
 //            if (requestParam == null)
 //                return canonicalize(link);
 
             URIBuilder uriBuilder = new URIBuilder(link);
             uriBuilder.setParameter(requestParam, "GetCapabilities");
-            link =  canonicalize(uriBuilder.build().toString());
+            link = canonicalize(uriBuilder.build().toString());
 
             //actually, still need to do this - some servers ALSO require the service=wms even though its going through the WMS endpoint
             // if the link already has a wms/wmts/wfs/atom, we assume we don't need to re-add its (i.e. http://.../WMS.exe?...)
@@ -132,9 +130,8 @@ public class CapabilitiesLinkFixer   {
 //                    || (link.toLowerCase().contains("atom")) )
 //                return link;
 
-            if ( (serviceRecordType==null) || (serviceRecordType.isEmpty()))
+            if ((serviceRecordType == null) || (serviceRecordType.isEmpty()))
                 return link; // no info to process
-
 
 
             //assumptions
@@ -148,15 +145,14 @@ public class CapabilitiesLinkFixer   {
                 return link;
 
             String serviceParam = findQueryParmName(link, "service");
-            if (serviceParam ==null)
-                serviceParam ="service";
+            if (serviceParam == null)
+                serviceParam = "service";
             uriBuilder = new URIBuilder(link);
             uriBuilder.setParameter(serviceParam, service);
-            link =  canonicalize(uriBuilder.build().toString());
+            link = canonicalize(uriBuilder.build().toString());
 
             return link;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return link;
         }
     }

@@ -75,7 +75,7 @@ public class GetStatusService {
     @Autowired
     LogbackLoggingEventExceptionRepo logbackLoggingEventExceptionRepo;
 
-    public LinkCheckStatus getStatus(String processID, Boolean showErrors,Boolean quick) throws Exception {
+    public LinkCheckStatus getStatus(String processID, Boolean showErrors, Boolean quick) throws Exception {
         try {
             if (quick == null)
                 quick = DEFAULT_QUICK;
@@ -91,16 +91,15 @@ public class GetStatusService {
             if (showErrors)
                 setupErrorMessages(result);
             return result;
-        }
-        catch (Exception e){
-            throw new Exception("Linkchecker - GetStatusService#getStatus threw error for processID="+processID+", showErrors="+showErrors+", quick="+quick);
+        } catch (Exception e) {
+            throw new Exception("Linkchecker - GetStatusService#getStatus threw error for processID=" + processID + ", showErrors=" + showErrors + ", quick=" + quick);
         }
     }
 
     private void setupErrorMessages(LinkCheckStatus result) {
         List<LogbackLoggingEvent> exceptionLogMessages = logbackLoggingEventRepo.findExceptions(result.getProcessID());
 
-        for(LogbackLoggingEvent exceptionLogMessage: exceptionLogMessages) {
+        for (LogbackLoggingEvent exceptionLogMessage : exceptionLogMessages) {
 
             List<LogbackLoggingEventException> exceptionlines = logbackLoggingEventExceptionRepo.findByEventIdOrderByI(exceptionLogMessage.eventId);
             List<String> ex_messages = exceptionlines.stream()
@@ -124,48 +123,48 @@ public class GetStatusService {
                     .map(x -> makeString(x.getValue()))
                     .collect(Collectors.toList());
 
-            result.stackTraces.add (single_stacktrace  );
+            result.stackTraces.add(single_stacktrace);
         }
     }
 
 
     public String makeString(List<LogbackLoggingEventException> items) {
         List<String> strs = items.stream()
-                .sorted(Comparator.comparingInt(x->x.getI()))
-                .map(x->x.getTraceLine())
+                .sorted(Comparator.comparingInt(x -> x.getI()))
+                .map(x -> x.getTraceLine())
                 .collect(Collectors.toList());
-        return String.join("\n   ",strs);
+        return String.join("\n   ", strs);
     }
 
-    public DocumentTypeStatus computeServiceRecords(String processID){
-     //   long nrecords = localServiceMetadataRecordRepo.countByLinkCheckJobId(processID);
+    public DocumentTypeStatus computeServiceRecords(String processID) {
+        //   long nrecords = localServiceMetadataRecordRepo.countByLinkCheckJobId(processID);
         List<StatusQueryItem> statusList = localServiceMetadataRecordRepo.getStatus(processID);
         List<StatusType> statusTypeList = new ArrayList<>();
         long nrecords = 0;
-        for(StatusQueryItem item: statusList){
-            StatusType statusType = new StatusType(item.getState().toString(),item.getNumberOfRecords());
+        for (StatusQueryItem item : statusList) {
+            StatusType statusType = new StatusType(item.getState().toString(), item.getNumberOfRecords());
             statusTypeList.add(statusType);
             nrecords += item.getNumberOfRecords();
         }
 
-        DocumentTypeStatus result = new DocumentTypeStatus("ServiceRecord",nrecords,statusTypeList);
+        DocumentTypeStatus result = new DocumentTypeStatus("ServiceRecord", nrecords, statusTypeList);
         return result;
     }
 
-    public DocumentTypeStatus computeDatasetRecords(String processID){
-      //  long nrecords = localDatasetMetadataRecordRepo.countByLinkCheckJobId(processID);
+    public DocumentTypeStatus computeDatasetRecords(String processID) {
+        //  long nrecords = localDatasetMetadataRecordRepo.countByLinkCheckJobId(processID);
         List<StatusQueryItem> statusList = localDatasetMetadataRecordRepo.getStatus(processID);
         List<StatusType> statusTypeList = new ArrayList<>();
         long nrecords = 0;
 
-        for(StatusQueryItem item: statusList){
-            StatusType statusType = new StatusType(item.getState().toString(),item.getNumberOfRecords());
+        for (StatusQueryItem item : statusList) {
+            StatusType statusType = new StatusType(item.getState().toString(), item.getNumberOfRecords());
             statusTypeList.add(statusType);
             nrecords += item.getNumberOfRecords();
 
         }
 
-        DocumentTypeStatus result = new DocumentTypeStatus("DatasetRecord",nrecords,statusTypeList);
+        DocumentTypeStatus result = new DocumentTypeStatus("DatasetRecord", nrecords, statusTypeList);
         return result;
     }
 

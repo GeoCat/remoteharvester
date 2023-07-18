@@ -35,7 +35,6 @@
 <gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:gco="http://www.isotc211.org/2005/gco"
                  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                 xmlns:gml="http://www.opengis.net/gml/3.2"
                  xmlns:gmx="http://www.isotc211.org/2005/gmx"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
@@ -43,7 +42,10 @@
         <gco:CharacterString>fileIdentifier</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:hierarchyLevel>
-        <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+        <gmd:MD_ScopeCode
+                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                codeListValue="dataset">dataset
+        </gmd:MD_ScopeCode>
     </gmd:hierarchyLevel>
 
     <gmd:identificationInfo>
@@ -56,24 +58,30 @@
                     <gmd:identifier>
                         <gmd:MD_Identifier>
                             <gmd:authority>
-                            <gmd:CI_Citation>
-                                <gmd:title>
-                                    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">t2</gco:CharacterString>
-                                </gmd:title>
-                                <gmd:date>
-                                    <gmd:CI_Date>
-                                        <gmd:date>
-                                            <gco:Date xmlns:gco="http://www.isotc211.org/2005/gco">2020-01-01</gco:Date>
-                                        </gmd:date>
-                                        <gmd:dateType>
-                                            <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
-                                        </gmd:dateType>
-                                    </gmd:CI_Date>
-                                </gmd:date>
-                            </gmd:CI_Citation>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">t2
+                                        </gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date xmlns:gco="http://www.isotc211.org/2005/gco">2020-01-01
+                                                </gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode
+                                                        codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                                                        codeListValue="revision"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
                             </gmd:authority>
                             <gmd:code>
-                                <gmx:Anchor xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="xrefuri" xmlns:gmx="http://www.isotc211.org/2005/gmx">anchortext</gmx:Anchor>
+                                <gmx:Anchor xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="xrefuri"
+                                            xmlns:gmx="http://www.isotc211.org/2005/gmx">anchortext
+                                </gmx:Anchor>
                             </gmd:code>
                         </gmd:MD_Identifier>
                     </gmd:identifier>

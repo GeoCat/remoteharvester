@@ -34,10 +34,6 @@
 package net.geocat.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.util.StringUtils;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
@@ -46,8 +42,8 @@ public class LinkCheckRunConfig {
     String longTermTag;
     String harvestJobId;
 
-    Boolean useOtherJobsHTTPCache ;
-    Boolean deleteHTTPCacheWhenComplete ;
+    Boolean useOtherJobsHTTPCache;
+    Boolean deleteHTTPCacheWhenComplete;
 
     Integer maxDataLinksToFollow;
     Integer maxAtomEntriesToAttempt;

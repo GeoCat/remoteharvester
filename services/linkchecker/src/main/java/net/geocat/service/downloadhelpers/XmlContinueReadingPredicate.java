@@ -45,9 +45,9 @@ public class XmlContinueReadingPredicate implements IContinueReadingPredicate {
             String doc = XmlStringTools.bytea2String(head);
             if (!XmlStringTools.isXML(doc))
                 return ContinueReading.STOP_READING; //not XML
-            return  ContinueReading.CONTINUE_READING;
+            return ContinueReading.CONTINUE_READING;
         } catch (Exception e) {
-            return  ContinueReading.STOP_READING;
+            return ContinueReading.STOP_READING;
         }
     }
 }

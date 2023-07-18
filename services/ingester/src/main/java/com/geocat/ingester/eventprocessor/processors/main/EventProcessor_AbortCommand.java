@@ -36,7 +36,7 @@ public class EventProcessor_AbortCommand extends BaseEventProcessor<AbortCommand
         logger.warn("attempting to user abort for " + processID);
         ingestJobService.updateIngestJobStateInDB(processID, USERABORT);
         logger.warn("user abort processed for " + processID);
-       // linkCheckJobService.finalize(getInitiatingEvent().getProcessID());
+        // linkCheckJobService.finalize(getInitiatingEvent().getProcessID());
         return this;
     }
 

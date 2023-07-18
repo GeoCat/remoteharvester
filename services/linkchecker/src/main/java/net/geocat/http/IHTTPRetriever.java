@@ -35,10 +35,8 @@ package net.geocat.http;
 
 import net.geocat.database.linkchecker.entities.HttpResult;
 
-import java.io.IOException;
-
 public interface IHTTPRetriever {
 
-      HttpResult retrieve(HTTPRequest request) throws Exception;
+    HttpResult retrieve(HTTPRequest request) throws Exception;
 
 }

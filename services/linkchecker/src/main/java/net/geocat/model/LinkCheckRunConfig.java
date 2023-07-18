@@ -55,12 +55,12 @@ public class LinkCheckRunConfig {
 
     boolean useOtherJobsHTTPCache = useOtherJobsHTTPCache_default;
     boolean deleteHTTPCacheWhenComplete = deleteHTTPCacheWhenComplete_default;
-    
+
     int maxDataLinksToFollow = maxDataLinksToFollow_default;
     int maxAtomEntriesToAttempt = maxAtomEntriesToAttempt_default;
     int maxAtomSectionLinksToFollow = maxAtomSectionLinksToFollow_default;
 
-    int storeAtMostNHistoricalRuns =storeAtMostNHistoricalRuns_default ;
+    int storeAtMostNHistoricalRuns = storeAtMostNHistoricalRuns_default;
 
 
     // GUID for the harvest (used as JMS Correlation ID).  Provided by server (do not specify)
@@ -75,7 +75,7 @@ public class LinkCheckRunConfig {
         if (!StringUtils.isEmpty(longTermTag)) {
             Optional<HarvestJob> harvestJob = harvestJobRepo.findMostRecentHarvestJobByLongTermTag(longTermTag);
             if (!harvestJob.isPresent()) {
-                throw new Exception(String.format("LinkCheckRunConfig - No harvester job related found for the harvester with name/uuid %s." , longTermTag));
+                throw new Exception(String.format("LinkCheckRunConfig - No harvester job related found for the harvester with name/uuid %s.", longTermTag));
             }
         } else {
             Optional<HarvestJob> harvestJob = harvestJobRepo.findById(harvestJobId);
@@ -88,11 +88,11 @@ public class LinkCheckRunConfig {
             }
         }
 
-        if (maxAtomEntriesToAttempt <=0)
+        if (maxAtomEntriesToAttempt <= 0)
             throw new Exception("maxAtomEntriesToAttempt must be >0");
-        if (maxAtomSectionLinksToFollow <=0)
+        if (maxAtomSectionLinksToFollow <= 0)
             throw new Exception("maxAtomSectionLinksToFollow must be >0");
-        if (maxDataLinksToFollow <=0)
+        if (maxDataLinksToFollow <= 0)
             throw new Exception("maxDataLinksToFollow must be >0");
 
     }
