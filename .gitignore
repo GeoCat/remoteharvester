@@ -35,6 +35,9 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+# VisualStudio code
+.vscode
+
 
 # User-specific stuff
 .idea
