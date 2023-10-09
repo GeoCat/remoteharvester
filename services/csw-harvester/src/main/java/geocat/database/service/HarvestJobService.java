@@ -77,8 +77,8 @@ public class HarvestJobService {
         }
     }
 
-    public HarvestJob getById(String id) {
-        return harvestJobRepo.findById(id).get();
+    public Optional<HarvestJob> getById(String id) {
+        return harvestJobRepo.findById(id);
     }
 
     public Optional<HarvestJob> getLastCompletedHarvestJobIdByLongTermTag(String longTermTag) {

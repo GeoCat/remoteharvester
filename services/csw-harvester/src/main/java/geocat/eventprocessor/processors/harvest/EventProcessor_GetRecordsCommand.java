@@ -70,7 +70,7 @@ public class EventProcessor_GetRecordsCommand extends BaseEventProcessor<GetReco
         //logger.debug("finish parse xml");
 
         GetRecordsResponseInfo info = new GetRecordsResponseInfo(xmlParsed);
-        HarvestJob harvestJob = harvestJobService.getById(e.getHarvesterId());
+        HarvestJob harvestJob = harvestJobService.getById(e.getHarvesterId()).get();
         EndpointJob endpointJob = endpointJobService.getById(e.getEndPointId());
         RecordSet recordSet = recordSetService.getById(e.getRecordSetId());
 

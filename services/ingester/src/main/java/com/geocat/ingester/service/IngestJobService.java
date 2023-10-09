@@ -77,7 +77,7 @@ public class IngestJobService {
         return ingestJobRepo.save(job);
     }
 
-    public IngestJob getById(String id) {
-        return ingestJobRepo.findById(id).get();
+    public Optional<IngestJob> getById(String id) {
+        return ingestJobRepo.findById(id);
     }
 }
