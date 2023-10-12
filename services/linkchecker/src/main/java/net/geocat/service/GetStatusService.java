@@ -34,6 +34,7 @@
 package net.geocat.service;
 
 import net.geocat.database.linkchecker.entities.LinkCheckJob;
+import net.geocat.database.linkchecker.entities.LinkCheckJobState;
 import net.geocat.database.linkchecker.entities.helper.LogbackLoggingEvent;
 import net.geocat.database.linkchecker.entities.helper.LogbackLoggingEventException;
 import net.geocat.database.linkchecker.entities.helper.StatusQueryItem;
@@ -45,10 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -77,19 +75,33 @@ public class GetStatusService {
 
     public LinkCheckStatus getStatus(String processID, Boolean showErrors, Boolean quick) throws Exception {
         try {
-            if (quick == null)
+            if (quick == null) {
                 quick = DEFAULT_QUICK;
+            }
             showErrors = showErrors == null ? false : showErrors;
-            LinkCheckJob job = linkCheckJobRepo.findById(processID).get();
 
-            LinkCheckStatus result = new LinkCheckStatus(processID, job.getState());
-            if (!quick) {
-                result.setServiceRecordStatus(computeServiceRecords(processID));
-                result.setDatasetRecordStatus(computeDatasetRecords(processID));
+            Optional<LinkCheckJob> jobOptional = linkCheckJobRepo.findById(processID);
+
+            LinkCheckStatus result;
+
+            if (jobOptional.isPresent()) {
+                LinkCheckJob job = jobOptional.get();
+
+                result = new LinkCheckStatus(processID, job.getState());
+
+                if (!quick) {
+                    result.setServiceRecordStatus(computeServiceRecords(processID));
+                    result.setDatasetRecordStatus(computeDatasetRecords(processID));
+                }
+
+                if (showErrors) {
+                    setupErrorMessages(result);
+                }
+            } else {
+                result = new LinkCheckStatus(processID, LinkCheckJobState.ERROR);
+                result.errorMessage.add(String.format("Harvester with processID %s doesn't exist", processID));
             }
 
-            if (showErrors)
-                setupErrorMessages(result);
             return result;
         } catch (Exception e) {
             throw new Exception("Linkchecker - GetStatusService#getStatus threw error for processID=" + processID + ", showErrors=" + showErrors + ", quick=" + quick);

@@ -63,7 +63,7 @@ public class EventProcessor_ActualHarvestStartCommand extends BaseEventProcessor
         List<Event> result = new ArrayList<>();
         String harvestId = getInitiatingEvent().getHarvesterId();
 
-        HarvestJob harvestJob = harvestJobService.getById(harvestId);
+        HarvestJob harvestJob = harvestJobService.getById(harvestId).get();
         List<EndpointJob> endpointJobs = harvestJobService.getEndpointJobs(harvestId);
 
         for (EndpointJob job : endpointJobs) {

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Scope("prototype")
 public class GetStatusService {
@@ -14,9 +16,15 @@ public class GetStatusService {
     IngestJobService ingestJobService;
 
     public IngestStatus getStatus(String processId) {
-        IngestJob job = ingestJobService.getById(processId);
+        Optional<IngestJob> jobOptional = ingestJobService.getById(processId);
 
-        IngestStatus result = new IngestStatus(job);
+        IngestStatus result;
+
+        if (jobOptional.isPresent()) {
+            result = new IngestStatus(jobOptional.get());
+        } else {
+            result = IngestStatus.createIngestStatusNoProcessId(processId);
+        }
 
         return result;
     }

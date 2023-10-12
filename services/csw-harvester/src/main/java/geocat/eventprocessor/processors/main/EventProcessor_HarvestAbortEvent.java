@@ -35,7 +35,7 @@ public class EventProcessor_HarvestAbortEvent extends BaseEventProcessor<Harvest
     public EventProcessor_HarvestAbortEvent internalProcessing() {
         String processID = getInitiatingEvent().getProcessID();
         logger.warn("attempting to user abort for " + processID);
-        HarvestJob job = harvestJobService.getById(processID);
+        HarvestJob job = harvestJobService.getById(processID).get();
         if ((job.getState() != HarvestJobState.COMPLETE)
                 && (job.getState() != HarvestJobState.ERROR)
                 && (job.getState() != HarvestJobState.USERABORT)) {

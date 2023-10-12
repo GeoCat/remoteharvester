@@ -55,7 +55,7 @@ public class EventProcessor_EndpointHarvestComplete extends BaseEventProcessor<E
             boolean thisJobDone = job.getState() == EndpointJobState.RECORDS_RECEIVED;
             allDone = allDone && thisJobDone;
         }
-        HarvestJob harvestJob = harvestJobService.getById(getInitiatingEvent().getHarvestId());
+        HarvestJob harvestJob = harvestJobService.getById(getInitiatingEvent().getHarvestId()).get();
         EndpointJob endpointJob = endpointJobService.getById(getInitiatingEvent().getEndPointId());
         getRecordsResponseEvaluator.evaluate_duplicateUUIDs(harvestJob, endpointJob);
         return this;

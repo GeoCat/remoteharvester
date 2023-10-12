@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,19 +41,30 @@ public class GetStatusService {
     LogbackLoggingEventExceptionRepo logbackLoggingEventExceptionRepo;
 
     public HarvestStatus getStatus(String processId, Boolean quick) {
-        if (quick == null)
+        if (quick == null) {
             quick = DEFAULT_QUICK;
-        HarvestJob job = harvestJobService.getById(processId);
-        List<EndpointJob> endpointJobs = endpointJobService.findAll(processId);
-
-        HarvestStatus result = new HarvestStatus(job);
-        if (!quick) {
-            setupErrorMessages(result);
-            for (EndpointJob endpointJob : endpointJobs) {
-                long numberReceived = computeNumberReceived(endpointJob);
-                result.endpoints.add(new EndpointStatus(endpointJob, (int) numberReceived));
-            }
         }
+
+        HarvestStatus result;
+
+        Optional<HarvestJob> jobOptional = harvestJobService.getById(processId);
+
+        if (jobOptional.isPresent()) {
+            List<EndpointJob> endpointJobs = endpointJobService.findAll(processId);
+
+            result = new HarvestStatus(jobOptional.get());
+            if (!quick) {
+                setupErrorMessages(result);
+                for (EndpointJob endpointJob : endpointJobs) {
+                    long numberReceived = computeNumberReceived(endpointJob);
+                    result.endpoints.add(new EndpointStatus(endpointJob, (int) numberReceived));
+                }
+            }
+        } else {
+            result = HarvestStatus.createHarvestStatusNoProcessId(processId);
+        }
+
+
         return result;
     }
 

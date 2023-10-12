@@ -1,6 +1,7 @@
 package geocat.model;
 
 import geocat.database.entities.HarvestJob;
+import geocat.database.entities.HarvestJobState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,13 @@ public class HarvestStatus {
     public List<EndpointStatus> endpoints;
 
 
+    private HarvestStatus(String processID) {
+        this.processID = processID;
+        endpoints = new ArrayList<>();
+        stackTraces = new ArrayList<>();
+        errorMessage = new ArrayList<>();
+    }
+
     public HarvestStatus(HarvestJob job) {
         this.processID = job.getJobId();
         this.url = job.getInitialUrl();
@@ -28,5 +36,12 @@ public class HarvestStatus {
         endpoints = new ArrayList<>();
         stackTraces = new ArrayList<>();
         errorMessage = new ArrayList<>();
+    }
+
+    public static HarvestStatus createHarvestStatusNoProcessId(String processID) {
+        HarvestStatus harvestStatus = new HarvestStatus(processID);
+        harvestStatus.state = HarvestJobState.ERROR.toString();
+        harvestStatus.errorMessage.add(String.format("Harvester with processID %s doesn't exist", processID));
+        return harvestStatus;
     }
 }
