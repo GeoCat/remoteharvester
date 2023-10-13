@@ -65,26 +65,50 @@ public class CSWEngine {
 
     //----
     public String GetCapabilities(String url) throws Exception {
+        String result;
+
         try {
-            String result = GetCapabilitiesPOST(url);
-            if (!isXML(result)) {
-                throw new Exception("URL did not return XML!");
-            }
+            result = tryGetCapabilities(url, true);
+        } catch (Exception ex) {
+            result = tryGetCapabilities(url, false);
+        }
 
-            if (result.contains("<ExceptionReport")) {
-                throw new Exception("GetCapabilities exception: " + result);
-            }
+        return result;
+    }
 
-            return result;
-        } catch (Exception e) {
-            return GetCapabilitiesGET(url);
+    private String tryGetCapabilities(String url, boolean usePost) throws Exception {
+        String result = usePost?GetCapabilitiesPOST(url):GetCapabilitiesGET(url);
+        checkCapabilitiesResponse(result);
+
+        return result;
+    }
+
+    private void checkCapabilitiesResponse(String capabilitiesResponse) throws Exception {
+        if (!isXML(capabilitiesResponse)) {
+            throw new Exception("URL did not return XML!");
+        }
+
+        if (capabilitiesResponse.contains("<ows:ExceptionReport") ||
+                capabilitiesResponse.contains("<ExceptionReport")) {
+            throw new Exception("GetCapabilities exception: " + capabilitiesResponse);
+        }
+
+        if (!capabilitiesResponse.contains("<csw:Capabilities") ||
+                capabilitiesResponse.contains("<Capabilities")) {
+            throw new Exception("GetCapabilities response is not valid: " + capabilitiesResponse);
         }
     }
 
     protected String GetCapabilitiesPOST(String url) throws Exception {
         HttpResult result = retriever.retrieveXML("POST", url, GETCAP_XML, null, null);
-        if (result.getHttpCode() == 500)
+        if (result.getHttpCode() == 500) {
             throw new Exception("attempting to get Cap with POST gives 500");
+        }
+
+        if (result.getHttpCode() == 404) {
+            throw new Exception("attempting to get Cap with POST gives 404");
+        }
+
         return new String(result.getData());
     }
 
