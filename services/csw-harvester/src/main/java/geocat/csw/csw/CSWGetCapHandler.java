@@ -58,4 +58,20 @@ public class CSWGetCapHandler {
 
         return u.toString();
     }
+
+    public String extractIdentifierFieldName(String getCapResponseXML) throws Exception {
+        Document getCapDoc = XMLTools.parseXML(getCapResponseXML);
+
+        String identifierFieldName = "";
+
+        NodeList nodes = XMLTools.xpath_nodeset(getCapDoc, "/Capabilities/OperationsMetadata/Operation[@name='GetRecords']/Constraint[@name='SupportedISOQueryables']/Value");
+        for (int i = 0; i < nodes.getLength(); i++) {
+            if (nodes.item(i).getTextContent().toLowerCase().equals("identifier") ||
+                    nodes.item(i).getTextContent().toLowerCase().contains(":identifier")) {
+                identifierFieldName = nodes.item(i).getNodeValue();
+                break;
+            }
+        }
+        return identifierFieldName;
+    }
 }

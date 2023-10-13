@@ -39,6 +39,9 @@ public class EndpointJob {
     @Enumerated(EnumType.STRING)
     private EndpointJobState state;
 
+    @Column(name = "identifier_field_name")
+    private String identifierFieldName;
+
     @PrePersist
     private void onInsert() {
         this.createTimeUTC = ZonedDateTime.now(ZoneId.of("UTC"));
@@ -121,5 +124,13 @@ public class EndpointJob {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getIdentifierFieldName() {
+        return identifierFieldName;
+    }
+
+    public void setIdentifierFieldName(String identifierFieldName) {
+        this.identifierFieldName = identifierFieldName;
     }
 }

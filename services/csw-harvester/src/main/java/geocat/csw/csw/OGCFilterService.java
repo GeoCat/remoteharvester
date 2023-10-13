@@ -2,6 +2,7 @@ package geocat.csw.csw;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -43,7 +44,7 @@ public class OGCFilterService {
 
     public static String ORDERBY = " <ogc:SortBy>\n" +
             "            <ogc:SortProperty>\n" +
-            "                <ogc:PropertyName>Identifier</ogc:PropertyName>\n" +
+            "                <ogc:PropertyName>PUT_ORDERBYFIELDNAME_HERE</ogc:PropertyName>\n" +
             "                <ogc:SortOrder>DESC</ogc:SortOrder>\n" +
             "            </ogc:SortProperty>\n" +
             "        </ogc:SortBy>\n";
@@ -124,7 +125,7 @@ public class OGCFilterService {
         return GETDISCOVERY_XML.replace("PUT_FILTER_HERE", fullFilter);
     }
 
-    public String getRecordsXML(String filter, int startRecord, int endRecord, boolean doNotSort) {
+    public String getRecordsXML(String filter, int startRecord, int endRecord, boolean doNotSort, String identifierFieldName) {
         String xml;
         int nrecords = endRecord - startRecord + 1;
         if ((filter != null) && (!filter.isEmpty())) {
@@ -136,10 +137,11 @@ public class OGCFilterService {
             xml = GETRECORDS_NO_FILTER_XML.replace("PUT_START_POSITION_HERE", Integer.toString(startRecord))
                     .replace("PUT_MAX_RECORDS_HERE", Integer.toString(nrecords));
         }
-        if (doNotSort)
+        if (doNotSort || !StringUtils.hasLength(identifierFieldName)) {
             xml = xml.replace("PUT_ORDERBY_HERE", "");
-        else
-            xml = xml.replace("PUT_ORDERBY_HERE", ORDERBY);
+        } else {
+            xml = xml.replace("PUT_ORDERBY_HERE", ORDERBY.replace("PUT_ORDERBYFIELDNAME_HERE", identifierFieldName));
+        }
         return xml;
     }
 

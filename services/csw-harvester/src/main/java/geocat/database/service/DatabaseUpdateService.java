@@ -55,6 +55,7 @@ public class DatabaseUpdateService {
         EndpointJob endpointJob = endpointJobRepo.findById(cswMetadata.getEndpointId()).get();
         endpointJob.setExpectedNumberOfRecords(cswMetadata.getNumberOfExpectedRecords());
         endpointJob.setUrlGetRecords(cswMetadata.getGetRecordsUrl());
+        endpointJob.setIdentifierFieldName(cswMetadata.getIdentifierFieldName());
 
         List<CSWEndPointDetectedEvent> result = createCSWEndPointDetectedEvents(cswMetadata);
         // endpointJob.setState(EndpointJobState.WORK_DETERMINED);

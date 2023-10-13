@@ -56,6 +56,8 @@ public class CSWService {
         String getRecordsUrl = endpoint_extractGetRecordsURL(endPointDetectedEvent);
         int expectedNumberOfRecords = endpoint_numberOfRecordsMatchingFilter(endPointDetectedEvent, getRecordsUrl);
 
+        String identifierFieldName= endpoint_identifierFieldName(endPointDetectedEvent);
+
         List<List<String>> nestedGetCaps = new ArrayList<>();
         if (endPointDetectedEvent.isLookForNestedDiscoveryService())
             nestedGetCaps = endpoint_nestedDiscovery(endPointDetectedEvent, getRecordsUrl);
@@ -66,7 +68,8 @@ public class CSWService {
                 getRecordsUrl,
                 nestedGetCaps,
                 filter,
-                endPointDetectedEvent.isLookForNestedDiscoveryService());
+                endPointDetectedEvent.isLookForNestedDiscoveryService(),
+                identifierFieldName);
         return result;
     }
 
@@ -93,8 +96,15 @@ public class CSWService {
         return cswGetCapHandler.extractGetRecordsURL(getcapXmlString);
     }
 
-    public String GetRecords(String url, String filter, int startRecord, int endRecord, Boolean doNotSort) throws Exception {
+    private String endpoint_identifierFieldName(CSWEndPointDetectedEvent endPointDetectedEvent) throws Exception {
+        logger.debug("requesting GetCapabilities from URL=" + endPointDetectedEvent.getUrl());
+
+        String getcapXmlString = cswEngine.GetCapabilities(endPointDetectedEvent.getUrl());
+        return cswGetCapHandler.extractIdentifierFieldName(getcapXmlString);
+    }
+
+    public String GetRecords(String url, String filter, int startRecord, int endRecord, Boolean doNotSort, String identifierFieldName) throws Exception {
         boolean _doNotSort = doNotSort != null && doNotSort;
-        return cswEngine.GetRecords(url, ogcFilterService.getRecordsXML(filter, startRecord, endRecord, _doNotSort));
+        return cswEngine.GetRecords(url, ogcFilterService.getRecordsXML(filter, startRecord, endRecord, _doNotSort, identifierFieldName));
     }
 }
