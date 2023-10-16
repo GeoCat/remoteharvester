@@ -1,9 +1,9 @@
 package net.geocat.model;
 
 
-/**
- * Ingester process status model.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class IngestStatus {
     public String processID;
     public String harvesterJobId;
@@ -14,6 +14,7 @@ public class IngestStatus {
     public long numberOfRecordsIngested;
     public long numberOfRecordsIndexed;
 
+    public List<String> errorMessage = new ArrayList<>();
 
     public String getProcessID() {
         return processID;
@@ -77,5 +78,13 @@ public class IngestStatus {
 
     public void setNumberOfRecordsIndexed(long numberOfRecordsIndexed) {
         this.numberOfRecordsIndexed = numberOfRecordsIndexed;
+    }
+
+    public List<String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(List<String> errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }
