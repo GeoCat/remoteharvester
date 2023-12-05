@@ -8,7 +8,6 @@ import com.geocat.ingester.dao.harvester.MetadataRecordRepo;
 import com.geocat.ingester.dao.ingester.IngestJobRepo;
 import com.geocat.ingester.dao.linkchecker.*;
 import com.geocat.ingester.exception.GeoNetworkClientException;
-import com.geocat.ingester.geonetwork.client.GeoNetworkClient;
 import com.geocat.ingester.model.harvester.EndpointJob;
 import com.geocat.ingester.model.harvester.HarvestJob;
 import com.geocat.ingester.model.harvester.MetadataRecordXml;
@@ -48,9 +47,6 @@ public class IngesterService {
 
     @Autowired
     private CatalogueService catalogueService;
-
-    @Autowired
-    private GeoNetworkClient geoNetworkClient;
 
     @Autowired
     private IngestJobService ingestJobService;
@@ -201,13 +197,6 @@ public class IngesterService {
             return false;
         }
 
-        // Index added/updated records
-        // TODO: Test, commented to be indexed in GeoNetwork to avoid issues with GeoNetwork API and ECAS
-        List<String> metadataIdsToIndex = metadataIds.entrySet().stream().filter(a -> a.getValue().equals(Boolean.TRUE))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-        geoNetworkClient.init();
-
         if (!continueProcessing(processId)) {
             log.warn(harvestJobId + " is in USERABORT/ERROR state - aborting");
             return false;
@@ -250,50 +239,6 @@ public class IngesterService {
         ingestJobService.updateIngestJobStateInDB(processId, IngestJobState.RECORDS_PROCESSED);
 
         log.info("IngesterService: run(): Finished ingestion process for harvester with name/uuid " + harvesterUuidOrName + ".");
-        return true;
-    }
-
-
-    /**
-     * Calls GeoNetwork index process for a set of metadata records.
-     *
-     * @param metadataIds
-     * @param processId
-     * @return true - completed, false - aborted
-     * @throws GeoNetworkClientException
-     */
-    private boolean indexRecords(List<String> metadataIds, String processId) {
-        int batchSize = 50;
-
-        int totalPages = (int) Math.ceil(metadataIds.size() * 1.0 / batchSize * 1.0);
-
-        int total = 0;
-
-        for (int i = 0; i < totalPages; i++) {
-            try {
-                if (!continueProcessing(processId)) {
-                    log.warn(processId + " is in USERABORT/ERROR state - aborting");
-                    return false;
-                }
-
-                int from = i * batchSize;
-                int to = Math.min(((i + 1) * batchSize), metadataIds.size());
-
-                int toR = (i == totalPages - 1) ? metadataIds.size() : (to - 1);
-                log.info("Indexing harvested metadata records from " + Math.max(1, i * batchSize) + " to " + toR + " of " + metadataIds.size());
-
-                geoNetworkClient.index(metadataIds.subList(from, to));
-
-                total = total + (to - from);
-
-                ingestJobService.updateIngestJobStateInDBIndexedRecords(processId, total);
-
-            } catch (GeoNetworkClientException ex) {
-                // TODO: Handle exception
-                log.error(ex.getMessage(), ex);
-                return false;
-            }
-        }
         return true;
     }
 
