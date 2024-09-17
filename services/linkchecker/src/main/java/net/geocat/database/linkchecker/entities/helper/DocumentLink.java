@@ -102,6 +102,13 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "INSPIRE Atom".toLowerCase()
     });
 
+    public static List<String> validAtomProtocols = Arrays.asList(new String[]{
+            "https://tools.ietf.org/html/rfc4287".toLowerCase(),
+            "ATOM Syndication Format".toLowerCase(),
+            "atom",
+            "INSPIRE Atom".toLowerCase()
+    });
+
     public static List<String> validAppProfiles = Arrays.asList(new String[]{
             "Download Service".toLowerCase(),
             "View Service".toLowerCase(),

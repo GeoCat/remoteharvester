@@ -86,6 +86,9 @@ public class CapabilitiesLinkFixer {
         if ((documentLink == null) || (documentLink.getProtocol() == null) || (documentLink.getProtocol().isEmpty()))
             return false;
         String protocol = documentLink.getProtocol().toLowerCase();
+
+        if (DocumentLink.validAtomProtocols.contains(protocol))
+            return true;
         if (protocol.endsWith("-rss"))
             return true;
         if (protocol.endsWith("atom"))
