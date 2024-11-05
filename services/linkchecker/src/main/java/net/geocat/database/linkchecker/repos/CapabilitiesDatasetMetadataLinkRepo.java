@@ -89,7 +89,10 @@ public interface CapabilitiesDatasetMetadataLinkRepo extends CrudRepository<Capa
             "        ) \n" +
             "WHERE\n" +
             "     datasetidentifier.datasetidentifierparenttype = 'CapDSMDLinkDatasetIdentifier' AND\n" +
-            "    datasetidentifier.code = ?2  \n" +
+            "    (lower(datasetidentifier.code) = lower(?2) OR " +
+            "     lower(datasetidentifier.code) LIKE '%' || lower(?2) || '%' OR " +
+            "     lower(?2) LIKE '%' || lower(datasetidentifier.code) || '%' " +
+            "    )\n" +
             "    AND datasetidentifier.codespace IS NULL      \n" +
             "    AND capabilitiesdatasetmetadatalink.cap_jobid = ?1 "
             , nativeQuery = true)
@@ -115,8 +118,15 @@ public interface CapabilitiesDatasetMetadataLinkRepo extends CrudRepository<Capa
             "        ) \n" +
             "WHERE\n" +
             "     datasetidentifier.datasetidentifierparenttype = 'CapDSMDLinkDatasetIdentifier' AND\n" +
-            "    datasetidentifier.code = ?2  \n" +
-            "    AND datasetidentifier.codespace = ?3      \n" +
+            "    (lower(datasetidentifier.code) = lower(?2) OR " +
+            "     lower(datasetidentifier.code) LIKE '%' || lower(?2) || '%' OR " +
+            "     lower(?2) LIKE '%' || lower(datasetidentifier.code) || '%' " +
+            "    )  \n" +
+            "    AND (datasetidentifier.codespace IS NULL OR " +
+            "         lower(datasetidentifier.codespace) = lower(?3) OR " +
+            "         lower(datasetidentifier.codespace) LIKE '%' || lower(?3) || '%' OR " +
+            "         lower(?3) LIKE '%' || lower(datasetidentifier.codespace)  || '%' " +
+            "    )\n" +
             "    AND capabilitiesdatasetmetadatalink.cap_jobid = ?1 "
             , nativeQuery = true)
     List<CapabilitiesLinkResult> linkToCapabilitiesViaIdentifier_codeAndCodeSpace(String linkCheckJobId, String metadata_code, String metadata_codespace);
@@ -137,7 +147,9 @@ public interface CapabilitiesDatasetMetadataLinkRepo extends CrudRepository<Capa
             "                 and capabilitiesdocument.linkcheckjobid = capabilitiesdatasetmetadatalink.linkcheckjobid \n" +
             "                )  \n" +
             "WHERE\n" +
-            "     capabilitiesdatasetmetadatalink.identity = ?2 \n" +
+            "     (lower(capabilitiesdatasetmetadatalink.identity) = lower(?2) OR " +
+            "      lower(capabilitiesdatasetmetadatalink.identity) LIKE '%' || lower(?2) || '%' OR " +
+            "      lower(?2) LIKE '%' || capabilitiesdatasetmetadatalink.identity || '%') \n" +
             "  AND capabilitiesdatasetmetadatalink.cap_jobid = ?1\n"
             , nativeQuery = true)
     List<CapabilitiesLinkResult> linkToCapabilitiesLayerViaIdentifier(String linkCheckJobId, String DSIDcode);
@@ -157,8 +169,20 @@ public interface CapabilitiesDatasetMetadataLinkRepo extends CrudRepository<Capa
             "                 and capabilitiesdocument.linkcheckjobid = capabilitiesdatasetmetadatalink.linkcheckjobid \n" +
             "                )  \n" +
             "WHERE\n" +
-            "     capabilitiesdatasetmetadatalink.identity = ?2 \n" +
-            "  AND (capabilitiesdatasetmetadatalink.authority = ?3 OR capabilitiesdatasetmetadatalink.authorityname = ?3)   \n" +
+            "     (lower(capabilitiesdatasetmetadatalink.identity) = lower(?2) OR " +
+            "       lower(capabilitiesdatasetmetadatalink.identity) LIKE '%' || lower(?2) || '%' OR lower(?2) LIKE '%' || lower(capabilitiesdatasetmetadatalink.identity || '%')) \n" +
+            "  AND (" +
+            "       capabilitiesdatasetmetadatalink.authority IS NULL OR " +
+            "       lower(capabilitiesdatasetmetadatalink.authority) = lower(?3) OR " +
+            "       lower(capabilitiesdatasetmetadatalink.authority) LIKE '%' || lower(?3) || '%' OR" +
+            "       lower(?3) LIKE '%' || lower(capabilitiesdatasetmetadatalink.authority)  || '%' " +
+            "      )   \n" +
+            "  AND (" +
+            "       capabilitiesdatasetmetadatalink.authorityname IS NULL OR " +
+            "       lower(capabilitiesdatasetmetadatalink.authorityname) = lower(?3) OR" +
+            "       lower(capabilitiesdatasetmetadatalink.authorityname) LIKE '%' || lower(?3) || '%' OR" +
+            "       lower(?3) LIKE '%' || lower(capabilitiesdatasetmetadatalink.authorityname)  || '%'" +
+            "      )   \n" +
             "  AND capabilitiesdatasetmetadatalink.cap_jobid = ?1\n"
             , nativeQuery = true)
     List<CapabilitiesLinkResult> linkToCapabilitiesLayerViaIdentifier(String linkCheckJobId, String DSIDcode, String DSIDcodespace);
