@@ -72,11 +72,64 @@ public class ServiceDocumentLinkService {
         result.setFunction(onlineResource.getFunction());
         result.setOperationName(onlineResource.getOperationName());
         result.setRawURL(onlineResource.getRawURL());
-        result.setProtocol(onlineResource.getProtocol());
+
+        String protocolFromUrl = inferProtocolFromUrl(onlineResource.getRawURL());
+
+        if ((onlineResource.getProtocol() == null) && (protocolFromUrl != null)) {
+            // If no protocol defined, try to infer the protocol from the URL
+            result.setProtocol(protocolFromUrl);
+        } else {
+            result.setProtocol(onlineResource.getProtocol());
+
+            // TODO: review
+            // Check if protocol inferred is not the same type to the one defined in the protocol field and update it based on the URL inferred protocol
+            if (protocolFromUrl != null) {
+                boolean isDownloadProtocol = ServiceDocumentLink.validDownloadProtocols.contains(onlineResource.getProtocol().toLowerCase());
+                boolean isDownloadUrlProtocol = ServiceDocumentLink.validDownloadProtocols.contains(protocolFromUrl.toLowerCase());
+                boolean isViewProtocol = ServiceDocumentLink.validViewProtocols.contains(onlineResource.getProtocol().toLowerCase());
+                boolean isViewUrlProtocol = ServiceDocumentLink.validViewProtocols.contains(protocolFromUrl);
+
+                if (isDownloadProtocol) {
+                   if (!isDownloadUrlProtocol && isViewUrlProtocol) {
+                       result.setProtocol(protocolFromUrl);
+                   }
+                } else if (isViewProtocol) {
+                    if (!isViewUrlProtocol && isDownloadUrlProtocol) {
+                        result.setProtocol(protocolFromUrl);
+                    }
+                }
+            }
+        }
+
         result.setApplicationProfile(onlineResource.getApplicationProfile());
 
         result.setLinkCheckJobId(datasetMetadataRecord.getLinkCheckJobId());
 
         return result;
+    }
+
+
+    private String inferProtocolFromUrl(String url) {
+        String normalizedUrl = url.toLowerCase();
+
+        if (normalizedUrl.indexOf("wms") > -1) {
+            return "wms";
+        } else if (normalizedUrl.indexOf("wmts") > -1) {
+            return "wmts";
+        } else if (normalizedUrl.indexOf("wfs") > -1) {
+            return "wfs";
+        } else if (normalizedUrl.indexOf("atom") > -1) {
+            return "atom";
+        } else if (normalizedUrl.indexOf("wcs") > -1) {
+            return "wcs";
+        } else if (normalizedUrl.indexOf("sos") > -1) {
+            return "sos";
+        } else if (normalizedUrl.indexOf("api features") > -1) {
+            return "api features";
+        } else if (normalizedUrl.indexOf("sensorthings") > -1) {
+            return "sensorthings";
+        }
+
+        return null;
     }
 }

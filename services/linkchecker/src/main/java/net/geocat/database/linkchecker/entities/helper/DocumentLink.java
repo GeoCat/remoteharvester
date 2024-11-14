@@ -92,8 +92,11 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "OGC Web Feature Service".toLowerCase(),
             "OGC Web Map Service".toLowerCase(),
             "OGC Web Map Tile Service".toLowerCase(),
+            "OGC:WMS".toLowerCase(),
             "wms",
+            "OGC:WMTS".toLowerCase(),
             "wmts",
+            "OGC:WFS".toLowerCase(),
             "wfs",
             "atom",
             "http://www.opengeospatial.org/standards/wms",
@@ -101,6 +104,33 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "http://www.opengeospatial.org/standards/wfs",
             "INSPIRE Atom".toLowerCase()
     });
+
+    public static List<String> validViewProtocols = Arrays.asList(new String[]{
+            "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
+            "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
+            "OGC Web Feature Service".toLowerCase(),
+            "OGC Web Map Service".toLowerCase(),
+            "OGC Web Map Tile Service".toLowerCase(),
+            "OGC:WMS".toLowerCase(),
+            "wms",
+            "OGC:WMTS".toLowerCase(),
+            "wmts",
+            "http://www.opengeospatial.org/standards/wms",
+            "http://www.opengeospatial.org/standards/wmts"
+    });
+
+    public static List<String> validDownloadProtocols = Arrays.asList(new String[]{
+            "http://www.opengis.net/def/serviceType/ogc/wfs".toLowerCase(),
+            "https://tools.ietf.org/html/rfc4287".toLowerCase(),
+            "ATOM Syndication Format".toLowerCase(),
+            "OGC Web Feature Service".toLowerCase(),
+            "OGC:WFS".toLowerCase(),
+            "wfs",
+            "atom",
+            "http://www.opengeospatial.org/standards/wfs",
+            "INSPIRE Atom".toLowerCase()
+    });
+
 
     public static List<String> validAtomProtocols = Arrays.asList(new String[]{
             "https://tools.ietf.org/html/rfc4287".toLowerCase(),
@@ -117,15 +147,12 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
     });
 
     public boolean isInspireSimplifiedLink() {
-        if ((rawURL == null) || (protocol == null) || (applicationProfile == null))
+        if ((rawURL == null) || (protocol == null))
             return false;
-        if (rawURL.isEmpty() || protocol.isEmpty() || applicationProfile.isEmpty())
+        if (rawURL.isEmpty() || protocol.isEmpty())
             return false;
 
         if (!validProtocols.contains(protocol.toLowerCase()))
-            return false;
-
-        if (!validAppProfiles.contains(applicationProfile.toLowerCase()))
             return false;
 
         return true;

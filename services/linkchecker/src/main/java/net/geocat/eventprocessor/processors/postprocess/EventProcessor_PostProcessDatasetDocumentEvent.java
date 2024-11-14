@@ -323,13 +323,40 @@ public class EventProcessor_PostProcessDatasetDocumentEvent extends BaseEventPro
                 .filter(x -> (x.getCapabilitiesDocumentType() == CapabilitiesType.WFS) || (x.getCapabilitiesDocumentType() == CapabilitiesType.Atom))
                 .collect(Collectors.toList());
 
-        if (!viewLinks.isEmpty())
-            localDatasetMetadataRecord.setINDICATOR_VIEW_LINK_TO_DATA(IndicatorStatus.PASS);
-        if (!downloadLinks.isEmpty())
-            localDatasetMetadataRecord.setINDICATOR_DOWNLOAD_LINK_TO_DATA(IndicatorStatus.PASS);
 
-        localDatasetMetadataRecord.setNumberOfViewDataLinks(viewLinks.size());
-        localDatasetMetadataRecord.setNumberOfDownloadDataLinks(downloadLinks.size());
+        if (!viewLinks.isEmpty())  {
+            localDatasetMetadataRecord.setINDICATOR_VIEW_LINK_TO_DATA(IndicatorStatus.PASS);
+            localDatasetMetadataRecord.setNumberOfViewDataLinks(viewLinks.size());
+        } else {
+            // Dataset link simplification
+            if (!localDatasetMetadataRecord.getDocumentLinks().isEmpty()) {
+                List<DocumentLink> viewLinksMetadataOnlineResources = localDatasetMetadataRecord.getDocumentLinks().stream()
+                        .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validViewProtocols.contains(x.getProtocol().toLowerCase())))
+                        .collect(Collectors.toList());
+
+                if (!viewLinksMetadataOnlineResources.isEmpty()) {
+                    localDatasetMetadataRecord.setINDICATOR_VIEW_LINK_TO_DATA(IndicatorStatus.PASS);
+                    localDatasetMetadataRecord.setNumberOfViewDataLinks(viewLinksMetadataOnlineResources.size());
+                }
+            }
+        }
+
+        if (!downloadLinks.isEmpty()) {
+            localDatasetMetadataRecord.setINDICATOR_DOWNLOAD_LINK_TO_DATA(IndicatorStatus.PASS);
+            localDatasetMetadataRecord.setNumberOfDownloadDataLinks(downloadLinks.size());
+        } else {
+            // Dataset link simplification
+            if (!localDatasetMetadataRecord.getDocumentLinks().isEmpty()) {
+                List<DocumentLink> downloadLinksMetadataOnlineResources = localDatasetMetadataRecord.getDocumentLinks().stream()
+                        .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validDownloadProtocols.contains(x.getProtocol().toLowerCase())))
+                        .collect(Collectors.toList());
+
+                if (!downloadLinksMetadataOnlineResources.isEmpty()) {
+                    localDatasetMetadataRecord.setINDICATOR_DOWNLOAD_LINK_TO_DATA(IndicatorStatus.PASS);
+                    localDatasetMetadataRecord.setNumberOfDownloadDataLinks(downloadLinksMetadataOnlineResources.size());
+                }
+            }
+        }
 
 //        List<ServiceDocSearchResult> serviceLinks =  new ArrayList<>();
 //        List<CapabilitiesLinkResult> capLinks =  new ArrayList<>();
