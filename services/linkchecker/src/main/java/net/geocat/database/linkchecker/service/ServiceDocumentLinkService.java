@@ -81,8 +81,12 @@ public class ServiceDocumentLinkService {
         } else {
             result.setProtocol(onlineResource.getProtocol());
 
-            // TODO: review
-            // Check if protocol inferred is not the same type to the one defined in the protocol field and update it based on the URL inferred protocol
+            // if the XML document's protocol isn't compatible with the actual URL
+            // then use the inferred URL protocol.
+            // Example;
+            // xml protocol is WMS (view)
+            // but, url is "...?service=WFS" (inferred url protocol is download and not view)
+            // then, set the protocol to Download (ignore the XML)
             if (protocolFromUrl != null) {
                 boolean isDownloadProtocol = ServiceDocumentLink.validDownloadProtocols.contains(onlineResource.getProtocol().toLowerCase());
                 boolean isDownloadUrlProtocol = ServiceDocumentLink.validDownloadProtocols.contains(protocolFromUrl.toLowerCase());
