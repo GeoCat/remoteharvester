@@ -38,8 +38,11 @@ import net.geocat.database.linkchecker.entities.CapabilitiesDocument;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 //Represents a link in a document
 @MappedSuperclass
@@ -83,28 +86,6 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
 
     //--
 
-    public static List<String> validProtocols = Arrays.asList(new String[]{
-            "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
-            "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
-            "http://www.opengis.net/def/serviceType/ogc/wfs".toLowerCase(),
-            "https://tools.ietf.org/html/rfc4287".toLowerCase(),
-            "ATOM Syndication Format".toLowerCase(),
-            "OGC Web Feature Service".toLowerCase(),
-            "OGC Web Map Service".toLowerCase(),
-            "OGC Web Map Tile Service".toLowerCase(),
-            "OGC:WMS".toLowerCase(),
-            "wms",
-            "OGC:WMTS".toLowerCase(),
-            "wmts",
-            "OGC:WFS".toLowerCase(),
-            "wfs",
-            "atom",
-            "http://www.opengeospatial.org/standards/wms",
-            "http://www.opengeospatial.org/standards/wmts",
-            "http://www.opengeospatial.org/standards/wfs",
-            "INSPIRE Atom".toLowerCase()
-    });
-
     public static List<String> validViewProtocols = Arrays.asList(new String[]{
             "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
             "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
@@ -131,6 +112,8 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "INSPIRE Atom".toLowerCase()
     });
 
+    public static List<String> validProtocols = Stream.concat(validViewProtocols.stream(),
+                    validDownloadProtocols.stream()).collect(Collectors.toList());
 
     public static List<String> validAtomProtocols = Arrays.asList(new String[]{
             "https://tools.ietf.org/html/rfc4287".toLowerCase(),
@@ -147,6 +130,7 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
     });
 
     public boolean isInspireSimplifiedLink() {
+        // Relax the check to process links with the applicationProfile information
         if ((rawURL == null) || (protocol == null))
             return false;
         if (rawURL.isEmpty() || protocol.isEmpty())
@@ -157,6 +141,24 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
 
         return true;
     }
+
+    /*public boolean isInspireSimplifiedLink() {
+        if ((rawURL == null) || (protocol == null) || (applicationProfile == null))
+            if ((rawURL == null) || (protocol == null))
+                return false;
+        if (rawURL.isEmpty() || protocol.isEmpty() || applicationProfile.isEmpty())
+            if (rawURL.isEmpty() || protocol.isEmpty())
+                return false;
+
+        if (!validProtocols.contains(protocol.toLowerCase()))
+            return false;
+
+        if (!validAppProfiles.contains(applicationProfile.toLowerCase()))
+            return false;
+
+        return true;
+    }*/
+
 
 
     //--
