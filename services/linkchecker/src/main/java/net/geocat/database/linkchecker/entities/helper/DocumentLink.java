@@ -87,29 +87,36 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
     //--
 
     public static List<String> validViewProtocols = Arrays.asList(new String[]{
-            "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
-            "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
-            "OGC Web Feature Service".toLowerCase(),
-            "OGC Web Map Service".toLowerCase(),
-            "OGC Web Map Tile Service".toLowerCase(),
-            "OGC:WMS".toLowerCase(),
             "wms",
-            "OGC:WMTS".toLowerCase(),
-            "wmts",
+            "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
+            "OGC Web Map Service".toLowerCase(),
+            "OGC:WMS".toLowerCase(),
             "http://www.opengeospatial.org/standards/wms",
+            "wmts",
+            "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
+            "OGC Web Map Tile Service".toLowerCase(),
+            "OGC:WMTS".toLowerCase(),
             "http://www.opengeospatial.org/standards/wmts"
     });
 
     public static List<String> validDownloadProtocols = Arrays.asList(new String[]{
+            "wfs",
             "http://www.opengis.net/def/serviceType/ogc/wfs".toLowerCase(),
-            "https://tools.ietf.org/html/rfc4287".toLowerCase(),
-            "ATOM Syndication Format".toLowerCase(),
             "OGC Web Feature Service".toLowerCase(),
             "OGC:WFS".toLowerCase(),
-            "wfs",
-            "atom",
             "http://www.opengeospatial.org/standards/wfs",
-            "INSPIRE Atom".toLowerCase()
+            "atom",
+            "https://tools.ietf.org/html/rfc4287".toLowerCase(),
+            "ATOM Syndication Format".toLowerCase(),
+            "INSPIRE Atom".toLowerCase(),
+            "wcs",
+            "OGC:WCS".toLowerCase(),
+            "api features",
+            "OGC - API Features".toLowerCase(),
+            "OGC:OGC-API-Features-items".toLowerCase(),
+            "sos",
+            "OGC:SOS".toLowerCase(),
+            "http://www.opengis.net/def/serviceType/ogc/sos".toLowerCase()
     });
 
     public static List<String> validProtocols = Stream.concat(validViewProtocols.stream(),
