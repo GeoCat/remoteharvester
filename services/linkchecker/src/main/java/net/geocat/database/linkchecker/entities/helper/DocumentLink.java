@@ -90,6 +90,7 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "wms",
             "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
             "OGC Web Map Service".toLowerCase(),
+            "Web Map Service (WMS)".toLowerCase(),
             "OGC:WMS".toLowerCase(),
             "http://www.opengeospatial.org/standards/wms",
             "wmts",
@@ -103,6 +104,7 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "wfs",
             "http://www.opengis.net/def/serviceType/ogc/wfs".toLowerCase(),
             "OGC Web Feature Service".toLowerCase(),
+            "Web Feature Service (WFS)".toLowerCase(),
             "OGC:WFS".toLowerCase(),
             "http://www.opengeospatial.org/standards/wfs",
             "atom",
@@ -111,9 +113,13 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "INSPIRE Atom".toLowerCase(),
             "wcs",
             "OGC:WCS".toLowerCase(),
+            "http://www.opengis.net/def/serviceType/ogc/wcs".toLowerCase(),
             "api features",
             "OGC - API Features".toLowerCase(),
             "OGC:OGC-API-Features-items".toLowerCase(),
+            "HTTP:OGC:API-Features".toLowerCase(),
+            "http://www.opengis.net/def/interface/ogcapi-features".toLowerCase(),
+            "SensorThings".toLowerCase(),
             "sos",
             "OGC:SOS".toLowerCase(),
             "http://www.opengis.net/def/serviceType/ogc/sos".toLowerCase()
@@ -136,6 +142,12 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/view".toLowerCase()
     });
 
+    public static final String VALID_PROTOCOLS_VIEW_REGEX = "(.*wms.*|.*wmts.*|.*web map service.*)";
+
+    public static final String VALID_PROTOCOLS_DOWNLOAD_REGEX = "(.*wfs.*|.*atom.*|.*wcs.*|.*sos.*|.*api.*feature.*|.*sensorthings.*|.*web feature service.*)";
+
+    public static final String VALID_PROTOCOLS_REGEX = "(.*wfs.*|.*atom.*|.*wcs.*|.*sos.*|.*api.*feature.*|.*sensorthings.*|.*wms.*|.*wmts.*|.*web map service.*|.*web feature service.*)";
+
     public boolean isInspireSimplifiedLink() {
         // Relax the check to process links with the applicationProfile information
         if ((rawURL == null) || (protocol == null))
@@ -143,11 +155,17 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
         if (rawURL.isEmpty() || protocol.isEmpty())
             return false;
 
-        if (!validProtocols.contains(protocol.toLowerCase()))
-            return false;
+        if (!validProtocols.contains(protocol.toLowerCase())) {
+            // Check protocol match "simple" values instead of exact match
+            if (!protocol.toLowerCase().matches(VALID_PROTOCOLS_REGEX)) {
+                return false;
+            }
+        }
+
 
         return true;
     }
+
 
     /*public boolean isInspireSimplifiedLink() {
         if ((rawURL == null) || (protocol == null) || (applicationProfile == null))
