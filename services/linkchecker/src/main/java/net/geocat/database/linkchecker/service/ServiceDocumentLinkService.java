@@ -101,6 +101,10 @@ public class ServiceDocumentLinkService {
                     if (!isViewUrlProtocol && isDownloadUrlProtocol) {
                         result.setProtocol(protocolFromUrl);
                     }
+                } else { // If no valid protocol from the protocol field, and the inferred protocol is valid --> use the inferred protocol
+                    if ((isDownloadUrlProtocol) || (isViewUrlProtocol)) {
+                        result.setProtocol(protocolFromUrl);
+                    }
                 }
             }
         }

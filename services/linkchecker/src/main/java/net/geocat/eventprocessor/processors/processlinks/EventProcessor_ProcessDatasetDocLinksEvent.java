@@ -33,6 +33,7 @@
 
 package net.geocat.eventprocessor.processors.processlinks;
 
+import net.geocat.database.linkchecker.entities.DatasetDocumentLink;
 import net.geocat.database.linkchecker.entities.LocalDatasetMetadataRecord;
 import net.geocat.database.linkchecker.entities.helper.ServiceMetadataDocumentState;
 import net.geocat.database.linkchecker.repos.CapabilitiesDocumentRepo;
@@ -52,7 +53,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 import static net.geocat.database.linkchecker.service.DatabaseUpdateService.convertToString;
 
 @Component
@@ -101,6 +106,15 @@ public class EventProcessor_ProcessDatasetDocLinksEvent extends BaseEventProcess
     public EventProcessor_ProcessDatasetDocLinksEvent internalProcessing() throws Exception {
 
         localDatasetMetadataRecord = localDatasetMetadataRecordRepo.findById(getInitiatingEvent().getDatasetDocumentId()).get();// make sure we re-load
+        // Dataset metadata record uses FetchMode.JOIN with DatasetIdentifier and DatasetDocumentLink
+        // If the metadata has more than 1 dataset identifier retrieves DatasetDocumentLink duplicated
+        // TODO: Check if possible to use instead FetchMode.SUBSELECT
+        List<DatasetDocumentLink> uniqueDatasetDocumentLinks = localDatasetMetadataRecord.getDocumentLinks().stream()
+                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingLong(DatasetDocumentLink::getDatasetMetadataLinkId))),
+                        ArrayList::new));
+
+        localDatasetMetadataRecord.setDocumentLinks(uniqueDatasetDocumentLinks);
+
         if (localDatasetMetadataRecord.getState() == ServiceMetadataDocumentState.NOT_APPLICABLE)
             return this; //nothing to do
 
