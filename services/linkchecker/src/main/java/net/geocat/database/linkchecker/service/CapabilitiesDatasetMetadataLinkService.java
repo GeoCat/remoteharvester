@@ -42,6 +42,7 @@ import net.geocat.xml.XmlCapabilitiesDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,19 +58,22 @@ public class CapabilitiesDatasetMetadataLinkService {
         List<CapabilitiesDatasetMetadataLink> result = new ArrayList<>();
         for (DatasetLink link : doc.getDatasetLinksList()) {
 
-            CapabilitiesDatasetMetadataLink item = new CapabilitiesDatasetMetadataLink();
-            item.setOgcLayerName(link.getOgcLayerName());
-            item.setLinkState(LinkState.Created);
-            item.setRawURL(link.getRawUrl());
-            item.setLinkCheckJobId(cap.getLinkCheckJobId());
-            item.setFixedURL(datasetLinkFixer.fix(link.getRawUrl()));
-            item.setIdentity(link.getIdentifier());
-            item.setAuthority(link.getAuthority());
-            item.setAuthorityName(link.getAuthorityName());
-            item.setCapabilitiesDocument(cap);
+            // Create the link if the URL starts with http
+            if (StringUtils.hasLength(link.getRawUrl()) && link.getRawUrl().toLowerCase().startsWith("http")) {
+                CapabilitiesDatasetMetadataLink item = new CapabilitiesDatasetMetadataLink();
+                item.setOgcLayerName(link.getOgcLayerName());
+                item.setLinkState(LinkState.Created);
+                item.setRawURL(link.getRawUrl());
+                item.setLinkCheckJobId(cap.getLinkCheckJobId());
+                item.setFixedURL(datasetLinkFixer.fix(link.getRawUrl()));
+                item.setIdentity(link.getIdentifier());
+                item.setAuthority(link.getAuthority());
+                item.setAuthorityName(link.getAuthorityName());
+                item.setCapabilitiesDocument(cap);
 
-            //   item.setCapabilitiesDocument(cap);
-            result.add(item);
+                //   item.setCapabilitiesDocument(cap);
+                result.add(item);
+            }
         }
         return result;
     }

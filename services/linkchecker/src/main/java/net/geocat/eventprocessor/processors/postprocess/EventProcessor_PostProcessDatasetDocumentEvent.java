@@ -331,7 +331,7 @@ public class EventProcessor_PostProcessDatasetDocumentEvent extends BaseEventPro
             // Dataset link simplification
             if (!localDatasetMetadataRecord.getDocumentLinks().isEmpty()) {
                 List<DocumentLink> viewLinksMetadataOnlineResources = localDatasetMetadataRecord.getDocumentLinks().stream()
-                        .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validViewProtocols.contains(x.getProtocol().toLowerCase()) || x.getProtocol().toLowerCase().matches(DocumentLink.VALID_PROTOCOLS_VIEW_REGEX)))
+                        .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() != null && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validViewProtocols.contains(x.getProtocol().toLowerCase()) || x.getProtocol().toLowerCase().matches(DocumentLink.VALID_PROTOCOLS_VIEW_REGEX)))
                         .collect(Collectors.toList());
 
                 if (!viewLinksMetadataOnlineResources.isEmpty()) {
@@ -348,7 +348,7 @@ public class EventProcessor_PostProcessDatasetDocumentEvent extends BaseEventPro
             // Dataset link simplification
             if (!localDatasetMetadataRecord.getDocumentLinks().isEmpty()) {
                 List<DocumentLink> downloadLinksMetadataOnlineResources = localDatasetMetadataRecord.getDocumentLinks().stream()
-                        .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validDownloadProtocols.contains(x.getProtocol().toLowerCase()) || x.getProtocol().toLowerCase().matches(DocumentLink.VALID_PROTOCOLS_DOWNLOAD_REGEX)))
+                        .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() != null && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validDownloadProtocols.contains(x.getProtocol().toLowerCase()) || x.getProtocol().toLowerCase().matches(DocumentLink.VALID_PROTOCOLS_DOWNLOAD_REGEX)))
                         .collect(Collectors.toList());
 
                 if (!downloadLinksMetadataOnlineResources.isEmpty()) {
