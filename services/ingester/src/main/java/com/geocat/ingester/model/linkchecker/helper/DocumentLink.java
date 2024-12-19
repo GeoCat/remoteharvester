@@ -41,6 +41,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 //Represents a link in a document
 @MappedSuperclass
@@ -84,22 +86,52 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
 
     //--
 
-    public static List<String> validProtocols = Arrays.asList(new String[]{
+    public static List<String> validViewProtocols = Arrays.asList(new String[]{
+            "wms",
             "http://www.opengis.net/def/serviceType/ogc/wms".toLowerCase(),
+            "OGC Web Map Service".toLowerCase(),
+            "Web Map Service (WMS)".toLowerCase(),
+            "OGC:WMS".toLowerCase(),
+            "http://www.opengeospatial.org/standards/wms",
+            "wmts",
             "http://www.opengis.net/def/serviceType/ogc/wmts".toLowerCase(),
+            "OGC Web Map Tile Service".toLowerCase(),
+            "OGC:WMTS".toLowerCase(),
+            "http://www.opengeospatial.org/standards/wmts"
+    });
+
+    public static List<String> validDownloadProtocols = Arrays.asList(new String[]{
+            "wfs",
             "http://www.opengis.net/def/serviceType/ogc/wfs".toLowerCase(),
+            "OGC Web Feature Service".toLowerCase(),
+            "Web Feature Service (WFS)".toLowerCase(),
+            "OGC:WFS".toLowerCase(),
+            "http://www.opengeospatial.org/standards/wfs",
+            "atom",
             "https://tools.ietf.org/html/rfc4287".toLowerCase(),
             "ATOM Syndication Format".toLowerCase(),
-            "OGC Web Feature Service".toLowerCase(),
-            "OGC Web Map Service".toLowerCase(),
-            "OGC Web Map Tile Service".toLowerCase(),
-            "wms",
-            "wmts",
-            "wfs",
+            "INSPIRE Atom".toLowerCase(),
+            "wcs",
+            "OGC:WCS".toLowerCase(),
+            "http://www.opengis.net/def/serviceType/ogc/wcs".toLowerCase(),
+            "api features",
+            "OGC - API Features".toLowerCase(),
+            "OGC:OGC-API-Features-items".toLowerCase(),
+            "HTTP:OGC:API-Features".toLowerCase(),
+            "http://www.opengis.net/def/interface/ogcapi-features".toLowerCase(),
+            "SensorThings".toLowerCase(),
+            "sos",
+            "OGC:SOS".toLowerCase(),
+            "http://www.opengis.net/def/serviceType/ogc/sos".toLowerCase()
+    });
+
+    public static List<String> validProtocols = Stream.concat(validViewProtocols.stream(),
+                    validDownloadProtocols.stream()).collect(Collectors.toList());
+
+    public static List<String> validAtomProtocols = Arrays.asList(new String[]{
+            "https://tools.ietf.org/html/rfc4287".toLowerCase(),
+            "ATOM Syndication Format".toLowerCase(),
             "atom",
-            "http://www.opengeospatial.org/standards/wms",
-            "http://www.opengeospatial.org/standards/wmts",
-            "http://www.opengeospatial.org/standards/wfs",
             "INSPIRE Atom".toLowerCase()
     });
 
@@ -110,10 +142,37 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             "http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/view".toLowerCase()
     });
 
+    public static final String VALID_PROTOCOLS_VIEW_REGEX = "(.*wms.*|.*wmts.*|.*web map service.*)";
+
+    public static final String VALID_PROTOCOLS_DOWNLOAD_REGEX = "(.*wfs.*|.*atom.*|.*wcs.*|.*sos.*|.*api.*feature.*|.*sensorthings.*|.*web feature service.*)";
+
+    public static final String VALID_PROTOCOLS_REGEX = "(.*wfs.*|.*atom.*|.*wcs.*|.*sos.*|.*api.*feature.*|.*sensorthings.*|.*wms.*|.*wmts.*|.*web map service.*|.*web feature service.*)";
+
     public boolean isInspireSimplifiedLink() {
+        // Relax the check to process links with the applicationProfile information
+        if ((rawURL == null) || (protocol == null))
+            return false;
+        if (rawURL.isEmpty() || protocol.isEmpty())
+            return false;
+
+        if (!validProtocols.contains(protocol.toLowerCase())) {
+            // Check protocol match "simple" values instead of exact match
+            if (!protocol.toLowerCase().matches(VALID_PROTOCOLS_REGEX)) {
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+
+    /*public boolean isInspireSimplifiedLink() {
         if ((rawURL == null) || (protocol == null) || (applicationProfile == null))
+            if ((rawURL == null) || (protocol == null))
             return false;
         if (rawURL.isEmpty() || protocol.isEmpty() || applicationProfile.isEmpty())
+            if (rawURL.isEmpty() || protocol.isEmpty())
             return false;
 
         if (!validProtocols.contains(protocol.toLowerCase()))
@@ -123,7 +182,8 @@ public abstract class DocumentLink extends RetrievableSimpleLink {
             return false;
 
         return true;
-    }
+    }*/
+
 
 
     //--

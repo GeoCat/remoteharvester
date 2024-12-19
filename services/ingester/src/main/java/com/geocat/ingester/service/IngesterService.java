@@ -73,6 +73,10 @@ public class IngesterService {
     DatasetDocumentLinkRepo datasetDocumentLinkRepo;
 
     @Autowired
+    LocalDatasetMetadataRecordRepo localDatasetMetadataRecordRepo;
+
+
+    @Autowired
     LinkToDataRepo linkToDataRepo;
 
     @Autowired
@@ -402,8 +406,25 @@ public class IngesterService {
 
                 LinkedResourceIndicator indicator = new LinkedResourceIndicator(layerName, layerLink, associatedServiceIds);
                 viewServiceLinkedResourceIndicators.add(indicator);
+
             }
         });
+
+
+        if (viewLinks.isEmpty()) {
+            LocalDatasetMetadataRecord datasetMetadataRecord = localDatasetMetadataRecordRepo.findFirstByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
+            List<DocumentLink> viewLinksMetadataOnlineResources = datasetMetadataRecord.getDocumentLinks().stream()
+                    .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() != null && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validViewProtocols.contains(x.getProtocol().toLowerCase()) || x.getProtocol().toLowerCase().matches(DocumentLink.VALID_PROTOCOLS_VIEW_REGEX)))
+                    .collect(Collectors.toList());
+
+            for (DocumentLink documentLink : viewLinksMetadataOnlineResources) {
+                List<String> associatedServiceIds = new ArrayList<>();
+                associatedServiceIds.add(datasetMetadataRecord.getFileIdentifier());
+
+                LinkedResourceIndicator indicator = new LinkedResourceIndicator(documentLink.getRawURL(), documentLink.getRawURL(), associatedServiceIds);
+                viewServiceLinkedResourceIndicators.add(indicator);
+            }
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -447,16 +468,25 @@ public class IngesterService {
 
                 // TODO: Review
                 List<AtomActualDataEntry> atomActualDataEntryList = simpleAtomLinkToData.getAtomActualDataEntryList();
-                for (AtomActualDataEntry atomActualDataEntry : atomActualDataEntryList) {
-                    if ((atomActualDataEntry.getSuccessfullyDownloaded() != null) && atomActualDataEntry.getSuccessfullyDownloaded()) {
-                        for (AtomDataRequest atomDataRequest : atomActualDataEntry.getAtomDataRequestList()) {
-                            layerLink = atomDataRequest.getFinalURL();
+                if (atomActualDataEntryList.isEmpty()) {
+                    if (simpleAtomLinkToData.getAtomSubFeedRequest() != null) {
+                        layerLink = simpleAtomLinkToData.getAtomSubFeedRequest().getFinalURL();
+                    }
+
+                    if (!StringUtils.hasLength(layerLink)) {
+                        layerLink = StringUtils.hasLength(simpleAtomLinkToData.getLayerId()) ? simpleAtomLinkToData.getLayerId() : "";
+                    }
+                } else {
+                    for (AtomActualDataEntry atomActualDataEntry : atomActualDataEntryList) {
+                        if ((atomActualDataEntry.getSuccessfullyDownloaded() != null) && atomActualDataEntry.getSuccessfullyDownloaded()) {
+                            for (AtomDataRequest atomDataRequest : atomActualDataEntry.getAtomDataRequestList()) {
+                                layerLink = atomDataRequest.getFinalURL();
+                                break;
+                            }
                             break;
                         }
-                        break;
                     }
                 }
-
             }
 
             List<ServiceDocumentLink> serviceDocumentLinks = serviceDocumentLinkRepo.findByLinkCheckJobIdAndSha2(linkCheckJobId, capabilitiesSha2);
@@ -471,6 +501,21 @@ public class IngesterService {
             LinkedResourceIndicator indicator = new LinkedResourceIndicator(layerName, layerLink, associatedServiceIds);
             downloadServiceLinkedResourceIndicators.add(indicator);
         });
+
+        if (downloadLinks.isEmpty()) {
+            LocalDatasetMetadataRecord datasetMetadataRecord = localDatasetMetadataRecordRepo.findFirstByFileIdentifierAndLinkCheckJobId(metadata.getRecordIdentifier(), linkCheckJobId);
+            List<DocumentLink> downloadLinksMetadataOnlineResources = datasetMetadataRecord.getDocumentLinks().stream()
+                    .filter(x -> (x.getLinkState().equals(LinkState.Complete) && x.getLinkHTTPStatusCode() != null && x.getLinkHTTPStatusCode() == 200) && (DocumentLink.validDownloadProtocols.contains(x.getProtocol().toLowerCase()) || x.getProtocol().toLowerCase().matches(DocumentLink.VALID_PROTOCOLS_DOWNLOAD_REGEX)))
+                    .collect(Collectors.toList());
+
+            for (DocumentLink documentLink : downloadLinksMetadataOnlineResources) {
+                List<String> associatedServiceIds = new ArrayList<>();
+                associatedServiceIds.add(datasetMetadataRecord.getFileIdentifier());
+
+                LinkedResourceIndicator indicator = new LinkedResourceIndicator(documentLink.getRawURL(), documentLink.getRawURL(), associatedServiceIds);
+                downloadServiceLinkedResourceIndicators.add(indicator);
+            }
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
