@@ -67,7 +67,7 @@ public class Config {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
         factory.setBrokerURL(brokerUrl);
         org.apache.activemq.RedeliveryPolicy redeliveryPolicy = factory.getRedeliveryPolicy();
-        redeliveryPolicy.setMaximumRedeliveries(3);
+        redeliveryPolicy.setMaximumRedeliveries(1);
         redeliveryPolicy.setRedeliveryDelay(3000);
         redeliveryPolicy.setInitialRedeliveryDelay(3000);
         redeliveryPolicy.setMaximumRedeliveryDelay(5000);
