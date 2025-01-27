@@ -80,7 +80,7 @@ public class MainLoopRouteCreator {
         JacksonDataFormat jsonDefHarvesterConfig = new JacksonDataFormat(Event.class);
 
         routeBuilder.errorHandler(routeBuilder.transactionErrorHandler()
-                .maximumRedeliveries(2)
+                .maximumRedeliveries(1)
                 .redeliveryDelay(1000));
 
         routeBuilder.onException().onExceptionOccurred(new Processor() {
@@ -91,7 +91,7 @@ public class MainLoopRouteCreator {
                         logger.error("exception occurred", ex);
                     }
                 })
-                .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(2)
+                .bean(DatabaseUpdateService.class, "errorOccurred", BeanScope.Request).maximumRedeliveries(1)
         ;
 
         ChoiceDefinition choice = routeBuilder
